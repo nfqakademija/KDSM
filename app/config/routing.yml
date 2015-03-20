@@ -1,1 +1,5 @@
+kdsm_first_pages:
+    resource: "@KDSMFirstPagesBundle/Resources/config/routing.yml"
+    prefix:   /
+
 

@@ -1,0 +1,3 @@
+kdsm_first_pages_homepage:
+    path:     /
+    defaults: { _controller: KDSMFirstPagesBundle:Default:index }
