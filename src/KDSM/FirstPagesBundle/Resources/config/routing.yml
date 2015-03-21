@@ -1,7 +1,3 @@
-defaultpage:
-    path:     /default
-    defaults: { _controller: KDSMFirstPagesBundle:Default:index }
-
 homepage:
     path:     /
     defaults: { _controller: KDSMFirstPagesBundle:Home:index }
