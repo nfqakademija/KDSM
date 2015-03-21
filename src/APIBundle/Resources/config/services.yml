@@ -1,6 +1,15 @@
+parameters:
+    api.url: 'http://wonderwall.ox.nfq.lt/kickertable/api/v1/events'
+    api.user: 'nfq'
+    api.password: 'labas'
+
 services:
     api.api_caller:
         class: APIBundle\Services\APICaller
+        arguments:
+            - [%api.url%]
+            - [%api.user%]
+            - [%api.password%]
     api.api_parser:
         class: APIBundle\Services\APIParser
         arguments: ['%kernel.root_dir%']
