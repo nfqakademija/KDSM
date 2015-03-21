@@ -1,4 +1,11 @@
 services:
-#    api.example:
-#        class: APIBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    api.api_caller:
+        class: APIBundle\Services\APICaller
+    api.api_parser:
+        class: APIBundle\Services\APIParser
+        arguments: ['%kernel.root_dir%']
+    api.api_manager:
+            class: APIBundle\Services\APIManager
+            calls:
+                - [setCaller, ['@api.api_caller']]
+                - [setParser, ['@api.api_parser']]
