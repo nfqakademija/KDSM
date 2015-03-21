@@ -5,3 +5,7 @@ homepage:
 reservationpage:
     path:     /reservation
     defaults: { _controller: KDSMFirstPagesBundle:Reservation:index }
+
+profilepage:
+    path:     /profile
+    defaults: { _controller: KDSMFirstPagesBundle:Profile:index }

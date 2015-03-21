@@ -3,6 +3,10 @@
 {% block title %}KDSMFirstPagesBundle:Reservation:index{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Reservation:index page</h1>
-    <a href="{{ path('homepage') }}">Return to homepage</a>
+<h1>Welcome to the Reservation page</h1>
+    <ul>
+        {% for link in navigation %}
+            <li><a href="{{ path(link.path) }}">Go to {{ link.name }}.</a></li>
+        {% endfor %}
+    </ul>
 {% endblock %}
