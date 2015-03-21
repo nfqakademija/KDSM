@@ -1,0 +1,12 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}KDSMFirstPagesBundle:Profile:index{% endblock %}
+
+{% block body %}
+<h1>Welcome to the Profile page</h1>
+    <ul>
+        {% for link in navigation %}
+            <li><a href="{{ path(link.path) }}">Go to {{ link.name }}.</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
