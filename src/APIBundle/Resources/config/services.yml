@@ -10,11 +10,14 @@ services:
             - [%api.url%]
             - [%api.user%]
             - [%api.password%]
-    api.api_parser:
-        class: APIBundle\Services\APIParser
+    api.api_xml_writer:
+        class: APIBundle\Services\APIXmlWriter
         arguments: ['%kernel.root_dir%']
+    api.api_csv_writer:
+            class: APIBundle\Services\APICsvWriter
+            arguments: ['%kernel.root_dir%']
     api.api_manager:
             class: APIBundle\Services\APIManager
             calls:
                 - [setCaller, ['@api.api_caller']]
-                - [setParser, ['@api.api_parser']]
+                - [setParser, ['@api.api_xml_writer']]

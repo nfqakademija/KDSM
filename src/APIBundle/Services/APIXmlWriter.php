@@ -4,7 +4,7 @@ namespace APIBundle\Services;
 use \Symfony\Component\DependencyInjection\ContainerAware;
 use XMLWriter;
 
-class APIParser extends ContainerAware{
+class APIXmlWriter extends ContainerAware{
     protected $xmmWriter;
 
     public function __construct($rootDir){

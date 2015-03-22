@@ -7,42 +7,48 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-//use APIBundle\Services\
-
-use XMLWriter;
 use GuzzleHttp;
-use GuzzleHttp\Exception\ConnectException;
 
 class DumpAPICommand extends ContainerAwareCommand{
     protected function configure()
     {
-        $this->setName('api:dump');
+        $this->setName('api:dump')
+        ->addArgument('dumpType', InputArgument::REQUIRED, 'Dump Type');
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dumpType = $input->getArgument('dumpType');
+        if($dumpType == 'xml')
+            $writer = $this->getContainer()->get('api.api_xml_writer');
+        else if ($dumpType == 'csv')
+            $writer = $this->getContainer()->get('api.api_csv_writer');
+        else{
+            $output->writeln('Unrecogniced dump file format');
+            return false;
+        }
         $output->writeln('API Dump Running');
 
-        $manager = $this->getContainer()->get('api.api_manager');
+//        $manager = $this->getContainer()->get('api.api_manager');
 
         $caller = $this->getContainer()->get('api.api_caller');
-        $parser = $this->getContainer()->get('api.api_parser');
+//        $writer = $this->getContainer()->get('api.api_xml_writer');
 
 //        $caller = $manager->getCaller();
 //        $parser = $manager->getParser();
 
-        $parser->writeDocumentHead();
+        $writer->writeDocumentHead();
 
         $convertedArray = $caller->callApi();
-        $parser->writeArray($convertedArray);
+        $writer->writeArray($convertedArray);
 
         while(sizeof($convertedArray['records']) == 100) {
 //        for($i = 0; $i < 10; $i++){
             $convertedArray = $caller->callApi(100, end($convertedArray['records'])['id']);
-            $parser->writeArray($convertedArray);
+            $writer->writeArray($convertedArray);
             $output->writeln('Dumping record id: ' . end($convertedArray['records'])['id']);
         }
 
-        $parser->writeDocumentFooter();
+        $writer->writeDocumentFooter();
 
         $output->writeln('API dump complete, last index of table event:');
         $output->writeln(end($convertedArray['records'])['id']);

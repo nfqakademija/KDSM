@@ -11,14 +11,14 @@ namespace APIBundle\Services;
 class APIManager {
 
     protected $caller;
-    protected $parser;
+    protected $writer;
 
     public function setCaller(APICaller $caller){
         $this->caller = $caller;
     }
 
-    public function setParser(APIParser $parser){
-        $this->parser = $parser;
+    public function setParser(APIXmlWriter $writer){
+        $this->writer = $writer;
     }
 
     public function getCaller(){
@@ -26,6 +26,6 @@ class APIManager {
     }
 
     public function getParser(){
-        return $this->parser;
+        return $this->writer;
     }
 }
