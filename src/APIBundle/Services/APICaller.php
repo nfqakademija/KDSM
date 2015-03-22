@@ -11,9 +11,9 @@ class APICaller {
     protected $password;
 
     public function __construct($url, $user, $password){
-        $this->url = $url[0];
-        $this->user = $user[0];
-        $this->password = $password[0];
+        $this->url = $url;
+        $this->user = $user;
+        $this->password = $password;
     }
 
     public function callApi($count = 100, $startId = 1){

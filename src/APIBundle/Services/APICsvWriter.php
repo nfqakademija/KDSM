@@ -2,12 +2,13 @@
 namespace APIBundle\Services;
 
 use \Symfony\Component\DependencyInjection\ContainerAware;
+use APIBundle\Services\APIWriterInterface;
 
-class APICsvWriter extends ContainerAware{
+class APICsvWriter extends ContainerAware implements APIWriterInterface{
     protected $fileHandle;
 
-    public function __construct($rootDir){
-        $this->fileHandle = fopen($rootDir . '/uploads/csv_writer_output.xml', 'w');
+    public function __construct($rootDir, $filePath){
+        $this->fileHandle = fopen($rootDir . $filePath, 'w');
     }
 
     public function writeArray($convertedArray){
