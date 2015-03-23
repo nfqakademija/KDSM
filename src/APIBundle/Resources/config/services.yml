@@ -2,7 +2,10 @@ parameters:
     api.url: 'http://wonderwall.ox.nfq.lt/kickertable/api/v1/events'
     api.user: 'nfq'
     api.password: 'labas'
-    api.filepath: '/uploads/xml_writer_output.xml'
+    api.csv_filepath: '/uploads/csv_writer_output.csv'
+    api.xml_filepath: '/uploads/xml_writer_output.xml'
+    api.csv_iterator_delimiter: ','
+    api.csv_iterator_keys: ['id', 'timesec', 'usec', 'type', 'data']
 
 services:
     api.api_caller:
@@ -11,12 +14,15 @@ services:
             [%api.url%, %api.user%, %api.password%]
     api.api_xml_writer:
         class: APIBundle\Services\APIXmlWriter
-        arguments: [%kernel.root_dir%, %api.filepath%]
+        arguments: [%kernel.root_dir%, %api.xml_filepath%]
     api.api_csv_writer:
-            class: APIBundle\Services\APICsvWriter
-            arguments: [%kernel.root_dir%, %api.filepath%]
+        class: APIBundle\Services\APICsvWriter
+        arguments: [%kernel.root_dir%, %api.csv_filepath%]
+    api.api_csv_iterator:
+        class: APIBundle\Services\APICsvIterator
+        arguments: [%kernel.root_dir%, %api.csv_filepath%, %api.csv_iterator_delimiter%, %api.csv_iterator_keys%]
     api.api_manager:
-            class: APIBundle\Services\APIManager
-            calls:
-                - [setCaller, ['@api.api_caller']]
-                - [setParser, ['@api.api_xml_writer']]
+        class: APIBundle\Services\APIManager
+        calls:
+            - [setCaller, ['@api.api_caller']]
+            - [setParser, ['@api.api_xml_writer']]
