@@ -12,17 +12,17 @@ services:
         class: APIBundle\Services\APICaller
         arguments:
             [%api.url%, %api.user%, %api.password%]
-    api.api_xml_writer:
-        class: APIBundle\Services\APIXmlWriter
-        arguments: [%kernel.root_dir%, %api.xml_filepath%]
-    api.api_csv_writer:
-        class: APIBundle\Services\APICsvWriter
-        arguments: [%kernel.root_dir%, %api.csv_filepath%]
+#    api.api_xml_writer:
+#        class: APIBundle\Services\APIXmlWriter
+#        arguments: [%kernel.root_dir%, %api.xml_filepath%]
+#    api.api_csv_writer:
+#        class: APIBundle\Services\APICsvWriter
+#        arguments: [%kernel.root_dir%, %api.csv_filepath%]
     api.api_csv_iterator:
         class: APIBundle\Services\APICsvIterator
         arguments: [%kernel.root_dir%, %api.csv_filepath%, %api.csv_iterator_delimiter%, %api.csv_iterator_keys%]
     api.api_manager:
         class: APIBundle\Services\APIManager
         calls:
-            - [setCaller, ['@api.api_caller']]
-            - [setParser, ['@api.api_xml_writer']]
+            - [setCaller, [@api.api_caller]]
+#            - [setParser, [@api.api_xml_writer]]

@@ -124,16 +124,4 @@ class APICsvIterator  implements Iterator
         return FALSE;
     }
 
-    //useless as of now
-
-    public function goToId($id){
-        $currentElement = $this->_currentElement[0];
-        $this->rewind();
-        while($this->next() && $this->_currentElement[0]<$id){
-            $element = $this->current();
-            if($element[0] == $id)
-                return $element;
-        }
-        return $currentElement;
-    }
 }
