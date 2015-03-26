@@ -1,1 +1,39 @@
-{{ route }}
+{% block javascript %}
+
+    {% javascripts
+        '@APIBundle/Resources/js/vis.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% stylesheets
+        '@APIBundle/Resources/css/vis.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div id="visualization"></div>
+<script type="text/javascript">
+    // DOM element where the Timeline will be attached
+    var container = document.getElementById('visualization');
+
+    // Create a DataSet (allows two way data-binding)
+    var plotData = [];
+
+    {% for key,shake in route %}
+        plotData.push({id: {{ key }}, start:'{{ shake }}' });
+    {% endfor %}
+
+    var data = new vis.DataSet(plotData);
+
+    // Configuration for the Timeline
+    var options = {};
+
+    // Create a Timeline
+    var timeline = new vis.Timeline(container, data, options);
+</script>
+
+{% endblock %}
+{{ dump(route) }}
