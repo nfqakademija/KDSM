@@ -16,24 +16,40 @@
 {% block body %}
     <div id="visualization"></div>
 <script type="text/javascript">
+    var i = 1;
+    ++i;
     // DOM element where the Timeline will be attached
     var container = document.getElementById('visualization');
+
+    var groups = new vis.DataSet();
+    groups.add({
+        id: 1,
+        content: 'Shakes'
+    });
+    groups.add({
+        id: 2,
+        content: 'Goals'
+    });
 
     // Create a DataSet (allows two way data-binding)
     var plotData = [];
 
-    {% for key,shake in route %}
-        plotData.push({id: {{ key }}, start:'{{ shake }}' });
+    {% for key,shake in shakes %}
+        plotData.push({x: '{{ key }}', y:{{ shake }}, group: 1 });
     {% endfor %}
 
-    var data = new vis.DataSet(plotData);
+    {% for key,goal in goals %}
+    plotData.push({x: '{{ key }}', y:{{ goal }}, group: 2 });
+    {% endfor %}
 
-    // Configuration for the Timeline
-    var options = {};
+    var dataset = new vis.DataSet(plotData);
+    var options = {
+//        start: '2014-06-10',
+//        end: '2014-06-18'
+    };
+    var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
-    // Create a Timeline
-    var timeline = new vis.Timeline(container, data, options);
 </script>
 
 {% endblock %}
-{{ dump(route) }}
+{#{{ dump(route) }}#}

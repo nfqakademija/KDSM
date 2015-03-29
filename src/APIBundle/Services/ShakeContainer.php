@@ -18,10 +18,25 @@ class ShakeContainer {
 
     public function setShakes(){
 //        while ($this->iterator->next()){
-        for($i = 0; $i<2000; $i++) {
+        $object = $this->iterator->current();
+//        $refHours = date('H', $object['timesec']);
+//        $refMins = date('m', $object['timesec']);
+        $shakeKey = date('Y-m-d H:i:s', $object['timesec']);
+        $refTimeStamp = date('H', $object['timesec']) . date('i', $object['timesec']);
+        $binValue = 0;
+        for($i = 0; $i<400; $i++) {
             $object = $this->iterator->current();
-            if ($object['type'] == 'TableShake')
-                $this->shakes[] = date('Y-m-d H:m:s', $object['timesec']);
+            if (date('H', $object['timesec']) . date('i', $object['timesec']) == $refTimeStamp){
+                if ($object['type'] == 'TableShake')
+                    $binValue++;
+            }
+            else {
+                $this->shakes[$shakeKey] = $binValue;
+                $binValue = 0;
+                $shakeKey = date('Y-m-d H:i:s', $object['timesec']);
+                $refTimeStamp = date('H', $object['timesec']) . date('i', $object['timesec']);
+            }
+//                $this->shakes[] = date('Y-m-d H:i:s', $object['timesec']);
         }
     }
 
@@ -29,4 +44,3 @@ class ShakeContainer {
         return $this->shakes;
     }
 }
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
