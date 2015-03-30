@@ -24,11 +24,19 @@
     var groups = new vis.DataSet();
     groups.add({
         id: 1,
-        content: 'Shakes'
+        content: 'Shakes',
+        options: {
+            drawPoints: false,//{ style: 'circle' },
+            catmullRom: false
+        }
     });
     groups.add({
         id: 2,
-        content: 'Goals'
+        content: 'Goals',
+        options: {
+            drawPoints: false,//{ style: 'circle' },
+            catmullRom: false
+        }
     });
 
     // Create a DataSet (allows two way data-binding)
@@ -44,8 +52,8 @@
 
     var dataset = new vis.DataSet(plotData);
     var options = {
-//        start: '2014-06-10',
-//        end: '2014-06-18'
+        start: '2014-12-04',
+        end: '2014-12-05'
     };
     var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
