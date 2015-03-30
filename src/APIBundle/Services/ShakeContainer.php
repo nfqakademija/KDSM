@@ -23,18 +23,27 @@ class ShakeContainer {
 //        $refMins = date('m', $object['timesec']);
         $shakeKey = date('Y-m-d H:i:s', $object['timesec']);
         $refTimeStamp = date('H', $object['timesec']) . date('i', $object['timesec']);
+        $refDate = date('Y-m-d', $object['timesec']);
+        $refDate = date('Y-m-d', strtotime('2014-12-02'));
         $binValue = 0;
-        for($i = 0; $i<400; $i++) {
+          while($refDate != date('Y-m-d', $object['timesec']))
+            $object = $this->iterator->current();
+       // for($i = 0; $i<400; $i++) {
+
+        while($refDate == date('Y-m-d', $object['timesec'])){
+
             $object = $this->iterator->current();
             if (date('H', $object['timesec']) . date('i', $object['timesec']) == $refTimeStamp){
                 if ($object['type'] == 'TableShake')
                     $binValue++;
             }
             else {
-                $this->shakes[$shakeKey] = $binValue;
-                $binValue = 0;
-                $shakeKey = date('Y-m-d H:i:s', $object['timesec']);
-                $refTimeStamp = date('H', $object['timesec']) . date('i', $object['timesec']);
+                if($refDate == date('Y-m-d', $object['timesec'])) {
+                    $shakeKey = $refTimeStamp;//date('Y-m-d H:i:s', $object['timesec']);
+                    $this->shakes[$shakeKey] = $binValue;
+                    $binValue = 0;
+                    $refTimeStamp = date('H', $object['timesec']) . date('i', $object['timesec']);
+                }
             }
 //                $this->shakes[] = date('Y-m-d H:i:s', $object['timesec']);
         }
