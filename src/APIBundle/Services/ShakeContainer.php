@@ -45,11 +45,11 @@ class ShakeContainer {
 
                     $object = $this->getNextObject();
 
-                    $refTimeStamp = $this->getNextTimestamp($refTimeStamp);
-                    while($refTimeStamp != $this->getObjectHrMin($object))
+                    $refTimeStamp = $this->getNextTimeStamp($refTimeStamp);
+                    while($refTimeStamp < $this->getObjectHrMin($object))
                     {
                         $this->writeBinValues(0, 0, $refTimeStamp);
-                        $refTimeStamp = $this->getNextTimestamp($refTimeStamp);
+                        $refTimeStamp = $this->getNextTimeStamp($refTimeStamp);
                     }
                 }
             }
@@ -83,7 +83,7 @@ class ShakeContainer {
 
     }
 
-    private function getNextTimestamp($currentTimeStamp){
+    private function getNextTimeStamp($currentTimeStamp){
         if($currentTimeStamp == 2400)
             return false;
         if(substr($currentTimeStamp, -2) < 60) {
