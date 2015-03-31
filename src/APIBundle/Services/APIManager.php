@@ -12,8 +12,16 @@ use Exception;
 
 class APIManager {
 
+    /**
+     * @var APICaller
+     */
     protected $caller;
+
+    /**
+     * @var APICsvWriter
+     */
     protected $writer;
+
 
     protected $timeStampFrom;
 
@@ -35,7 +43,7 @@ class APIManager {
         else if($dateFrom != 0)
             throw new Exception('Unknown date format: '. $dateFrom);
 
-        if ($type == 'xml')
+        if ($type == 'xml') // to case
             $this->writer = new APIXmlWriter($path, $name . '.xml');
         else if ($type == 'csv')
             $this->writer = new APICsvWriter($path, $name . '.csv');
