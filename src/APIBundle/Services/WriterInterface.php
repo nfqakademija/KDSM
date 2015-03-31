@@ -8,7 +8,7 @@ namespace APIBundle\Services;
  * Time: 5:56 PM
  */
 
-interface APIWriterInterface {
+interface WriterInterface {
 
     public function __construct($rootDir, $filePath);
 

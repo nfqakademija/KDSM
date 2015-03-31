@@ -11,7 +11,7 @@ namespace APIBundle\Services;
 use Iterator;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
-class APICsvIterator  implements Iterator
+class CsvIterator  implements Iterator
 {
     /**
      * Must be greater than the longest line (in characters) to be found in

@@ -4,7 +4,7 @@ namespace APIBundle\Services;
 use GuzzleHttp;
 use GuzzleHttp\Exception\ConnectException;
 
-class APICaller {
+class Caller {
 
     protected $url;
     protected $user;

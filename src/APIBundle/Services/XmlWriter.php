@@ -2,14 +2,14 @@
 namespace APIBundle\Services;
 
 use \Symfony\Component\DependencyInjection\ContainerAware;
-use XMLWriter;
-use APIBundle\Services\APIWriterInterface;
+use XMLWriter as XMLFileWriter;
+use APIBundle\Services\WriterInterface;
 
-class APIXmlWriter extends ContainerAware implements APIWriterInterface{
+class XmlWriter extends ContainerAware implements WriterInterface{
     protected $xmmWriter;
 
     public function __construct($rootDir, $filePath){
-        $this->xmlWriter = new XMLWriter();
+        $this->xmlWriter = new XMLFileWriter();
         $this->xmlWriter->openURI($rootDir . $filePath);
     }
 

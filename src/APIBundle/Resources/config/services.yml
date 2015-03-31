@@ -9,7 +9,7 @@ parameters:
 
 services:
     api.api_caller:
-        class: APIBundle\Services\APICaller
+        class: APIBundle\Services\Caller
         arguments:
             [%api.url%, %api.user%, %api.password%]
 #    api.api_xml_writer:
@@ -19,10 +19,10 @@ services:
 #        class: APIBundle\Services\APICsvWriter
 #        arguments: [%kernel.root_dir%, %api.csv_filepath%]
     api.api_csv_iterator:
-        class: APIBundle\Services\APICsvIterator
+        class: APIBundle\Services\CsvIterator
         arguments: [%kernel.root_dir%, %api.csv_filepath%, %api.csv_iterator_delimiter%, %api.csv_iterator_keys%]
     api.api_manager:
-        class: APIBundle\Services\APIManager
+        class: APIBundle\Services\Manager
         calls:
             - [setCaller, [@api.api_caller]]
 #            - [setParser, [@api.api_xml_writer]]

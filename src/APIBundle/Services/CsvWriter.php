@@ -4,7 +4,7 @@ namespace APIBundle\Services;
 use \Symfony\Component\DependencyInjection\ContainerAware;
 use APIBundle\Services\APIWriterInterface;
 
-class APICsvWriter extends ContainerAware implements APIWriterInterface{
+class CsvWriter extends ContainerAware implements WriterInterface{
     protected $fileHandle;
 
     public function __construct($rootDir, $filePath){

@@ -9,9 +9,16 @@
 namespace APIBundle\Services;
 use Symfony\Component\Form\Exception\BadMethodCallException;
 
-class APIManager {
+class Manager {
 
+    /**
+     * @var Caller
+     */
     protected $caller;
+
+    /**
+     * @var WriterInterface
+     */
     protected $writer;
 
 //    public function __construct(
@@ -19,7 +26,7 @@ class APIManager {
 //        $this->caller = new APICaller('','',''); //added for IDE to be able to recognice the methods....
 //    }
 
-    public function setCaller(APICaller $caller){
+    public function setCaller(Caller $caller){
         $this->caller = $caller;
     }
 
@@ -28,9 +35,9 @@ class APIManager {
 //            mkdir($path, 0777, true);
 //        }
         if ($type == 'xml')
-            $this->writer = new APIXmlWriter($path, $name . '.xml');
+            $this->writer = new XmlWriter($path, $name . '.xml');
         else if ($type == 'csv')
-            $this->writer = new APICsvWriter($path, $name . '.csv');
+            $this->writer = new CsvWriter($path, $name . '.csv');
         else throw new BadMethodCallException('Incorrect file type provided. Only [csv] and [xml] are accepted');
     }
 
