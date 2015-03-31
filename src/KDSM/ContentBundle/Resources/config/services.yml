@@ -1,0 +1,4 @@
+services:
+#    kdsm_content.example:
+#        class: KDSM\ContentBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

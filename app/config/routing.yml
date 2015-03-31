@@ -1,1 +1,5 @@
+kdsm_content:
+    resource: "@KDSMContentBundle/Resources/config/routing.yml"
+    prefix:   /
+
 
