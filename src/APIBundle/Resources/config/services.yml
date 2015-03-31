@@ -1,4 +1,5 @@
 parameters:
+    apibundle.db.table_prefix: api_
     api.url: 'http://wonderwall.ox.nfq.lt/kickertable/api/v1/events'
     api.user: 'nfq'
     api.password: 'labas'
@@ -8,6 +9,11 @@ parameters:
     api.csv_iterator_keys: ['id', 'timesec', 'usec', 'type', 'data']
 
 services:
+    mybundle.tblprefix_subscriber:
+        class: APIBundle\Subscriber\TablePrefixSubscriber
+        arguments: [%apibundle.db.table_prefix%]
+        tags:
+            - { name: doctrine.event_subscriber }
     api.api_caller:
         class: APIBundle\Services\Caller
         arguments:

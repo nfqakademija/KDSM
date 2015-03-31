@@ -1,0 +1,29 @@
+APIBundle\Entity\TableEvent:
+    type: entity
+    table: table_event
+    repositoryClass: APIBundle\Entity\TableEventRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        timesec:
+            type: datetime
+        usec:
+            type: string
+            length: '10'
+        typeId:
+            column: type_id
+            type: integer
+        data:
+            type: string
+            length: 255
+    oneToOne:
+        eventType:
+            targetEntity: APIBundle\Entity\TableEventType
+            joinColumn:
+                name: type_id
+                referencedColumnName: id
+    lifecycleCallbacks: {  }
