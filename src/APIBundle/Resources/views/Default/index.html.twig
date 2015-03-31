@@ -52,8 +52,8 @@
 
     var dataset = new vis.DataSet(plotData);
     var options = {
-        start: '2014-10-03',
-        end: '2014-10-04'
+        start: '{{ date }}',
+        end: '{{ date|date_modify('+1 day')|date('Y-m-d') }}'
     };
     var graph2d = new vis.Graph2d(container, dataset, groups, options);
 

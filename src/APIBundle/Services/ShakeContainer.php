@@ -13,9 +13,9 @@ class ShakeContainer {
     private $refDate;
     private $iterator;
 
-    public function __construct($path, $fileName){
+    public function __construct($path, $fileName, $date){
         $this->iterator = new APICsvIterator($path, $fileName.'.csv', ',', ['id', 'timesec', 'usec', 'type', 'data']);
-        $this->refDate = date('Y-m-d', strtotime('2014-10-03'));
+        $this->refDate = date('Y-m-d', strtotime($date));
     }
 
     public function setShakes(){
@@ -63,6 +63,10 @@ class ShakeContainer {
 
     public function getGoals(){
         return $this->goals;
+    }
+
+    public function getDate(){
+        return $this->refDate;
     }
 
     private function getNextObject(){
