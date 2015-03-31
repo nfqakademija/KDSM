@@ -16,10 +16,20 @@ class APICaller {
         $this->password = $password;
     }
 
-    public function callApi($count = 100, $startId = 1){
+    public function callApiFromId($count = 100, $startId = 1){
         $client = new GuzzleHttp\Client();
         try {
             $res = $client->get($this->url . '?rows=' . $count . '&from-id=' . $startId, ['auth' => [$this->user, $this->password]]);
+        } catch(ConnectException $e){
+            return false;
+        }
+        return $res->json();
+    }
+
+    public function callApiFromTimeStamp($count = 100, $timeStamp = 0){
+        $client = new GuzzleHttp\Client();
+        try {
+            $res = $client->get($this->url . '?rows=' . $count . '&from-ts=' . $timeStamp, ['auth' => [$this->user, $this->password]]);
         } catch(ConnectException $e){
             return false;
         }
