@@ -11,7 +11,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         
-        $shakeContainer = new ShakeContainer($this->get('kernel')->getRootDir()."/uploads/", 'failas', '2015-03-19');
+        $shakeContainer = new ShakeContainer($this->get('kernel')->getRootDir()."/uploads/", 'failas', '2015-03-18');
         $shakeContainer->setShakes();
         return $this->render('APIBundle:Default:index.html.twig', array('shakes' => $shakeContainer->getShakes(),
             'goals' => $shakeContainer->getGoals(), 'swipes' => $shakeContainer->getSwipes(),

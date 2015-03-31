@@ -21,6 +21,7 @@ services:
     api.api_csv_iterator:
         class: APIBundle\Services\APICsvIterator
         arguments: [%kernel.root_dir%, %api.csv_filepath%, %api.csv_iterator_delimiter%, %api.csv_iterator_keys%]
+
     api.api_manager:
         class: APIBundle\Services\APIManager
         calls:

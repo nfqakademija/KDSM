@@ -30,7 +30,8 @@ class IterateCsvCommand extends ContainerAwareCommand{
 //        $iterator = $this->getContainer()->get('api.api_csv_iterator');
         if($input->getArgument('count') && is_numeric($input->getArgument('count'))){
             for($i = 0; $i < $input->getArgument('count'); $i++){
-                print_r($iterator->current());
+//                print_r($iterator->current());
+                echo date('Y-m-d', $iterator->current()['timesec']);
             }
         }
         else {
@@ -41,7 +42,8 @@ class IterateCsvCommand extends ContainerAwareCommand{
 //            }
 //        }
             while ($iterator->next())
-                print_r($iterator->current());
+                //print_r($iterator->current());
+                echo date('Y-m-d', $iterator->current()['timesec'])."\n";
         }
     }
 
