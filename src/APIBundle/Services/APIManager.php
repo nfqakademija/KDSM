@@ -23,7 +23,7 @@ class APIManager {
         $this->caller = $caller;
     }
 
-    public function setParser($type = 'csv', $name = 'xml_writer_output', $path = 'app/uploads/'){
+    public function setParser($type = 'csv', $name = 'failas', $path = 'app/uploads/'){
 //        if (!file_exists($path)) {
 //            mkdir($path, 0777, true);
 //        }
