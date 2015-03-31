@@ -38,6 +38,14 @@
             catmullRom: false
         }
     });
+    groups.add({
+        id: 3,
+        content: 'Swipes',
+        options: {
+            drawPoints: false,//{ style: 'circle' },
+            catmullRom: false
+        }
+    });
 
     // Create a DataSet (allows two way data-binding)
     var plotData = [];
@@ -48,6 +56,10 @@
 
     {% for key,goal in goals %}
     plotData.push({x: '{{ key }}', y:{{ goal }}, group: 2 });
+    {% endfor %}
+
+    {% for key,swipe in swipes %}
+    plotData.push({x: '{{ key }}', y:{{ swipe }}, group: 3 });
     {% endfor %}
 
     var dataset = new vis.DataSet(plotData);

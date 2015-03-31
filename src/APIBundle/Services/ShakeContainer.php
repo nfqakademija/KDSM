@@ -10,6 +10,7 @@ namespace APIBundle\Services;
 class ShakeContainer {
     private $shakes;
     private $goals;
+    private $swipes;
     private $refDate;
     private $iterator;
 
@@ -21,7 +22,7 @@ class ShakeContainer {
     public function setShakes(){
         $object = $this->iterator->current();
 
-        $shakeValue = $goalValue = 0;
+        $shakeValue = $goalValue = $swipeValue = 0;
 
         while($this->refDate != date('Y-m-d', $object['timesec'])) //go until target date
             $object = $this->iterator->current();
@@ -35,20 +36,22 @@ class ShakeContainer {
                     $shakeValue++;
                 if ($object['type'] == 'AutoGoal')
                     $goalValue++;
+                if ($object['type'] == 'CardSwipe')
+                    $swipeValue++;
 
                 $object = $this->getNextObject();
             }
             else {
                 if($this->refDate == date('Y-m-d', $object['timesec'])) {
-                    $this->writeBinValues($shakeValue, $goalValue, $refTimeStamp);
-                    $shakeValue = $goalValue = 0;
+                    $this->writeBinValues($shakeValue, $goalValue, $swipeValue, $refTimeStamp);
+                    $shakeValue = $goalValue = $swipeValue = 0;
 
-                    $object = $this->getNextObject();
-
+//                    $object = $this->getNextObject();
                     $refTimeStamp = $this->getNextTimeStamp($refTimeStamp);
+
                     while($refTimeStamp < $this->getObjectHrMin($object))
                     {
-                        $this->writeBinValues(0, 0, $refTimeStamp);
+                        $this->writeBinValues(0, 0, 0, $refTimeStamp);
                         $refTimeStamp = $this->getNextTimeStamp($refTimeStamp);
                     }
                 }
@@ -65,6 +68,10 @@ class ShakeContainer {
         return $this->goals;
     }
 
+    public function getSwipes(){
+        return $this->swipes;
+    }
+
     public function getDate(){
         return $this->refDate;
     }
@@ -77,9 +84,10 @@ class ShakeContainer {
         return date('H', $object['timesec']) . date('i', $object['timesec']);
     }
 
-    private function writeBinValues($shakes, $goals, $refTimeStamp){
+    private function writeBinValues($shakes, $goals, $swipes, $refTimeStamp){
         $this->shakes[date('Y-m-d H:i:s',strtotime($this->refDate.substr($refTimeStamp, 0, 2).':'.substr($refTimeStamp, -2).':00'))] = $shakes; //white timebin and event count
         $this->goals[date('Y-m-d H:i:s',strtotime($this->refDate.substr($refTimeStamp, 0, 2).':'.substr($refTimeStamp, -2).':00'))] = $goals; //white timebin and event count
+        $this->swipes[date('Y-m-d H:i:s',strtotime($this->refDate.substr($refTimeStamp, 0, 2).':'.substr($refTimeStamp, -2).':00'))] = $swipes; //white timebin and event count
 
     }
 
