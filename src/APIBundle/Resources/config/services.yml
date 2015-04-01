@@ -5,7 +5,7 @@ parameters:
     api.csv_filepath: '/uploads/failas.csv'
     api.xml_filepath: '/uploads/xml_writer_output.xml'
     api.csv_iterator_delimiter: ','
-    api.csv_iterator_keys: ['id', 'timesec', 'usec', 'type', 'data']
+    api.csv_iterator_keys: ['id', 'timeSec', 'usec', 'type', 'data']
 
 services:
     api.api_caller:

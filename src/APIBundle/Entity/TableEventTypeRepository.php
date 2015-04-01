@@ -15,9 +15,5 @@ use Doctrine\ORM\Mapping\Entity;
  */
 class TableEventTypeRepository extends EntityRepository
 {
-//    public function __construct(EntityManager $em, )
-    public function findByEventName($name){
-
-    }
 
 }

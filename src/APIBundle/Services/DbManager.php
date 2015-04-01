@@ -8,7 +8,6 @@
 
 namespace APIBundle\Services;
 
-
 use Doctrine\ORM\EntityManager;
 use APIBundle\Entity\TableEvent;
 use APIBundle\Entity\TableEventType;
@@ -27,7 +26,7 @@ class DbManager {
     public function insertObject($object){
         $newEvent = new TableEvent();
         $newEvent->setEventId($object['id']);
-        $newEvent->setTimesec(new \DateTime(date("Y-m-d H:i:s", $object['timesec'])));
+        $newEvent->setTimesec(new \DateTime(date("Y-m-d H:i:s", $object['timeSec'])));
         $newEvent->setUsec($object['usec']);
         $newEvent->setTypeID($this->em->getRepository('APIBundle:TableEventType')->findBy(array('name' => $object['type']))[0]->getId());
         $newEvent->setData($object['data']);
@@ -47,5 +46,22 @@ class DbManager {
         while ($this->iterator->next()){
             $this->insertObject($iterator->current());
         }
+    }
+
+    public function writeJsonToDb($apiResponse){
+        foreach($apiResponse['records'] as $object){
+            $this->insertObject($object);
+        }
+        return sizeof($apiResponse['records']) == 100 ? true : false;
+    }
+
+    public function getLatest(Caller $apiCaller, $dumpAll){
+        $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
+        echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent();
+        if($dumpAll)
+            while($isFullCall) {
+                $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
+                echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent();
+            }
     }
 }

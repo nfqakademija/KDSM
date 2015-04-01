@@ -12,4 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class TableEventRepository extends EntityRepository
 {
+    public function getLatestEvent(){
+        $query = $this->createQueryBuilder('tb');
+        return $query->select('MAX(tb.eventId)')->getQuery()->getResult()[0][1];
+    }
 }
