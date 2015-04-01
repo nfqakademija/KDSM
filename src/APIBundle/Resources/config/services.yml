@@ -1,23 +1,21 @@
 parameters:
-    apibundle.db.table_prefix: api_
     api.url: 'http://wonderwall.ox.nfq.lt/kickertable/api/v1/events'
     api.user: 'nfq'
     api.password: 'labas'
-    api.csv_filepath: '/uploads/csv_writer_output.csv'
+    api.csv_filepath: '/uploads/failas.csv'
     api.xml_filepath: '/uploads/xml_writer_output.xml'
     api.csv_iterator_delimiter: ','
     api.csv_iterator_keys: ['id', 'timesec', 'usec', 'type', 'data']
 
 services:
-    mybundle.tblprefix_subscriber:
-        class: APIBundle\Subscriber\TablePrefixSubscriber
-        arguments: [%apibundle.db.table_prefix%]
-        tags:
-            - { name: doctrine.event_subscriber }
     api.api_caller:
         class: APIBundle\Services\Caller
         arguments:
             [%api.url%, %api.user%, %api.password%]
+    api.api_db_manager:
+        class: APIBundle\Services\DbManager
+        arguments:
+            entityManager: @doctrine.orm.entity_manager
 #    api.api_xml_writer:
 #        class: APIBundle\Services\APIXmlWriter
 #        arguments: [%kernel.root_dir%, %api.xml_filepath%]

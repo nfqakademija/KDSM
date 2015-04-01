@@ -9,6 +9,9 @@ APIBundle\Entity\TableEvent:
             generator:
                 strategy: AUTO
     fields:
+        eventId:
+            column: event_id
+            type: integer
         timesec:
             type: datetime
         usec:
@@ -20,7 +23,7 @@ APIBundle\Entity\TableEvent:
         data:
             type: string
             length: 255
-    oneToOne:
+    ManyToOne:
         eventType:
             targetEntity: APIBundle\Entity\TableEventType
             joinColumn:

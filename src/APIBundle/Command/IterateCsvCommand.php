@@ -14,23 +14,33 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+
+use Doctrine\ORM\EntityManager;
+use APIBundle\Entity\TableEventTypeRepository;
+
 class IterateCsvCommand extends ContainerAwareCommand{
     protected function configure()
     {
-        $this->setName('api:iterate')
-            ->addArgument('count', InputArgument::OPTIONAL, 'Desired element count');
+        $this->setName('api:iterate');
+//            ->addArgument('count', InputArgument::OPTIONAL, 'Desired element count');
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $iterator = $this->getContainer()->get('api.api_csv_iterator');
-        if($input->getArgument('count') && is_numeric($input->getArgument('count'))){
-            for($i = 0; $i < $input->getArgument('count'); $i++){
-                print_r($iterator->current());
+//        if($input->getArgument('count') && is_numeric($input->getArgument('count'))){
+//            for($i = 0; $i < $input->getArgument('count'); $i++){
+//                print_r($iterator->current());
+//            }
+//        }
+//        else
+            while ($iterator->next()){
+                $dbManager = $this->getContainer()->get('api.api_db_manager');
+//                print_r($iterator->current());
+                $dbManager->insertObject($iterator->current());
+
+
             }
-        }
-        else
-            while ($iterator->next())
-                print_r($iterator->current());
+//                print_r($iterator->current());
     }
 
 }

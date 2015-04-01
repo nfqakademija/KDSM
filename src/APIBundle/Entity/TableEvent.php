@@ -15,6 +15,11 @@ class TableEvent
     private $id;
 
     /**
+     *  $var integer
+     */
+    private $eventId;
+
+    /**
      * @var \DateTime
      */
     private $timesec;
@@ -47,6 +52,22 @@ class TableEvent
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEventId()
+    {
+        return $this->eventId;
+    }
+
+    /**
+     * @param mixed $eventId
+     */
+    public function setEventId($eventId)
+    {
+        $this->eventId = $eventId;
     }
 
     /**
@@ -100,7 +121,7 @@ class TableEvent
      * @param integer $type
      * @return TableEvent
      */
-    public function setType($typeId)
+    public function setTypeID($typeId)
     {
         $this->typeId = $typeId;
 
