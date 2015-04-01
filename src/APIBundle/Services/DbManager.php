@@ -15,7 +15,10 @@ use APIBundle\Entity\TableEventType;
 
 
 class DbManager {
-
+    /**
+     * @var CsvIterator
+     */
+    private $iterator;
 
     public function __construct(EntityManager $entityManager){
         $this->em = $entityManager;
@@ -29,11 +32,20 @@ class DbManager {
         $newEvent->setTypeID($this->em->getRepository('APIBundle:TableEventType')->findBy(array('name' => $object['type']))[0]->getId());
         $newEvent->setData($object['data']);
         $this->em->persist($newEvent);
-//        echo "Wrote even ID: " . $newEvent->getEventId();
         $this->em->flush();
     }
 
-    private function getEventType(){
+    public function setIterator($iterator){
+        $this->iterator = $iterator;
+    }
 
+    /**
+     * @param $iterator
+     */
+    public function writeCsvToDb(\Iterator $iterator){
+        $this->setIterator($iterator);
+        while ($this->iterator->next()){
+            $this->insertObject($iterator->current());
+        }
     }
 }
