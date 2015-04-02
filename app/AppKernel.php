@@ -17,7 +17,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new APIBundle\APIBundle(),
+            new KDSM\APIBundle\KDSMAPIBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

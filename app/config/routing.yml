@@ -1,5 +1,5 @@
 api:
-    resource: "@APIBundle/Resources/config/routing.yml"
+    resource: "@KDSMAPIBundle/Resources/config/routing.yml"
     prefix:   /
 
 

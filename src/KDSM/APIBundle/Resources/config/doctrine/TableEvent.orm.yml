@@ -1,0 +1,32 @@
+KDSM\APIBundle\Entity\TableEvent:
+    type: entity
+    table: table_event
+    repositoryClass: KDSM\APIBundle\Entity\TableEventRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        eventId:
+            column: event_id
+            type: integer
+        timesec:
+            type: datetime
+        usec:
+            type: string
+            length: '10'
+        typeId:
+            column: type_id
+            type: integer
+        data:
+            type: string
+            length: 255
+    ManyToOne:
+        eventType:
+            targetEntity: APIBundle\Entity\TableEventType
+            joinColumn:
+                name: type_id
+                referencedColumnName: id
+    lifecycleCallbacks: {  }
