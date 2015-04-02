@@ -1,5 +1,5 @@
 <?php
-namespace APIBundle\Services;
+namespace APIBundle\Services\fileIO;
 
 /**
  * Created by PhpStorm.

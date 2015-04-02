@@ -11,6 +11,7 @@ namespace APIBundle\Services;
 use Doctrine\ORM\EntityManager;
 use APIBundle\Entity\TableEvent;
 use APIBundle\Entity\TableEventType;
+use APIBundle\Services\fileIO\CsvIterator;
 
 
 class DbManager {
@@ -57,11 +58,11 @@ class DbManager {
 
     public function getLatest(Caller $apiCaller, $dumpAll){
         $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
-        echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent();
+        echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent() . "\n";
         if($dumpAll)
             while($isFullCall) {
                 $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
-                echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent();
+                echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent() . "\n";
             }
     }
 }

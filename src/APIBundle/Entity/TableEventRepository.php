@@ -14,6 +14,10 @@ class TableEventRepository extends EntityRepository
 {
     public function getLatestEvent(){
         $query = $this->createQueryBuilder('tb');
-        return $query->select('MAX(tb.eventId)')->getQuery()->getResult()[0][1];
+        $query->select('MAX(tb.eventId)');
+        if($query->getQuery()->getResult()[0][1])
+            return $query->getQuery()->getResult()[0][1];
+        else
+            return 1;
     }
 }

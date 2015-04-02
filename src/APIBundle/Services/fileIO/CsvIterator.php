@@ -6,7 +6,7 @@
  * Time: 9:53 AM
  */
 
-namespace APIBundle\Services;
+namespace APIBundle\Services\fileIO;
 
 use Iterator;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;

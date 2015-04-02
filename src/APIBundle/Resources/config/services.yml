@@ -16,17 +16,10 @@ services:
         class: APIBundle\Services\DbManager
         arguments:
             entityManager: @doctrine.orm.entity_manager
-#    api.api_xml_writer:
-#        class: APIBundle\Services\APIXmlWriter
-#        arguments: [%kernel.root_dir%, %api.xml_filepath%]
-#    api.api_csv_writer:
-#        class: APIBundle\Services\APICsvWriter
-#        arguments: [%kernel.root_dir%, %api.csv_filepath%]
     api.api_csv_iterator:
-        class: APIBundle\Services\CsvIterator
+        class: APIBundle\Services\fileIO\CsvIterator
         arguments: [%kernel.root_dir%, %api.csv_filepath%, %api.csv_iterator_delimiter%, %api.csv_iterator_keys%]
     api.api_manager:
-        class: APIBundle\Services\Manager
+        class: APIBundle\Services\fileIO\Manager
         calls:
             - [setCaller, [@api.api_caller]]
-#            - [setParser, [@api.api_xml_writer]]

@@ -1,5 +1,5 @@
 <?php
-namespace APIBundle\Services;
+namespace APIBundle\Services\fileIO;
 
 use \Symfony\Component\DependencyInjection\ContainerAware;
 use APIBundle\Services\APIWriterInterface;
