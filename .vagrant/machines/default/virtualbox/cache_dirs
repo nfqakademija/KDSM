@@ -1,0 +1,4 @@
+/var/cache/apt/archives
+/usr/local/rvm/gems/ruby-1.9.3-p551/cache
+/usr/local/rvm/archives
+/home/vagrant/.composer/cache
