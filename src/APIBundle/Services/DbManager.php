@@ -19,9 +19,14 @@ class DbManager {
      * @var CsvIterator
      */
     private $iterator;
+    /**
+     * @var \APIBundle\Entity\TableEventRepository
+     */
+    private $rep;
 
     public function __construct(EntityManager $entityManager){
         $this->em = $entityManager;
+        $this->rep = $this->em->getRepository('APIBundle:TableEvent');
     }
 
     public function insertObject($object){
@@ -31,8 +36,7 @@ class DbManager {
         $newEvent->setUsec($object['usec']);
         $newEvent->setTypeID($this->em->getRepository('APIBundle:TableEventType')->findBy(array('name' => $object['type']))[0]->getId());
         $newEvent->setData($object['data']);
-        $this->em->persist($newEvent);
-        $this->em->flush();
+        $this->rep->persistObject($newEvent);
     }
 
     public function setIterator($iterator){
@@ -57,12 +61,12 @@ class DbManager {
     }
 
     public function getLatest(Caller $apiCaller, $dumpAll){
-        $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
-        echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent() . "\n";
+        $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEvent()));
+        echo $this->rep->getLatestEvent() . "\n";
         if($dumpAll)
             while($isFullCall) {
-                $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent()));
-                echo $this->em->getRepository('APIBundle:TableEvent')->getLatestEvent() . "\n";
+                $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEvent()));
+                echo $this->rep->getLatestEvent() . "\n";
             }
     }
 }

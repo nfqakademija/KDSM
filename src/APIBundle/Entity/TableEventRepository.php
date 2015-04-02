@@ -20,4 +20,9 @@ class TableEventRepository extends EntityRepository
         else
             return 1;
     }
+
+    public function persistObject($newEvent){
+        $this->getEntityManager()->persist($newEvent);
+        $this->getEntityManager()->flush();
+    }
 }
