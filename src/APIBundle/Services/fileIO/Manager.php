@@ -22,11 +22,6 @@ class Manager {
      */
     protected $writer;
 
-//    public function __construct(
-//
-//        $this->caller = new APICaller('','',''); //added for IDE to be able to recognice the methods....
-//    }
-
     public function setCaller(Caller $caller){
         $this->caller = $caller;
     }
