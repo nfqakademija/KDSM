@@ -1,0 +1,14 @@
+KDSM\APIBundle\Entity\TableEventType:
+    type: entity
+    table: table_event_type
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: '30'
+    lifecycleCallbacks: {  }
