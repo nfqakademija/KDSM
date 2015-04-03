@@ -10,7 +10,7 @@ vagrantfile-local:
         network:
             private_network: 192.168.56.101
             forwarded_port:
-                YavknOS4pWkM:
+                vrHqawv6CMAv:
                     host: '30000'
                     guest: '80'
         post_up_message: ''
@@ -32,7 +32,7 @@ vagrantfile-local:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
-            3ovlAI2gtZZ3:
+            cNFSkoCMhP58:
                 owner: www-data
                 group: www-data
                 source: ./
@@ -87,7 +87,7 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        1u0mf7ovtkmh:
+        mcbcguppaghh:
             servername: kicker.dev
             docroot: /var/www/web
             port: '80'
@@ -95,7 +95,7 @@ apache:
                 - 'APP_ENV dev'
             custom_fragment: ''
             directories:
-                hn4cmcvsygyc:
+                wzwkdfoyutjt:
                     provider: directory
                     path: /var/www
                     options:
@@ -108,7 +108,7 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        ibbrjs9nsrz9:
+                        haboqkddw2uc:
                             provider: filesmatch
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
@@ -125,7 +125,7 @@ nginx:
         proxy_buffers: '4 256k'
     upstreams: {  }
     vhosts:
-        pfny6o5appht:
+        5o3neviaefke:
             proxy: ''
             server_name: awesome.dev
             server_aliases:
@@ -138,7 +138,7 @@ nginx:
                 - index.php
             client_max_body_size: 1m
             locations:
-                gw0q1ehmpegw:
+                uxjrercl7u7g:
                     location: /
                     try_files:
                         - $uri
@@ -147,7 +147,7 @@ nginx:
                     fastcgi: ''
                     fastcgi_index: ''
                     fastcgi_split_path: ''
-                12rapiqmyeox:
+                spyovig5bmnc:
                     location: '~ \.php$'
                     try_files:
                         - $uri
@@ -176,6 +176,39 @@ php:
             - cli
             - intl
             - mcrypt
+            - bcmath
+            - cgi
+            - common
+            - curl
+            - dbg
+            - enchant
+            - fpm
+            - gd
+            - geoip
+            - gmp
+            - imagick
+            - imap
+            - interbase
+            - ldap
+            - mapscript
+            - mbstring
+            - memcache
+            - memcached
+            - mysql
+            - mysqlnd
+            - odbc
+            - opcache
+            - pspell
+            - readline
+            - recode
+            - snmp
+            - sqlite
+            - svn
+            - sybase
+            - tidy
+            - xcache
+            - xmlrpc
+            - xsl
         pear: {  }
         pecl:
             - pecl_http
