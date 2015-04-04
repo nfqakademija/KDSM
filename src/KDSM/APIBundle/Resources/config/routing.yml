@@ -6,7 +6,4 @@ users:
     path:     /users
     defaults: { _controller: KDSMAPIBundle:Users:index }
 
-users:
-     path:     /users/view
-     defaults: { _controller: KDSMAPIBundle:Users:view }
 
