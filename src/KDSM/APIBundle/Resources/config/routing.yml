@@ -2,8 +2,4 @@ api_homepage:
     path:     /
     defaults: { _controller: KDSMAPIBundle:Default:index }
 
-users:
-    path:     /users
-    defaults: { _controller: KDSMAPIBundle:Users:index }
-
 
