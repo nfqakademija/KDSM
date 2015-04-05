@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}
-        {% stylesheets '@KDSMAPIBundle/Resources/public/css/*' filter='cssrewrite' %}
+        {% stylesheets '@KDSMContentBundle/Resources/public/css/*' filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
     {% endblock %}
@@ -19,7 +19,7 @@
             <div class="row header-top">
                 <div class="col-sm-2">
                     <div class="row">
-                        {% image '@KDSMAPIBundle/Resources/public/images/logo.png' %}
+                        {% image '@KDSMContentBundle/Resources/public/images/logo.png' %}
                         <img class="img-responsive logo" src="{{ asset_url }}" alt="Logo"/>
                         {% endimage %}
                     </div>
@@ -49,7 +49,7 @@
 
 </div>
 {% block javascripts %}
-    {% javascripts '@KDSMAPIBundle/Resources/public/js/*' %}
+    {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
