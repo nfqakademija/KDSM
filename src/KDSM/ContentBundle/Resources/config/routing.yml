@@ -1,5 +1,5 @@
 kdsm_content_homepage:
-    path:     /hello/{name}
+    path:     /homepage
     defaults: { _controller: KDSMContentBundle:Default:index }
 
 users:
