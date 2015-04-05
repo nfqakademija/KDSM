@@ -6,6 +6,14 @@ users:
     path:     /users
     defaults: { _controller: KDSMContentBundle:Users:index }
 
-users:
+users_register:
+    path:     /register
+    defaults: { _controller: KDSMContentBundle:Users:register }
+
+user_login:
+    path:     /login
+    defaults: { _controller: KDSMContentBundle:Users:login }
+
+user_view:
     path:     /users/view/{id}
     defaults: { _controller: KDSMContentBundle:Users:view }
