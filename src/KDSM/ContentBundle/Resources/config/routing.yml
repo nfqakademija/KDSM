@@ -1,3 +1,11 @@
 kdsm_content_homepage:
     path:     /hello/{name}
     defaults: { _controller: KDSMContentBundle:Default:index }
+
+users:
+    path:     /users
+    defaults: { _controller: KDSMContentBundle:Users:index }
+
+users:
+    path:     /users/view/{id}
+    defaults: { _controller: KDSMContentBundle:Users:view }
