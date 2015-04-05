@@ -6581,4 +6581,8 @@ button.close {
     display: none !important;
   }
 }
-/*# sourceMappingURL=bootstrap.css.map */
+
+.col-centered {
+    float:none;
+    margin: 0 auto;
+}

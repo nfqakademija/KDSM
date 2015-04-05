@@ -3,7 +3,7 @@ body {
 }
 
 .wrapper {
-    background-image: url('../images/background.jpg');
+    background-image: url('../../../bundles/content/images/background.jpg');
     position: fixed;
     top: 0;
     left: 0;
@@ -36,3 +36,55 @@ header {
     height: 40px;
     padding: 0 20%;
 }
+
+.result-page {
+    margin-top:10%;
+}
+
+.user-photo {
+    width: 51%;
+    border: 1px solid #BABABA;
+    padding: 5px;
+    background: #f0f0f0;
+}
+
+.result_box {
+    height: 50%;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+.result_box span.result {
+    font-size:10em;
+}
+
+.result_box span.separator {
+    padding:0 5%;
+}
+
+/* Users */
+.users-list {
+
+}
+
+.search-box {
+    border: 1px solid #BABABA;
+    padding: 3% 5%;
+    margin-bottom: 20px;
+}
+
+.search-box label {
+    display: block;
+}
+
+.search-box input {
+    width: 80%;
+    padding: 5px 10px;
+}
+
+.found-user-list {
+
+}
+
+
