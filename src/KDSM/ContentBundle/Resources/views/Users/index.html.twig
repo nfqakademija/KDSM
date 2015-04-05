@@ -1,4 +1,39 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    {{ 'users index' }}
+    <div class="col-sm-4">
+        <div class="row"></div>
+    </div>
+    <div class="col-sm-8">
+        <div class="row users-list">
+            <div class="search-box">
+                {# Dar nezinau kaip kurti formas su sympfony #}
+                <label for="search-user">Search user: </label>
+                <input id="search-user" type="text"/>
+            </div>
+            <div class="found-user-list">
+                <table class="table table-responsive table-bordered">
+                    <thead>
+                        <th class="rank">Rank</th>
+                        <th class="photo">Photo</th>
+                        <th class="name">Name</th>
+                        <th class="level">Level</th>
+                        <th class="view">View</th>
+                        <th class="invite">Invite</th>
+                    </thead>
+                    <tbody>
+                    {% for i in 0..10 %}
+                        <tr>
+                            <td>1</td>
+                            <td>-</td>
+                            <td>Justas Jusaitis</td>
+                            <td>Hight</td>
+                            <td>-</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
