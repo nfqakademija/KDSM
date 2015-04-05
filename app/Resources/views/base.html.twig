@@ -7,8 +7,9 @@
     <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}
         {% stylesheets '@KDSMContentBundle/Resources/public/css/*' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
         {% endstylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/content/css/main.css') }}" type="text/css" media="all" />
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
