@@ -65,7 +65,8 @@
     var dataset = new vis.DataSet(plotData);
     var options = {
         start: '{{ date }}',
-        end: '{{ date|date_modify('+1 day')|date('Y-m-d') }}'
+        end: '{{ date|date_modify('+1 day')|date('Y-m-d') }}',
+        legend: true
     };
     var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
