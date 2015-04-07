@@ -10,4 +10,5 @@
 /vendor/
 /web/bundles/
 /symfony.phar
+/.vagrant/machines/
 .idea
