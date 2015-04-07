@@ -1,3 +1,3 @@
 kdsm_content_homepage:
-    path:     /hello/{name}
+    path:     /content/
     defaults: { _controller: KDSMContentBundle:Default:index }
