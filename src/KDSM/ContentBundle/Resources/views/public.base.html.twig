@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container-fluid wrapper no-padding">
+        <div class="row">
+            <div class="col-sm-10 col-centered result-page">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="user-photo pull-left">
+                                {% image '@KDSMContentBundle/Resources/public/images/empty-user.jpg' %}
+                                <img class="img-responsive" src="{{ asset_url }}" alt="Logo"/>
+                                {% endimage %}
+                            </div>
+                            <div class="user-photo pull-right">
+                                {% image '@KDSMContentBundle/Resources/public/images/empty-user.jpg' %}
+                                <img class="img-responsive" src="{{ asset_url }}" alt="Logo"/>
+                                {% endimage %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row result_box">
+                            <span class="first_team result">8</span>
+                            <span class="separator result">:</span>
+                            <span class="first_team result">6</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="user-photo pull-right">
+                                {% image '@KDSMContentBundle/Resources/public/images/empty-user.jpg' %}
+                                <img class="img-responsive" src="{{ asset_url }}" alt="Logo"/>
+                                {% endimage %}
+                            </div>
+                            <div class="user-photo pull-left">
+                                {% image '@KDSMContentBundle/Resources/public/images/empty-user.jpg' %}
+                                <img class="img-responsive" src="{{ asset_url }}" alt="Logo"/>
+                                {% endimage %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
