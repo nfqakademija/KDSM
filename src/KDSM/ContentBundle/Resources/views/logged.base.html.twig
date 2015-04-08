@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container-fluid wrapper no-padding">
+        <div class="row">
+            <aside class="col-sm-2 no-padding-left sidebar">
+                <div class="row user-info">
+                    <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    <span class="user-name text-center"><em>Dainius Šležas</em></span>
+                    <span class="notifications-icon"><i class="fa fa-bell"></i></span>
+                </div>
+                <nav class="row sidebar-nav">
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="#category1">
+                                <i class="fa fa-home"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('queue') }}">
+                                <i class="fa fa-sitemap"></i>
+                                <span>Queue</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#category1">
+                                <i class="fa fa-line-chart"></i>
+                                <span>Statistics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#category1">
+                                <i class="fa fa-sign-out"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="col-sm-10 sidebar-width-to-right">
+                <div class="row">
+                     {% block content %}
+
+                     {% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+{% endblock %}
