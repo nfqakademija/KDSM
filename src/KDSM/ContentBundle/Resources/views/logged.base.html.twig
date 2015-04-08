@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="container-fluid wrapper no-padding">
+    <div class="container-fluid">
         <div class="row">
-            <aside class="col-sm-2 no-padding-left sidebar">
+            <aside class="col-sm-2 sidebar">
                 <div class="row user-info">
                     <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
                     <span class="user-name text-center"><em>Dainius Šležas</em></span>
@@ -11,7 +11,7 @@
                 <nav class="row sidebar-nav">
                     <ul class="nav">
                         <li class="active">
-                            <a href="{{ path('users') }}">
+                            <a href="{{ path('logged_homepage') }}">
                                 <i class="fa fa-home"></i>
                                 <span>Home</span>
                             </a>
@@ -29,7 +29,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#category1">
+                            <a href="{{ path('logout') }}">
                                 <i class="fa fa-sign-out"></i>
                                 <span>Logout</span>
                             </a>
@@ -37,12 +37,10 @@
                     </ul>
                 </nav>
             </aside>
-            <main class="col-sm-10 sidebar-width-to-right">
-                <div class="row">
+            <main class="col-sm-9 main-content">
                      {% block content %}
 
                      {% endblock %}
-                </div>
             </main>
         </div>
     </div>
