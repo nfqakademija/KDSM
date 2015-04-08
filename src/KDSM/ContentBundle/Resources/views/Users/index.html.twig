@@ -1,10 +1,6 @@
-{% extends 'base.html.twig' %}
-{% block body %}
-    <div class="col-sm-4">
-        <div class="row"></div>
-    </div>
-    <div class="col-sm-8">
-        <div class="row users-list">
+{% extends 'KDSMContentBundle::logged.base.html.twig' %}
+{% block content %}
+        <div class="users-list">
             <div class="search-box">
                 {# Dar nezinau kaip kurti formas su sympfony #}
                 <label for="search-user">Search user: </label>
@@ -25,7 +21,7 @@
                         <tr>
                             <td>1</td>
                             <td>-</td>
-                            <td>Justas Jusaitis</td>
+                            <td>Simas Jasaitis</td>
                             <td>Hight</td>
                             <td>-</td>
                             <td></td>
@@ -35,5 +31,4 @@
                 </table>
             </div>
         </div>
-    </div>
 {% endblock %}

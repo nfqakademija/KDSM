@@ -17,3 +17,7 @@ user_login:
 user_view:
     path:     /users/view/{id}
     defaults: { _controller: KDSMContentBundle:Users:view }
+
+queue:
+    path:     /queue
+    defaults: { _controller: KDSMContentBundle:Queue:index }
