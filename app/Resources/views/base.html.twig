@@ -6,50 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}
-        {% stylesheets '@KDSMContentBundle/Resources/public/css/*' filter='cssrewrite' %}
-        <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}" />
+        {% stylesheets 'bundles/kdsmcontent/css/main.css' filter='cssrewrite' %}
+             <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
         {% endstylesheets %}
-        <link rel="stylesheet" href="{{ asset('bundles/content/css/main.css') }}" type="text/css" media="all" />
+        {# Fonts #}
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}" />
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
-<div class="container-fluid wrapper">
-    <header class="row media">
-        <div class="container">
-            <div class="row header-top">
-                <div class="col-sm-2">
-                    <div class="row">
-                        {% image '@KDSMContentBundle/Resources/public/images/logo.png' %}
-                        <img class="img-responsive logo" src="{{ asset_url }}" alt="Logo"/>
-                        {% endimage %}
-                    </div>
-                </div>
-                <div class="col-sm-7">
-                    <div class="row login-form">
-
-                    </div>
-                </div>
-            </div>
-            <div class="row header-bottom">
-                <div class="col-sm-8">
-                    <h4>Dar neteko išbandyti šio žaidimo?</h4>
-                </div>
-                <div class="col-sm-3">
-                    <a class="btn btn-primary btn-sm" href="">Užsiregistruokite</a>
-                </div>
-            </div>
-        </div>
-    </header>
-    <main class="row">
-        {% block body %}{% endblock %}
-    </main>
-    <footer>
-
-    </footer>
-
-</div>
+{% block body %} {% endblock %}
 {% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
     {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
