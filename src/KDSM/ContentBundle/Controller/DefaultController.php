@@ -10,4 +10,9 @@ class DefaultController extends Controller
     {
         return $this->render('KDSMContentBundle:Default:index.html.twig');
     }
+
+    public function loggedHomepageAction()
+    {
+        return $this->render('KDSMContentBundle:Default:loggedHomepage.html.twig');
+    }
 }

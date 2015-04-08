@@ -1,53 +1,15 @@
 body {
-
-}
-
-/* General classes */
-.no-padding {
     padding: 0;
-}
-
-.no-padding-right {
-    padding-right: 0;
-}
-
-.no-padding-left {
-    padding-left: 0;
-}
-
-.wrapper {
+    margin: 0;
     background: rgba(226, 226, 226, 0.6);
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 0;
-    background-repeat: no-repeat;
-    background-position: top right;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    font-family: Open Sans !important;
+    font-weight: 400;
+    color: #222;
+    font-size: 14px;
 }
 
 .result-page {
     margin-top:10%;
-}
-
-.result_box {
-    height: 50%;
-    display: block;
-    overflow: hidden;
-    text-align: center;
-}
-
-.result_box span.result {
-    font-size:10em;
-}
-
-.result_box span.separator {
-    padding:0 5%;
 }
 
 /* Users */
@@ -118,7 +80,7 @@ body {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background: #F57C00;
+    background: #4CAF50;
     position: absolute;
     left: 60%;
     text-align: center;
@@ -126,11 +88,6 @@ body {
     font-size: 1.4em;
     color: white;
     top: 1%;
-}
-
-.sidebar-width-to-right {
-    position:relative;
-    left: 18%;
 }
 
 .sidebar-nav {
@@ -171,7 +128,7 @@ body {
 .sidebar-nav ul li:hover,
 .sidebar-nav ul li.active {
     background: #121212 !important;
-    border-left: 3px solid #F57C00;
+    border-left: 3px solid #4CAF50;
 }
 
 .sidebar-nav ul li:hover a,
@@ -180,3 +137,58 @@ body {
     background: #121212 !important;
 }
 
+/* Main page content */
+.main-content {
+    position: relative;
+    left: 8%;
+    float: none;
+    margin: 0 auto;
+}
+
+/* Logged homepage*/
+
+.result-box {
+    height: 50%;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin: 5% 0;
+}
+
+.result-box span.result {
+    font-size: 8em;
+    font-family: Open Sans !important;
+    font-weight: 400;
+    font-style: italic;
+    color: #4CAF50;
+}
+
+.result-box span.separator {
+    padding:0 5%;
+}
+
+.user-photo {
+    width: 50.5%;
+    border: 1px solid #BABABA;
+    padding: 2%;
+    background: white;
+}
+
+.user-photo img {
+
+}
+
+/* Tables */
+table {
+    background: white;
+}
+
+table th {
+    background: #4CAF50;
+    border: none !important;
+    color: white;
+    font-family: Open Sans !important;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
