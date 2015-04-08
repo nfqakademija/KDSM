@@ -2,9 +2,13 @@ kdsm_content_homepage:
     path:     /homepage
     defaults: { _controller: KDSMContentBundle:Default:index }
 
-users:
-    path:     /users
-    defaults: { _controller: KDSMContentBundle:Users:index }
+logged_homepage:
+    path:     /
+    defaults: { _controller: KDSMContentBundle:Default:loggedHomepage }
+
+logout:
+        path:     /logout
+        defaults: { _controller: KDSMContentBundle:Users:logout }
 
 users_register:
     path:     /register
