@@ -3,17 +3,24 @@ namespace KDSM\APIBundle\Services;
 
 use GuzzleHttp;
 use GuzzleHttp\Exception\ConnectException;
+use KDSM\APIBundle\Services\fileIO\callerListener;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Caller {
 
     protected $url;
     protected $user;
     protected $password;
+    protected $eventDispatcher;
+    protected $listener;
 
     public function __construct($url, $user, $password){
         $this->url = $url;
         $this->user = $user;
         $this->password = $password;
+        $this->eventDispatcher = new EventDispatcher();
+        $this->listener = new callerListener();
+        $this->eventDispatcher->addListener('api.success.action', array($this->listener, 'onApiSuccessAction'));
     }
 
     public function callApi($count = 100, $startId = 1){
@@ -23,6 +30,7 @@ class Caller {
         } catch(ConnectException $e){
             return false;
         }
+        $this->eventDispatcher->dispatch('api.success.action');
         return $res->json();
     }
 
