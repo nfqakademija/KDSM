@@ -21,6 +21,7 @@ class Caller {
         $this->listener = new CallerListener();
         $this->eventDispatcher->addListener('api.success.action', array($this->listener, 'onApiSuccessAction'));
         $this->eventDispatcher->addListener('api.failure.action', array($this->listener, 'onApiFailureAction'));
+        $this->eventDispatcher->addListener('api.longer.action', array($this->listener, 'onLongerThanAction'));
     }
 
     public function callApi($count = 100, $startId = 1){
@@ -33,6 +34,13 @@ class Caller {
         }
         $this->eventDispatcher->dispatch('api.success.action');
         return $res->json();
+    }
+
+    public function isLongerThan() {
+        $string = 'String which is defined';
+        if($string.length() > 10) {
+            $this->eventDispatcher->dispatch('api.longer.action');
+        }
     }
 
 }

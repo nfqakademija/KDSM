@@ -21,4 +21,9 @@ class CallerListener {
         echo 'API Call Failure'."\n";
     }
 
+    public function onLongerThanAction(Event $event = null){
+
+        echo 'String is longer than 10 characters'."\n";
+    }
+
 }
