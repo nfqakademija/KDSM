@@ -16,5 +16,9 @@ class CallerListener {
 
         echo 'API Call Successful'."\n";
     }
+    public function onApiFailureAction(Event $event = null){
+
+        echo 'API Call Failure'."\n";
+    }
 
 }

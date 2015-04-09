@@ -20,6 +20,7 @@ class Caller {
         $this->eventDispatcher = new EventDispatcher();
         $this->listener = new CallerListener();
         $this->eventDispatcher->addListener('api.success.action', array($this->listener, 'onApiSuccessAction'));
+        $this->eventDispatcher->addListener('api.failure.action', array($this->listener, 'onApiFailureAction'));
     }
 
     public function callApi($count = 100, $startId = 1){
@@ -27,6 +28,7 @@ class Caller {
         try {
             $res = $client->get($this->url . '?rows=' . $count . '&from-id=' . $startId, ['auth' => [$this->user, $this->password]]);
         } catch(ConnectException $e){
+            $this->eventDispatcher->dispatch('api.failure.action');
             return false;
         }
         $this->eventDispatcher->dispatch('api.success.action');
