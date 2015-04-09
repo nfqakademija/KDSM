@@ -3,7 +3,6 @@ namespace KDSM\APIBundle\Services;
 
 use GuzzleHttp;
 use GuzzleHttp\Exception\ConnectException;
-use KDSM\APIBundle\Services\fileIO\callerListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Caller {
@@ -19,7 +18,7 @@ class Caller {
         $this->user = $user;
         $this->password = $password;
         $this->eventDispatcher = new EventDispatcher();
-        $this->listener = new callerListener();
+        $this->listener = new CallerListener();
         $this->eventDispatcher->addListener('api.success.action', array($this->listener, 'onApiSuccessAction'));
     }
 
