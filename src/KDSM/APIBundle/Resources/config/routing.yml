@@ -1,5 +1,5 @@
 api_homepage:
-    path:     /
+    path:     /api/
     defaults: { _controller: KDSMAPIBundle:Default:index }
 
 

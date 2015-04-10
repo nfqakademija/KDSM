@@ -168,10 +168,10 @@ GIT
 
 GIT
   remote: https://github.com/puppetlabs/puppetlabs-java.git
-  ref: 1.2.0
-  sha: 92bd03eec3679f8b0c77da55928bf9c3750c67f6
+  ref: 1.3.0
+  sha: fcdb14eb7536877ce12383393b7cb26a6b7a1bcd
   specs:
-    puppetlabs-java (1.2.0)
+    puppetlabs-java (1.3.0)
       puppetlabs-stdlib (>= 2.4.0)
 
 GIT
