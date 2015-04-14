@@ -17,7 +17,6 @@ class ParameterType extends AbstractType
         $builder
             ->add('parameterName')
             ->add('parameterValue')
-            ->add('timeChanged')
             ->add('save', 'submit', array('label' => 'Edit Parameter'))
         ;
     }

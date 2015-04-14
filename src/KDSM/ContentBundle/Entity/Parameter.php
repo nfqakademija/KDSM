@@ -43,6 +43,11 @@ class Parameter
     private $timeChanged;
 
 
+    public function __construct()
+    {
+        $this->timeChanged = new \DateTime();
+    }
+
     /**
      * Get id
      *
