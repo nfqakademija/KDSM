@@ -18,6 +18,7 @@ class ParameterType extends AbstractType
             ->add('parameterName')
             ->add('parameterValue')
             ->add('timeChanged')
+            ->add('save', 'submit', array('label' => 'Edit Parameter'))
         ;
     }
     
