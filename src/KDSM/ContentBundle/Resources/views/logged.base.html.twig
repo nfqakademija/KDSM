@@ -5,7 +5,14 @@
             <aside class="col-sm-2 sidebar">
                 <div class="row user-info">
                     <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                    <span class="user-name text-center"><em>Dainius Šležas</em></span>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="user-name text-center"><em> {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</em></span>
+                    <span class="user-name text-center">
+                        <a href="{{ path('fos_user_security_logout') }}">
+                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                        </a>
+                    </span>
+                    {% endif %}
                     <span class="notifications-icon"><i class="fa fa-bell"></i></span>
                 </div>
                 <nav class="row sidebar-nav">
@@ -38,6 +45,7 @@
                 </nav>
             </aside>
             <main class="col-sm-9 main-content">
+                'labas'
                      {% block content %}
 
                      {% endblock %}
