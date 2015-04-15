@@ -1,0 +1,10 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}KDSMContentBundle:Admin:index{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Admin page</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}
