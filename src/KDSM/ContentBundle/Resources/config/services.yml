@@ -4,3 +4,6 @@ services:
     kdsm_content.table_busy_check:
         class: KDSM\ContentBundle\Services\Statistics\BusyCheck
         arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%]
+    kdsm_content.parameter_getter:
+        class: KDSM\ContentBundle\Services\ParameterService
+        arguments: [@doctrine.orm.entity_manager]
