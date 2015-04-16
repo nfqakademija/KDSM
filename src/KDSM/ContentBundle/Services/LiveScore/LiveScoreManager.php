@@ -81,12 +81,13 @@ class LiveScoreManager{
      * immediately displayed.
      * Afterwards it continues until table free or first cardswipe event. It then checks for other cardswipe events
      * within 2 minute interval (not affected by able free anymore)
-     *
+     **/
+    /*
      * ISSUES:
-     * only searches for players 2 mins after game ends.
-     * Further on later, when frontend will provide player ID's it will only check until that cardswipe.
-     * Currently players are overwritten by a swipe event
-     * Same player can play on multiple positions
+     * TODO only searches for players 2 mins after game ends.
+     * TODO Further on later, when frontend will provide player ID's it will only check until that cardswipe.
+     * TODO Currently players are overwritten by a swipe event
+     * TODO Same player can play on multiple positions
      *
      */
     private function readEvents($checkDateTime){
@@ -138,9 +139,11 @@ class LiveScoreManager{
     }
 
     private function addPlayer($event){
-        $playerId = $playerId = json_decode($event->getData())->team == 0 ? 1 +
-        json_decode($event->getData())->player : 3 + json_decode($event->getData())->player;
-        $this->table['players'][$playerId] = ['id' => json_decode($event->getData())->card_id];
+        if(is_object($event) && $event instanceof TableEvent) {
+            $playerId = $playerId = json_decode($event->getData())->team == 0 ? 1 +
+                json_decode($event->getData())->player : 3 + json_decode($event->getData())->player;
+            $this->table['players'][$playerId] = ['id' => json_decode($event->getData())->card_id];
+        }
 }
 
 }
