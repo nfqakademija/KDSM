@@ -17,16 +17,10 @@ KDSM\APIBundle\Entity\TableEvent:
         usec:
             type: string
             length: '10'
-        typeId:
-            column: type_id
-            type: integer
+        type:
+            type: string
+            length: '20'
         data:
             type: string
             length: 255
-    ManyToOne:
-        eventType:
-            targetEntity: APIBundle\Entity\TableEventType
-            joinColumn:
-                name: type_id
-                referencedColumnName: id
     lifecycleCallbacks: {  }
