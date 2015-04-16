@@ -1,0 +1,29 @@
+# src/KDSM/ContentBundle/Resources/config/doctrine/User.orm.yml
+KDSM\ContentBundle\Entity\User:
+    type:  entity
+    table: fos_user
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        cardId:
+            column: card_id
+            type: integer
+        profilePicturePath:
+            column: profile_picture_path
+            type: string
+            length: '255'
+        skillLevel:
+            column: skill_level
+            type: integer
+        lastPlayed:
+            column: last_played
+            type: datetime
+        wins:
+            column: wins
+            type: integer
+        losses:
+            column: losses
+            type: integer
