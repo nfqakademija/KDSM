@@ -21,7 +21,7 @@ class AdminController extends Controller
             $em->persist($parameter);
             $em->flush();
 
-            return $this->redirectToRoute('api_homepage');
+            return $this->redirectToRoute('admin');
         }
 
 
