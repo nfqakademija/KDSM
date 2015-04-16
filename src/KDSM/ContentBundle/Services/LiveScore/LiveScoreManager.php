@@ -73,7 +73,6 @@ class LiveScoreManager{
     public function readEvents($checkDateTime){
         $score = ['white' => 0, 'black' => 0];
         $getResults = true;
-        $j = 0;
         $timestamp = strtotime($checkDateTime);
         while($getResults){
             if($this->busyCheck->busyCheck(date('Y-m-d H:i:s', $timestamp)) == 'busy') {
