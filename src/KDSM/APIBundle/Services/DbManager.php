@@ -33,7 +33,7 @@ class DbManager {
         $newEvent->setEventId($object['id']);
         $newEvent->setTimesec(new \DateTime(date("Y-m-d H:i:s", $object['timeSec'])));
         $newEvent->setUsec($object['usec']);
-        $newEvent->setTypeID($this->em->getRepository('KDSMAPIBundle:TableEventType')->findBy(array('name' => $object['type']))[0]->getId());
+        $newEvent->setType($object['type']);
         $newEvent->setData($object['data']);
         $this->rep->persistObject($newEvent);
     }
