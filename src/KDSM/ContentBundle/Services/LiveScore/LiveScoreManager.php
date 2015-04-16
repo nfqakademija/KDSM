@@ -37,6 +37,8 @@ class LiveScoreManager{
      */
     protected $rep;
 
+    protected $table;
+
     /**
      * @param LiveScore $liveScore
      * @param BusyCheck $busyCheck
@@ -60,9 +62,10 @@ class LiveScoreManager{
             $response['tableStatus'] = $status;
         }
         else if ($status == 'busy'){
+            $this->table =['score' => ['white' => 0, 'black' => 0],'players' => [/*should be set by frontend*/]];
             $response['tableStatus'] = $status;
-            $response['tableData'] = $this->readEvents($checkDateTime);
-//            $response
+            if($this->readEvents($checkDateTime))
+                $response['tableData'] = $this->table;
         }
         else
             $response['tableStatus'] = 'error';
@@ -78,37 +81,66 @@ class LiveScoreManager{
      * immediately displayed.
      * Afterwards it continues until table free or first cardswipe event. It then checks for other cardswipe events
      * within 2 minute interval (not affected by able free anymore)
+     *
+     * ISSUES:
+     * only searches for players 2 mins after game ends.
+     * Further on later, when frontend will provide player ID's it will only check until that cardswipe.
+     * Currently players are overwritten by a swipe event
+     * Same player can play on multiple positions
+     *
      */
-    public function readEvents($checkDateTime){
-        $table =['score' => ['white' => 0, 'black' => 0],'players' => [1 => 0, 2 => 0, 3 => 0, 4 => 0]];
+    private function readEvents($checkDateTime){
         $getResults = true;
+        $getPlayers = false;
         $timestamp = strtotime($checkDateTime);
         while($getResults){
             if($this->busyCheck->busyCheck(date('Y-m-d H:i:s', $timestamp)) == 'busy') {
+                //get 1 minutes worth of events
                 $events = $this->rep->getEventsOnDateTime($timestamp);
-                foreach ($events as  $event){
-                    if (is_object($event) && $event instanceof TableEvent) {
-                        if ($event->getType() == 'AutoGoal')
-                            if (json_decode($event->getData())->team == 1 && !in_array(10, $table['score']))
-                                $table['score']['white']++;
-                            else $table['score']['black']++;
-                        if ($event->getType() == 'CardSwipe'){
-                            $getResults = false; // cardswipe resets the game score counter
-                            break; //stops further result processing
+                foreach($events as  $event){
+                    if(is_object($event) && $event instanceof TableEvent) {
+                        //scan for goals. break on card swipe if 10 goals are not reached
+                        //if 10 goals are reached, process and count card swipes.
+                        if($event->getType() == 'AutoGoal' && !in_array(10, $this->table['score']))
+                            if(json_decode($event->getData())->team == 1)
+                                $this->table['score']['white']++;
+                            else $this->table['score']['black']++;
+                        if($event->getType() == 'CardSwipe'){
+                            if(!in_array(10, $this->table['score'])) {
+                                $getResults = false; // cardswipe resets the game score counter
+                                break; //stops further result processing
+                            }
+                            else{
+                                $this->addPlayer($event);
+                                $getPlayers = true;
+                            }
                         }
                     }
                 }
-                $timestamp = strtotime('-1 minute', $timestamp);
-                if(in_array(10, $table['score'])) {
-                    $getResults = false;
-                }
+                if($getResults) $timestamp = strtotime('-1 minute', $timestamp); //if goal scan is over do not advance the timestamp
+                if(in_array(10, $this->table['score'])) {$getResults = false; $getPlayers = true;} //if game is over stop the goal scan
             }
             else {
-                $getResults = false;
+                $getResults = false; //if table status = free
             }
 
         }
-        return $table;
+        if($getPlayers){
+            $events = $this->rep->getSwipesOnDateTime($timestamp);
+            foreach($events as  $event){
+                if(is_object($event) && $event instanceof TableEvent) {
+                    //add any other detected players
+                    $this->addPlayer($event);
+                }
+            }
+        }
+        return true;
     }
+
+    private function addPlayer($event){
+        $playerId = $playerId = json_decode($event->getData())->team == 0 ? 1 +
+        json_decode($event->getData())->player : 3 + json_decode($event->getData())->player;
+        $this->table['players'][$playerId] = ['id' => json_decode($event->getData())->card_id];
+}
 
 }
