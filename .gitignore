@@ -12,3 +12,4 @@
 /symfony.phar
 /.vagrant/machines/
 .idea
+.vagrant/machines

@@ -1,0 +1,38 @@
+body {
+
+}
+
+.wrapper {
+    background-image: url('../images/background.jpg');
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    background-repeat: no-repeat;
+    background-position: top right;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+header {
+    height:120px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.header-top {
+    height: 80px;
+    border-bottom: 1px solid #BABABA;
+}
+
+.logo {
+    padding-top:20px;
+}
+
+.header-bottom {
+    height: 40px;
+    padding: 0 20%;
+}
