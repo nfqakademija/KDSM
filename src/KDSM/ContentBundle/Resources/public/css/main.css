@@ -1,0 +1,194 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: rgba(226, 226, 226, 0.6);
+    font-family: Open Sans !important;
+    font-weight: 400;
+    color: #222;
+    font-size: 14px;
+}
+
+.result-page {
+    margin-top:10%;
+}
+
+/* Users */
+.users-list {
+
+}
+
+.search-box {
+    border: 1px solid #BABABA;
+    padding: 3% 5%;
+    margin-bottom: 20px;
+}
+
+.search-box label {
+    display: block;
+}
+
+.search-box input {
+    width: 80%;
+    padding: 5px 10px;
+}
+
+.found-user-list {
+
+}
+
+/* Sidebar */
+.sidebar {
+    height: 100%;
+    background: #212121;
+    position:fixed;
+    left: 0;
+    top: 0;
+}
+
+.user-info {
+    height: 25%;
+}
+
+.user-info img {
+    max-width: 60%;
+    max-height: 60%;
+    margin: 5% auto;
+    display: block;
+    -webkit-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    -ms-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    -o-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.user-info span.user-name {
+    display: block;
+    height:10%;
+    color:white;
+    font-size: 1.2em;
+    font-family: Open Sans !important;
+    font-weight: 400;
+}
+
+.user-info span.notifications-icon {
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #4CAF50;
+    position: absolute;
+    left: 60%;
+    text-align: center;
+    line-height: 35px;
+    font-size: 1.4em;
+    color: white;
+    top: 1%;
+}
+
+.sidebar-nav {
+
+}
+
+.sidebar-nav ul {
+
+}
+
+.sidebar-nav ul li {
+    padding: 3% 0;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.sidebar-nav ul li a {
+    text-align: center;
+    color: #757575;
+}
+
+.sidebar-nav ul li a i {
+    font-size: 2.5em;
+    display: block;
+    font-family: FontAwesome;
+    padding: 3% 0;
+}
+
+.sidebar-nav ul li a span {
+    font-size: 1.2em;
+    font-family: Open Sans !important;
+    font-weight: 300;
+}
+
+.sidebar-nav ul li:hover,
+.sidebar-nav ul li.active {
+    background: #121212 !important;
+    border-left: 3px solid #4CAF50;
+}
+
+.sidebar-nav ul li:hover a,
+.sidebar-nav ul li.active a {
+    color: #fff;
+    background: #121212 !important;
+}
+
+/* Main page content */
+.main-content {
+    position: relative;
+    left: 8%;
+    float: none;
+    margin: 0 auto;
+}
+
+/* Logged homepage*/
+
+.result-box {
+    height: 50%;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin: 5% 0;
+}
+
+.result-box span.result {
+    font-size: 8em;
+    font-family: Open Sans !important;
+    font-weight: 400;
+    font-style: italic;
+    color: #4CAF50;
+}
+
+.result-box span.separator {
+    padding:0 5%;
+}
+
+.user-photo {
+    width: 50.5%;
+    border: 1px solid #BABABA;
+    padding: 2%;
+    background: white;
+}
+
+.user-photo img {
+
+}
+
+/* Tables */
+table {
+    background: white;
+}
+
+table th {
+    background: #4CAF50;
+    border: none !important;
+    color: white;
+    font-family: Open Sans !important;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
