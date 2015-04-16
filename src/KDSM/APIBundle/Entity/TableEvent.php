@@ -30,9 +30,9 @@ class TableEvent
     private $usec;
 
     /**
-     * @var integer
+     * @var string
      */
-    private $typeId;
+    private $type;
 
     /**
      * @var string
@@ -116,29 +116,6 @@ class TableEvent
     }
 
     /**
-     * Set type
-     *
-     * @param integer $type
-     * @return TableEvent
-     */
-    public function setTypeID($typeId)
-    {
-        $this->typeId = $typeId;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getTypeID()
-    {
-        return $this->typeId;
-    }
-
-    /**
      * Set data
      *
      * @param string $data
@@ -161,23 +138,29 @@ class TableEvent
         return $this->data;
     }
 
-    /**
-     * @return TableEventType
-     */
-    public function getEventType()
-    {
-        return $this->eventType;
-    }
-
-    /**
-     * @param TableEventType $eventType
-     */
-    public function setEventType($eventType)
-    {
-        $this->eventType = $eventType;
-    }
-
     public function __construct(){
-        $this->eventType = new TableEventType();
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return TableEvent
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
