@@ -62,6 +62,7 @@ class LiveScoreManager{
         else if ($status == 'busy'){
             $response['status'] = $status;
             $response['score'] = $this->readEvents($checkDateTime);
+
         }
         else
             $response['status'] = 'error';
@@ -85,7 +86,6 @@ class LiveScoreManager{
                             else $score['black']++;
                 }
                 $timestamp = strtotime('-1 minute', $timestamp);
-                print_r($score); echo "\n";
                 if(in_array(10, $score)) {
                     $getResults = false;
                 }
