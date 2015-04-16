@@ -1,0 +1,21 @@
+# src/KDSM/ContentBundle/Resources/config/doctrine/Parameter.orm.yml
+KDSM\ContentBundle\Entity\Parameter:
+    type:  entity
+    table: parameter
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        parameterName:
+            column: parameter_name
+            type: string
+            length: '255'
+        parameterValue:
+            column: parameter_value
+            type: string
+            length: '255'
+        timeChanged:
+            column: time_changed
+            type: datetime
