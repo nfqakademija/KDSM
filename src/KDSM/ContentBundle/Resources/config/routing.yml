@@ -1,3 +1,19 @@
 kdsm_content_homepage:
-    path:     /content/
+    path:     /
     defaults: { _controller: KDSMContentBundle:Default:index }
+
+logged_homepage:
+    path:     /logged
+    defaults: { _controller: KDSMContentBundle:Default:loggedHomepage }
+
+logout:
+        path:     /logout
+        defaults: { _controller: KDSMContentBundle:Users:logout }
+
+user_view:
+    path:     /users/view/{id}
+    defaults: { _controller: KDSMContentBundle:Users:view }
+
+queue:
+    path:     /queue
+    defaults: { _controller: KDSMContentBundle:Queue:index }
