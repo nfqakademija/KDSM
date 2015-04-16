@@ -1,6 +1,7 @@
 # src/KDSM/ContentBundle/Resources/config/doctrine/Parameter.orm.yml
 KDSM\ContentBundle\Entity\Parameter:
     type:  entity
+    repositoryClass: KDSM\ContentBundle\Entity\ParameterRepository
     table: parameter
     id:
         id:
