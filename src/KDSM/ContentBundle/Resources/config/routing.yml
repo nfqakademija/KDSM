@@ -4,3 +4,6 @@ admin:
 kdsm_content_homepage:
     path:     /content/
     defaults: { _controller: KDSMContentBundle:Default:index }
+ksdm_live_game:
+    path:     /content/live_game
+    defaults: { _controller: KDSMContentBundle:Default:liveGame }
