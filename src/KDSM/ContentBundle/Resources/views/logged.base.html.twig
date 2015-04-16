@@ -1,4 +1,13 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}" />
+    {% stylesheets 'bundles/kdsmcontent/css/main.css' filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {# Fonts #}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
+{% endblock %}
 {% block body %}
     <div class="container-fluid">
         <div class="row">
@@ -52,4 +61,10 @@
             </main>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+    {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
