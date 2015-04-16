@@ -23,21 +23,23 @@ class TableEventRepository extends EntityRepository
     }
 
     public function getShakeCountAtMinute($timestamp){
-        $shakeEventId = $this->getEntityManager()->getRepository('KDSMAPIBundle:TableEventType')
-            ->findOneBy(array('name' => 'TableShake'))->getId();
 
         $query = $this->createQueryBuilder('tb');
         $query->select('COUNT(tb.eventId)')
-            ->where('tb.typeId = ?1')
+            ->where('tb.type = ?1')
             ->andWhere('tb.timesec >= ?2')
             ->andWhere('tb.timesec <= ?3');
 
-        $query->setParameters(array(1 => $shakeEventId, 2 => date('Y-m-d H:i:s', $timestamp), 3 => date('Y-m-d H:i:s', $timestamp+60)));
+        $query->setParameters(array(1 => 'TableShake', 2 => date('Y-m-d H:i:s', $timestamp), 3 => date('Y-m-d H:i:s', $timestamp+60)));
 
         if($query->getQuery()->getResult()[0][1])
             return $query->getQuery()->getResult()[0][1];
         else
             return 0;
+    }
+
+    public function getEventsOnDateTime($datetime){
+
     }
 
     public function persistObject($newEvent){
