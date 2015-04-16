@@ -8,7 +8,7 @@ services:
         class: KDSM\ContentBundle\Entity\LiveScore
     kdsm_content.live_score_manager:
         class: KDSM\ContentBundle\Services\LiveScore\LiveScoreManager
-        arguments: [@kdsm_content.live_score, @kdsm_content.table_busy_check]
+        arguments: [@kdsm_content.live_score, @kdsm_content.table_busy_check, @doctrine.orm.entity_manager]
     kdsm_content.parameter_getter:
         class: KDSM\ContentBundle\Services\ParameterService
         arguments: [@doctrine.orm.entity_manager]

@@ -11,34 +11,16 @@ namespace KDSM\ContentBundle\Entity;
 
 class LiveScore {
 
-    private $status;
     private $players;
     private $score;
 
     public function __construct(){
-        $this->status = 'unknown';
         $this->players['player1'] = new User;
         $this->players['player2'] = new User;
         $this->players['player3'] = new User;
         $this->players['player4'] = new User;
         $this->score['white'] = 0;
         $this->score['black'] = 0;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 
     /**

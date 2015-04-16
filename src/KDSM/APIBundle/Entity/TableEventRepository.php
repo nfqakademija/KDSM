@@ -38,8 +38,13 @@ class TableEventRepository extends EntityRepository
             return 0;
     }
 
-    public function getEventsOnDateTime($datetime){
-
+    public function getEventsOnDateTime($timestamp){
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.timesec >= ?1')
+            ->andWhere('tb.timesec <= ?2');
+        $query->setParameters(array(1 => date('Y-m-d H:i:s', strtotime('-1 minute',$timestamp)), 2 => date('Y-m-d H:i:s', $timestamp)));
+        return $query->getQuery()->getResult();
     }
 
     public function persistObject($newEvent){
