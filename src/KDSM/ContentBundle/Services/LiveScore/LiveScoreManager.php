@@ -57,35 +57,49 @@ class LiveScoreManager{
         $status = $this->busyCheck->busyCheck($checkDateTime);
 
         if($status == 'free'){
-            $response['status'] = $status;
+            $response['tableStatus'] = $status;
         }
         else if ($status == 'busy'){
-            $response['status'] = $status;
-            $response['score'] = $this->readEvents($checkDateTime);
-
+            $response['tableStatus'] = $status;
+            $response['tableData'] = $this->readEvents($checkDateTime);
+//            $response
         }
         else
-            $response['status'] = 'error';
+            $response['tableStatus'] = 'error';
         return $response;
 
     }
 
+
+    /*
+     * gets table events in 1 minute intervals from the given datetime. Counts goals until 10 on one side or
+     * until table free status is reached.
+     * If a cardswipe is encountered before reaching 10 goals on either side, it is treated as newgame flag and score is
+     * immediately displayed.
+     * Afterwards it continues until table free or first cardswipe event. It then checks for other cardswipe events
+     * within 2 minute interval (not affected by able free anymore)
+     */
     public function readEvents($checkDateTime){
-        $score = ['white' => 0, 'black' => 0];
+        $table =['score' => ['white' => 0, 'black' => 0],'players' => [1 => 0, 2 => 0, 3 => 0, 4 => 0]];
         $getResults = true;
         $timestamp = strtotime($checkDateTime);
         while($getResults){
             if($this->busyCheck->busyCheck(date('Y-m-d H:i:s', $timestamp)) == 'busy') {
                 $events = $this->rep->getEventsOnDateTime($timestamp);
                 foreach ($events as  $event){
-                    if (is_object($event) && $event instanceof TableEvent)
-                        if($event->getType() == 'AutoGoal')
-                            if(json_decode($event->getData())->team == 1 && !in_array(10, $score))
-                                $score['white']++;
-                            else $score['black']++;
+                    if (is_object($event) && $event instanceof TableEvent) {
+                        if ($event->getType() == 'AutoGoal')
+                            if (json_decode($event->getData())->team == 1 && !in_array(10, $table['score']))
+                                $table['score']['white']++;
+                            else $table['score']['black']++;
+                        if ($event->getType() == 'CardSwipe'){
+                            $getResults = false; // cardswipe resets the game score counter
+                            break; //stops further result processing
+                        }
+                    }
                 }
                 $timestamp = strtotime('-1 minute', $timestamp);
-                if(in_array(10, $score)) {
+                if(in_array(10, $table['score'])) {
                     $getResults = false;
                 }
             }
@@ -94,7 +108,7 @@ class LiveScoreManager{
             }
 
         }
-        return $score;
+        return $table;
     }
 
 }
