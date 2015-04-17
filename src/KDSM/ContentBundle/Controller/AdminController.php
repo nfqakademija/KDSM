@@ -15,9 +15,10 @@ class AdminController extends Controller
         $form = $this->createForm(new ParameterType(), $parameter);
 
         $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('KDSMContentBundle:Parameter');
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($parameter);
             $em->flush();
 
@@ -27,6 +28,7 @@ class AdminController extends Controller
 
         return $this->render('KDSMContentBundle:Admin:index.html.twig', array(
                 'form' => $form->createView(),
+                'parameters' => $rep->getAllParameters()
             ));
     }
 

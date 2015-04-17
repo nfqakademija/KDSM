@@ -7,4 +7,8 @@
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
+
+    {% for param in parameters %}
+        <p>{{ param['parameter_name'] }} : {{ param['parameter_value'] }}</p>
+    {% endfor %}
 {% endblock %}
