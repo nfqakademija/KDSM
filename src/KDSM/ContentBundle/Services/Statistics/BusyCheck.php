@@ -38,8 +38,4 @@ class BusyCheck {
             $tableStatus = 'busy';
         return $tableStatus;
     }
-
-    private function refreshAPIEvents(){
-
-    }
 }
