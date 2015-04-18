@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}" />
+    {% stylesheets 'bundles/kdsmcontent/css/main.css' filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {# Fonts #}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-sm-2 sidebar">
+                <div class="row user-info">
+                    <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="user-name text-center"><em> {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</em></span>
+                    <span class="user-name text-center">
+                        <a href="{{ path('fos_user_security_logout') }}">
+                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                        </a>
+                    </span>
+                    {% endif %}
+                    <span class="notifications-icon"><i class="fa fa-bell"></i></span>
+                </div>
+                <nav class="row sidebar-nav">
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="{{ path('logged_homepage') }}">
+                                <i class="fa fa-home"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('queue') }}">
+                                <i class="fa fa-sitemap"></i>
+                                <span>Queue</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#category1">
+                                <i class="fa fa-line-chart"></i>
+                                <span>Statistics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('logout') }}">
+                                <i class="fa fa-sign-out"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="col-sm-9 main-content">
+                'labas'
+                     {% block content %}
+
+                     {% endblock %}
+            </main>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+    {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -9,7 +9,12 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Default:index.html.twig', array('name' => 'world'));
+        return $this->render('KDSMContentBundle:Default:index.html.twig');
+    }
+
+    public function loggedHomepageAction()
+    {
+        return $this->render('KDSMContentBundle:Default:loggedHomepage.html.twig');
     }
 
     public function liveGameAction(){

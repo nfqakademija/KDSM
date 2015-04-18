@@ -25,7 +25,6 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
-    translator: { fallbacks: [en] }
 
 # Twig Configuration
 twig:
@@ -36,7 +35,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        [KDSMContentBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
