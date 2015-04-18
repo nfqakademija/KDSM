@@ -13,14 +13,6 @@ use Doctrine\ORM\EntityRepository;
 class ParameterRepository extends EntityRepository
 
 {
-    /*
-    public function getAllParameters(){
-        $query = $this->createQueryBuilder('p')
-            ->groupBy('p.parameterName')
-            ->getQuery();
-        $results = $query->getResult();
-        return $results;
-    }*/
 
     public function getParameterValueByName($name){
         $value = $this->findOneBy(

@@ -25,7 +25,6 @@ class AdminController extends Controller
             return $this->redirectToRoute('admin');
         }
 
-
         return $this->render('KDSMContentBundle:Admin:index.html.twig', array(
                 'form' => $form->createView(),
                 'parameters' => $rep->getAllParameters()
@@ -51,7 +50,7 @@ class AdminController extends Controller
     public function removeAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $rep= $em->getRepository('KDSMContentBundle:Parameter');
-//        $request->request->all();
+
         $rep->removeParameter($request->request->get('parameter'));
     }
 

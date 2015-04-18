@@ -18,8 +18,7 @@ class ParameterService {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMContentBundle:Parameter');
     }
-
-
+    
     public function getParameterValue($name){
         return $this->rep->getParameterValueByName($name);
     }
