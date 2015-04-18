@@ -106,16 +106,16 @@ class LiveScoreManager{
                             if(json_decode($event->getData())->team == 1)
                                 $this->table['score']['white']++;
                             else $this->table['score']['black']++;
-                        if($event->getType() == 'CardSwipe'){
-                            if(!in_array(10, $this->table['score'])) {
-                                $getResults = false; // cardswipe resets the game score counter
-                                break; //stops further result processing
-                            }
-                            else{
-                                $this->addPlayer($event);
-                                $getPlayers = true;
-                            }
-                        }
+//                        if($event->getType() == 'CardSwipe'){
+//                            if(!in_array(10, $this->table['score'])) {
+//                                $getResults = false; // cardswipe resets the game score counter
+//                                break; //stops further result processing
+//                            }
+//                            else{
+//                                $this->addPlayer($event);
+//                                $getPlayers = true;
+//                            }
+//                        }
                     }
                 }
                 if($getResults) $timestamp = strtotime('-1 minute', $timestamp); //if goal scan is over do not advance the timestamp
