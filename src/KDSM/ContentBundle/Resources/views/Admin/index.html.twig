@@ -5,20 +5,32 @@
 {% block stylesheets %}
 
     <link rel="stylesheet" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/kdsmcontent/css/main.css') }}">
 
 {% endblock %}
 
 {% block body %}
-    <div class="content">
+    <div class="container-fluid">
         <h1>Parameter management</h1>
         <h3>Add parameter</h3>
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+            {{ form_label(form.parameterName) }}
+            <div>{{ form_widget(form.parameterName) }}</div>
+
+            {{ form_label(form.parameterValue) }}
+            <div>{{ form_widget(form.parameterValue) }}</div>
+
+            <br>
+            <div>{{ form_widget(form.save) }}</div>
         {{ form_end(form) }}
         <br>
 
         <h3>Parameter list</h3>
-        <table class="table">
+        {#TODO: Make the table collapsable, past tries below#}
+        {#<h3 data-toggle="collapse" data-target="#parameter_table">Parameter list</h3>#}
+        {#<table class="table collapse in" id="parameter_table" style="display: table">#}
+        <table class="table" id="parameter_table">
+        {#<table class="table collapse in" id="parameter_table">#}
             <tablehead>
                 <tr>
                     <th>Parameter name</th>
