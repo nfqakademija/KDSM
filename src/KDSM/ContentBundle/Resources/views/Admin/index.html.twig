@@ -27,7 +27,9 @@
         $(document).ready(function() {
             $('.edit').editable('{{ path('admin_post') }}', {
                 indicator : 'Saving...',
-                tooltip   : 'Click to edit...'
+                tooltip   : 'Click to edit...',
+                cancel    : 'Cancel',
+                submit    : 'OK'
             });
             $('.edit_area').editable('{{ path('admin_post') }}', {
                 type      : 'textarea',

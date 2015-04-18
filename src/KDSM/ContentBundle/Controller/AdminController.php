@@ -43,7 +43,9 @@ class AdminController extends Controller
         $em->persist($parameter);
         $em->flush();
 
-        return $this->render($parameter->getParameterValue());
+        return $this->render('KDSMContentBundle:Admin:post.html.twig', array(
+            'value' => $parameter->getParameterValue()
+        ));
     }
 
 }
