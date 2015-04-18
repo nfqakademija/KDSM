@@ -6,6 +6,10 @@ admin_post:
     path: /adminPost
     defaults: { _controller: KDSMContentBundle:Admin:post }
 
+admin_remove:
+    path: /adminRemove
+    defaults: {_controller: KDSMContentBundle:Admin:remove}
+
 kdsm_content_homepage:
     path:     /
     defaults: { _controller: KDSMContentBundle:Default:index }

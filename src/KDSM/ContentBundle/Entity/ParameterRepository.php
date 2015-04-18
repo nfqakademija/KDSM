@@ -37,4 +37,14 @@ class ParameterRepository extends EntityRepository
 
         return $results;
     }
+
+    public function removeParameter($name){
+
+        $this->createQueryBuilder('p')
+            ->delete()
+            ->where('p.parameterName = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->execute();
+    }
 }

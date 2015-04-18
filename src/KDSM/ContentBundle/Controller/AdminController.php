@@ -48,4 +48,11 @@ class AdminController extends Controller
         ));
     }
 
+    public function removeAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $rep= $em->getRepository('KDSMContentBundle:Parameter');
+//        $request->request->all();
+        $rep->removeParameter($request->request->get('parameter'));
+    }
+
 }
