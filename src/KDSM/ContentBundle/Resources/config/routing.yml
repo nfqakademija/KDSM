@@ -2,12 +2,12 @@ admin:
     path:     /admin
     defaults: { _controller: KDSMContentBundle:Admin:index }
 
-admin_post:
-    path: /adminPost
-    defaults: { _controller: KDSMContentBundle:Admin:post }
+admin_changeparameter:
+    path: /adminChangeParameter
+    defaults: { _controller: KDSMContentBundle:Admin:change }
 
-admin_remove:
-    path: /adminRemove
+admin_removeparameter:
+    path: /adminRemoveParameter
     defaults: {_controller: KDSMContentBundle:Admin:remove}
 
 kdsm_content_homepage:

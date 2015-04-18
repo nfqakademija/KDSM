@@ -31,7 +31,7 @@ class AdminController extends Controller
             ));
     }
 
-    public function postAction(Request $request){
+    public function changeAction(Request $request){
 
         $parameter = new Parameter();
 
@@ -42,7 +42,7 @@ class AdminController extends Controller
         $em->persist($parameter);
         $em->flush();
 
-        return $this->render('KDSMContentBundle:Admin:post.html.twig', array(
+        return $this->render('KDSMContentBundle:Admin:postparameter.html.twig', array(
             'value' => $parameter->getParameterValue()
         ));
     }

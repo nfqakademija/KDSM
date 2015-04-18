@@ -26,13 +26,13 @@
 
     <script>
         $(document).ready(function() {
-            $('.edit').editable('{{ path('admin_post') }}', {
+            $('.edit').editable('{{ path('admin_changeparameter') }}', {
                 indicator : 'Saving...',
                 tooltip   : 'Click to edit...',
                 cancel    : 'Cancel',
                 submit    : 'OK'
             });
-            $('.edit_area').editable('{{ path('admin_post') }}', {
+            $('.edit_area').editable('{{ path('admin_changeparameter') }}', {
                 type      : 'textarea',
                 cancel    : 'Cancel',
                 submit    : 'OK',
@@ -44,7 +44,7 @@
     <script>
         function deleteParameter(parameter){
             if(confirm('Are you sure you would like to delete parameter ' + parameter + ' ?')) {
-                $.post('{{ path('admin_remove') }}',
+                $.post('{{ path('admin_removeparameter') }}',
                         {
                             parameter: parameter
                         }
