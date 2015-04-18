@@ -30,7 +30,7 @@ class ParameterRepository extends EntityRepository
     }
 
     public function getAllParameters(){
-        $sql = 'SELECT p1.* FROM parameter p1 LEFT JOIN parameter p2 ON (p1.parameter_name = p2.parameter_name AND p1.id < p2.id) WHERE p2.id IS NULL';
+        $sql = 'SELECT p1.* FROM parameter p1 LEFT JOIN parameter p2 ON (p1.parameter_name = p2.parameter_name AND p1.id < p2.id) WHERE p2.id IS NULL ORDER BY p1.parameter_name';
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $stmt->execute();
         $results = $stmt->fetchAll();

@@ -32,4 +32,18 @@ class AdminController extends Controller
             ));
     }
 
+    public function postAction(Request $request){
+
+        $parameter = new Parameter();
+
+        $parameter->setParameterName($request->request->get('id'));
+        $parameter->setParameterValue($request->request->get('value'));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($parameter);
+        $em->flush();
+
+        return $this->render($parameter->getParameterValue());
+    }
+
 }

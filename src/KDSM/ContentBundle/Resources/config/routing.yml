@@ -1,6 +1,11 @@
 admin:
     path:     /admin
     defaults: { _controller: KDSMContentBundle:Admin:index }
+
+admin_post:
+    path: /adminPost
+    defaults: { _controller: KDSMContentBundle:Admin:post }
+
 kdsm_content_homepage:
     path:     /
     defaults: { _controller: KDSMContentBundle:Default:index }
