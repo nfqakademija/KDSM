@@ -8,10 +8,106 @@ body {
     font-size: 14px;
 }
 
+header {
+    background: rgba(255, 255, 255, 0.7);
+    height: 8em;
+}
+
+.logo {
+    margin-top:20px;
+}
+
+.wallpaper {
+    background-image: url('../images/background1.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/background1.jpg',sizingMethod='scale')";
+}
+
+.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-color: #333;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .result-page {
     margin-top:10%;
 }
 
+/* Login Form */
+.login-form {
+    float: none;
+    margin: 2em auto;
+    padding-bottom: 1em;
+    background-color: white;
+    -o-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    -ms-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.login-form h2 {
+    font-family: 'Roboto', 'PT Sans', sans-serif;
+    font-size: 1.8em;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    color: #4278A6;
+    text-align: center;
+    border-bottom: 1px solid #CACACA;
+}
+
+.login-form input.field {
+    display: block;
+    padding: 0.7em 1em;
+    margin: 1em auto;
+}
+
+.login-form label.remember-me-label {
+    font-weight: 400;
+    color: #95a5a6;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.login-form input[type=checkbox] {
+    height: 1.5em;
+    width: 1.5em;
+    float: left;
+    margin: 5px;
+}
+
+.login-form input[type=checkbox]:before{
+    width: 20px;
+    height: 20px;
+}
+
+.login-form input[type=checkbox]:after {
+    top: -20px;
+    width: 16px;
+    height: 16px;
+}
+
+.login-form input[type=submit] {
+    background-color: #F48E2B;
+    border: none;
+    float: right;
+    padding: 0.5em 2em;
+    color: white;
+    border-color: #CB6E13;
+}
 /* Users */
 .users-list {
 

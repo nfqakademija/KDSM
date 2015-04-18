@@ -14,25 +14,30 @@ class DefaultController extends Controller
 
     public function loggedHomepageAction()
     {
-        return $this->render('KDSMContentBundle:Default:loggedHomepage.html.twig');
+        return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
     }
 
     public function liveGameAction(){
-        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
-        $tableStatusResponse = $liveScoreManager->getTableStatus();
-//        $rand = rand(1,10);
-//        $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
-//        if($rand <= 5) {
-//            $result =  json_encode(array('status' => 'free'));
-//        }
-//        if($rand > 3){
-//            $result = json_encode(array('status' => 'busy', 'player1' => $users[array_rand($users)], 'player2' => $users[array_rand($users)],
-//                'player3' => $users[array_rand($users)], 'player4' => $users[array_rand($users)], 'scoreWhite' => rand(0,10), 'scoreBlack' => rand(5,10)));
-//        }
+        //$liveScoreManager = $this->get('kdsm_content.live_score_manager');
+        //$tableStatusResponse = $liveScoreManager->getTableStatus();
 
-        $result = json_encode($tableStatusResponse);
-        $response = new Response($result);
-        $response->headers->set('Content-Type', 'application/json');
+        $rand = rand(1,10);
+        $users = array(125234243, 135513113, 643434232, 533435335, 234234236);
+        $result = array();
+        if($rand <= 5) {
+            $result['status'] = 'free';
+        }
+        if($rand > 3){
+            $result['status'] = 'busy';
+            $result['player1'] = $users[array_rand($users)];
+            $result['player2'] = $users[array_rand($users)];
+            $result['player3'] = $users[array_rand($users)];
+            $result['player4'] = $users[array_rand($users)];
+            $result['scoreWhite'] = rand(0,10);
+            $result['scoreBlack'] = rand(5,10);
+        }
+
+        $response = new Response(json_encode($result));
         return $response;
     }
 }
