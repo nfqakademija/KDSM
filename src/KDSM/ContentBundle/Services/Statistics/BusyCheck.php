@@ -28,12 +28,15 @@ class BusyCheck {
 
     public function busyCheck($checkDateTime){
         $shakesNow = $this->getShakesPerMinute(strtotime($checkDateTime));
+        $tableStatus = null;
         if($shakesNow <= $this->busyThreshold) {
-            $shakesMinuteAgo = $this->getShakesPerMinute(strtotime($checkDateTime)-60);
-            if($shakesMinuteAgo <= $this->busyThreshold)
-                return 'free';
+//            $shakesMinuteAgo = $this->getShakesPerMinute(strtotime($checkDateTime)-60);
+//            if($shakesMinuteAgo <= $this->busyThreshold)
+                $tableStatus = 'free';
         }
-        return 'busy';
+        else
+            $tableStatus = 'busy';
+        return $tableStatus;
     }
 
     private function refreshAPIEvents(){
