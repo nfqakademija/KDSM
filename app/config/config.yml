@@ -77,3 +77,6 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: KDSM\ContentBundle\Entity\User
+    registration:
+            form:
+                type: kdsm_content_registration
