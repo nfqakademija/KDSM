@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new KDSM\ContentBundle\KDSMContentBundle(),
             new KDSM\APIBundle\KDSMAPIBundle(),
