@@ -60,12 +60,12 @@ class DbManager {
     }
 
     public function getLatest(Caller $apiCaller, $dumpAll){
-        $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEvent()));
-        echo $this->rep->getLatestEvent() . "\n";
+        $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEventId()));
+        echo $this->rep->getLatestEventId() . "\n";
         if($dumpAll)
             while($isFullCall) {
-                $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEvent()));
-                echo $this->rep->getLatestEvent() . "\n";
+                $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEventId()));
+                echo $this->rep->getLatestEventId() . "\n";
             }
     }
 }

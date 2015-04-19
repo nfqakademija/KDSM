@@ -13,7 +13,7 @@ use DateInterval;
  */
 class TableEventRepository extends EntityRepository
 {
-    public function getLatestEvent(){
+    public function getLatestEventId(){
         $query = $this->createQueryBuilder('tb');
         $query->select('MAX(tb.eventId)');
         if($query->getQuery()->getResult()[0][1])
@@ -22,7 +22,16 @@ class TableEventRepository extends EntityRepository
             return 1;
     }
 
-    public function getShakeCountAtMinute($timestamp){
+    public function getLatestTableEvent(){
+        $result = null;
+        $query = $this->createQueryBuilder('tb');
+        $query->select('tb')->orderBy('tb.id', 'desc')->setMaxResults(1);
+        if($query->getQuery()->getResult())
+            $result = $query->getQuery()->getResult()[0];
+        return $result;
+    }
+
+    public function getShakeCountAtPeriod($timestamp, $period){
 
         $query = $this->createQueryBuilder('tb');
         $query->select('COUNT(tb.eventId)')
@@ -30,7 +39,7 @@ class TableEventRepository extends EntityRepository
             ->andWhere('tb.timesec >= ?2')
             ->andWhere('tb.timesec <= ?3');
 
-        $query->setParameters(array(1 => 'TableShake', 2 => date('Y-m-d H:i:s', $timestamp), 3 => date('Y-m-d H:i:s', $timestamp+60)));
+        $query->setParameters(array(1 => 'TableShake', 2 => date('Y-m-d H:i:s', $timestamp-$period), 3 => date('Y-m-d H:i:s', $timestamp)));
 
         if($query->getQuery()->getResult()[0][1])
             return $query->getQuery()->getResult()[0][1];
