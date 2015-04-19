@@ -59,10 +59,11 @@ class TableEventRepository extends EntityRepository
     public function getGoalEventsFromId($id){
         $query = $this->createQueryBuilder('tb');
         $query->select()
-            ->where('tb.id >= ?1')
+            ->where('tb.id > ?1')
+//            ->andWhere('tb.id< ?3')
             ->andWhere('tb.type = ?2')
             ->orderBy('tb.eventId', 'ASC');
-        $query->setParameters(array(1 => $id, 2 => 'AutoGoal'));
+        $query->setParameters(array(1 => $id, 2 => 'AutoGoal'/*, 3 => 3968*/));
         return $query->getQuery()->getResult();
     }
 // todo unused anymore

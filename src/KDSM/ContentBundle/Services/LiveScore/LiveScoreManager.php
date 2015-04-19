@@ -66,6 +66,8 @@ class LiveScoreManager{
         $checkDateTime = strtotime('2014-10-06 09:05:00');
         $status = $this->busyCheck->busyCheck($checkDateTime);
 
+//        $this->cacheMan->setLatestCheckedTableGoalId(3905);
+
         if($status == 'free'){
             $this->cacheMan->resetScoreCache();
         }
@@ -89,7 +91,6 @@ class LiveScoreManager{
             $table = $this->cacheMan->resetScoreCache();
 
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
-
         foreach($events as $event){
             if(is_object($event) && $event instanceof TableEvent) {
                 if (json_decode($event->getData())->team == 1)
@@ -102,8 +103,10 @@ class LiveScoreManager{
             }
         }
         //cache up  stuff
-        //$this->setLatestCheckedTableGoalId($event->getId());
-        $this->cacheMan->setScoreCache($table['score']);
+        if(isset($event)) {
+            $this->cacheMan->setLatestCheckedTableGoalId($event->getId());
+            $this->cacheMan->setScoreCache($table['score']);
+        }
         //cleanup
         unset($events);
         unset($event);
