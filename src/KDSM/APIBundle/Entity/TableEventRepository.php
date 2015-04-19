@@ -13,14 +13,14 @@ use DateInterval;
  */
 class TableEventRepository extends EntityRepository
 {
-    public function getLatestEventId(){
-        $query = $this->createQueryBuilder('tb');
-        $query->select('MAX(tb.eventId)');
-        if($query->getQuery()->getResult()[0][1])
-            return $query->getQuery()->getResult()[0][1];
-        else
-            return 1;
-    }
+//    public function getLatestEventId(){
+//        $query = $this->createQueryBuilder('tb');
+//        $query->select('MAX(tb.eventId)');
+//        if($query->getQuery()->getResult()[0][1])
+//            return $query->getQuery()->getResult()[0][1];
+//        else
+//            return 1;
+//    }
 
     public function getLatestTableEvent(){
         $result = null;
@@ -47,24 +47,35 @@ class TableEventRepository extends EntityRepository
             return 0;
     }
 
-    public function getEventsOnDateTime($timestamp){
-        $query = $this->createQueryBuilder('tb');
-        $query->select()
-            ->where('tb.timesec >= ?1')
-            ->andWhere('tb.timesec <= ?2');
-        $query->setParameters(array(1 => date('Y-m-d H:i:s', strtotime('-1 minute',$timestamp)), 2 => date('Y-m-d H:i:s', $timestamp)));
-        return $query->getQuery()->getResult();
-    }
+//    todo unused atm
+//    public function getEventsFromId($id){
+//        $query = $this->createQueryBuilder('tb');
+//        $query->select()
+//            ->where('tb.id >= ?1');
+//        $query->setParameters(array(1 => $id));
+//        return $query->getQuery()->getResult();
+//    }
 
-    public function getSwipesOnDateTime($timestamp){
+    public function getGoalEventsFromId($id){
+        echo $id . "<br/>";
         $query = $this->createQueryBuilder('tb');
         $query->select()
-            ->where('tb.timesec >= ?1')
-            ->andWhere('tb.timesec <= ?2')
-            ->andWhere('tb.type = ?3');
-        $query->setParameters(array(1 => date('Y-m-d H:i:s', strtotime('-2 minutes',$timestamp)), 2 => date('Y-m-d H:i:s', $timestamp), 3 => 'CardSwipe'));
+            ->where('tb.id >= ?1')
+            ->andWhere('tb.type = ?2')
+            ->orderBy('tb.eventId', 'ASC');
+        $query->setParameters(array(1 => $id, 2 => 'AutoGoal'));
         return $query->getQuery()->getResult();
     }
+// todo unused anymore
+//    public function getSwipesOnDateTime($timestamp){
+//        $query = $this->createQueryBuilder('tb');
+//        $query->select()
+//            ->where('tb.timesec >= ?1')
+//            ->andWhere('tb.timesec <= ?2')
+//            ->andWhere('tb.type = ?3');
+//        $query->setParameters(array(1 => date('Y-m-d H:i:s', strtotime('-2 minutes',$timestamp)), 2 => date('Y-m-d H:i:s', $timestamp), 3 => 'CardSwipe'));
+//        return $query->getQuery()->getResult();
+//    }
 
     public function persistObject($newEvent){
         $this->getEntityManager()->persist($newEvent);

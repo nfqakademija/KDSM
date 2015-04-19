@@ -14,7 +14,7 @@ use KDSM\APIBundle\Entity\TableEvent;
 use KDSM\ContentBundle\Entity\LiveScore;
 use KDSM\ContentBundle\Services\Statistics;
 use KDSM\ContentBundle\Services\Statistics\BusyCheck;
-
+use KDSM\ContentBundle\Services\Redis\CacheManager;
 
 /**
  * Class LiveScoreManager
@@ -37,34 +37,44 @@ class LiveScoreManager{
      */
     protected $rep;
 
+    /**
+     * @var CacheManager
+     */
+    protected $cacheMan;
+
     protected $table;
 
     /**
      * @param LiveScore $liveScore
      * @param BusyCheck $busyCheck
      * @param EntityManager $entityManager
+     * @param CacheManager $cacheMan
      */
-    public function __construct(LiveScore $liveScore, BusyCheck $busyCheck, EntityManager $entityManager){
+    public function __construct(LiveScore $liveScore, BusyCheck $busyCheck, EntityManager $entityManager, CacheManager $cacheMan){
         $this->liveScore = $liveScore;
         $this->busyCheck = $busyCheck;
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
+        $this->cacheMan = $cacheMan;
     }
+
 
     /**
      *
      */
-    public function getTableStatus($checkDateTime = '2014-10-06 09:02:00')
+    public function getTableStatus(/*$checkDateTime = '2014-10-06 09:02:00'*/)
     {
+        //todo set to now() at live
+        $checkDateTime = strtotime('2014-10-06 09:05:00');
         $status = $this->busyCheck->busyCheck($checkDateTime);
 
         if($status == 'free'){
             $response['tableStatus'] = $status;
+            $this->cacheMan->resetScoreCache();
         }
         else if ($status == 'busy'){
-            $this->table =['score' => ['white' => 0, 'black' => 0],'players' => [/*should be set by frontend*/]];
             $response['tableStatus'] = $status;
-            if($this->readEvents($checkDateTime))
+            if($this->readEvents())
                 $response['tableData'] = $this->table;
         }
         else
@@ -75,75 +85,32 @@ class LiveScoreManager{
 
 
     /*
-     * gets table events in 1 minute intervals from the given datetime. Counts goals until 10 on one side or
-     * until table free status is reached.
-     * If a cardswipe is encountered before reaching 10 goals on either side, it is treated as newgame flag and score is
-     * immediately displayed.
-     * Afterwards it continues until table free or first cardswipe event. It then checks for other cardswipe events
-     * within 2 minute interval (not affected by able free anymore)
+     * gets latest table events. Counts result until one team wins. As this event should be ran several times during one
+     * BusyCheck interval, the latter should filter out table busy/free stuff
      **/
-    /*
-     * ISSUES:
-     * TODO only searches for players 2 mins after game ends.
-     * TODO Further on later, when frontend will provide player ID's it will only check until that cardswipe.
-     * TODO Currently players are overwritten by a swipe event
-     * TODO Same player can play on multiple positions
-     *
-     */
-    private function readEvents($checkDateTime){
-        $getResults = true;
-        $getPlayers = false;
-        $timestamp = strtotime($checkDateTime);
-        while($getResults){
-            if($this->busyCheck->busyCheck(date('Y-m-d H:i:s', $timestamp)) == 'busy') {
-                //get 1 minutes worth of events
-                $events = $this->rep->getEventsOnDateTime($timestamp);
-                foreach($events as  $event){
-                    if(is_object($event) && $event instanceof TableEvent) {
-                        //scan for goals. break on card swipe if 10 goals are not reached
-                        //if 10 goals are reached, process and count card swipes.
-                        if($event->getType() == 'AutoGoal' && !in_array(10, $this->table['score']))
-                            if(json_decode($event->getData())->team == 1)
-                                $this->table['score']['white']++;
-                            else $this->table['score']['black']++;
-//                        if($event->getType() == 'CardSwipe'){
-//                            if(!in_array(10, $this->table['score'])) {
-//                                $getResults = false; // cardswipe resets the game score counter
-//                                break; //stops further result processing
-//                            }
-//                            else{
-//                                $this->addPlayer($event);
-//                                $getPlayers = true;
-//                            }
-//                        }
-                    }
-                }
-                if($getResults) $timestamp = strtotime('-1 minute', $timestamp); //if goal scan is over do not advance the timestamp
-                if(in_array(10, $this->table['score'])) {$getResults = false; $getPlayers = true;} //if game is over stop the goal scan
-            }
-            else {
-                $getResults = false; //if table status = free
-            }
 
-        }
-        if($getPlayers){
-            $events = $this->rep->getSwipesOnDateTime($timestamp);
-            foreach($events as  $event){
-                if(is_object($event) && $event instanceof TableEvent) {
-                    //add any other detected players
-                    $this->addPlayer($event);
+    private function readEvents(){
+        $this->table = $this->cacheMan->getScoreCache(); //gets latest result
+        if(in_array(10, $this->table['score']))//reset to 0 if latest game ended with a score of 10
+            $this->table = $this->cacheMan->resetScoreCache();
+
+        $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
+
+        foreach($events as $event){
+            if(is_object($event) && $event instanceof TableEvent) {
+                if (json_decode($event->getData())->team == 1)
+                    $this->table['score']['white']++;
+                else $this->table['score']['black']++;
+
+                if (in_array(10, $this->table['score'])) {
+                    //$this->setLatestCheckedTableGoalId($event->getId());
+                    print_r($this->table['score']);
+                    $this->cacheMan->setScoreCache($this->table['score']);
+                    //cache up  stuff
+                    break;
                 }
             }
         }
         return true;
     }
-
-    private function addPlayer($event){
-        if(is_object($event) && $event instanceof TableEvent) {
-            $playerId = $playerId = json_decode($event->getData())->team == 0 ? 1 +
-                json_decode($event->getData())->player : 3 + json_decode($event->getData())->player;
-            $this->table['players'][$playerId] = ['id' => json_decode($event->getData())->card_id];
-        }
-}
-
 }

@@ -5,6 +5,8 @@ namespace KDSM\ContentBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+use Predis;
+
 class DefaultController extends Controller
 {
     public function indexAction()
@@ -18,8 +20,13 @@ class DefaultController extends Controller
     }
 
     public function liveGameAction(){
-        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
-        $tableStatusResponse = $liveScoreManager->getTableStatus();
+        $cacheMan = $this->get('kdsm_content.cache_manager');
+        print_r($cacheMan->getScoreCache());
+
+//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $tableStatusResponse = $liveScoreManager->getTableStatus();
+
+
 //        $rand = rand(1,10);
 //        $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
 //        if($rand <= 5) {
