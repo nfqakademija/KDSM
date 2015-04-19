@@ -81,7 +81,12 @@ class LiveScoreManager{
 
 
     /*
-     * gets latest table events. Counts result until one team wins. As this event should be ran several times during one
+     * gets latest table events. Counts result until one team wins.
+     *
+     * Gets/writes current result to Redis. Tracking is based on the event ID's in the database.
+     * Online check is done counting shake events during last minute.
+     *
+     *  As this event should be ran several times during one
      * BusyCheck interval, the latter should filter out table busy/free stuff
      **/
 
