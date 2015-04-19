@@ -18,7 +18,7 @@ header {
 }
 
 .wallpaper {
-    background-image: url('../images/background1.jpg');
+    background-image: url('../images/background2.jpg');
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -47,7 +47,8 @@ header {
 }
 
 /* Login Form */
-.login-form {
+.login-form,
+.register-form{
     float: none;
     margin: 2em auto;
     padding-bottom: 1em;
@@ -59,7 +60,8 @@ header {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
-.login-form h2 {
+.login-form h2,
+.register-form h2{
     font-family: 'Roboto', 'PT Sans', sans-serif;
     font-size: 1.8em;
     padding-top: 20px;
@@ -73,6 +75,25 @@ header {
     display: block;
     padding: 0.7em 1em;
     margin: 1em auto;
+}
+
+#fos_user_registration_form > div {
+    margin: 1em 0;
+}
+
+.register-form label {
+    color:white;
+    font-weight: 300;
+    display: inline-block;
+    width: 35%;
+}
+
+.register-form input[type=text],
+.register-form input[type=email],
+.register-form input[type=number],
+.register-form input[type=password] {
+    padding: 0.2em 0.4em;
+    width: 60%;
 }
 
 .login-form label.remember-me-label {
@@ -100,13 +121,15 @@ header {
     height: 16px;
 }
 
-.login-form input[type=submit] {
+.login-form input[type=submit],
+.register-form input[type=submit] {
     background-color: #F48E2B;
     border: none;
-    float: right;
     padding: 0.5em 2em;
     color: white;
     border-color: #CB6E13;
+    display: block;
+    margin: 0 auto;
 }
 /* Users */
 .users-list {
@@ -236,9 +259,12 @@ header {
 /* Main page content */
 .main-content {
     position: relative;
-    left: 8%;
     float: none;
     margin: 0 auto;
+}
+
+.main-content.after-fixed-sidebar {
+    left:8%;
 }
 
 /* Logged homepage*/

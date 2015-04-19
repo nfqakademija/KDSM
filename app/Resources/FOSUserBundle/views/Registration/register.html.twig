@@ -1,0 +1,10 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <div class="col-sm-5 register-form">
+        <h2>{{ 'registration.heading' | trans }}</h2>
+        {% include "FOSUserBundle:Registration:register_content.html.twig" %}
+    </div>
+{% endblock fos_user_content %}
