@@ -30,7 +30,7 @@
                      {{ include('KDSMContentBundle::Includes/sidebar.html.twig') }}
                 {% endif %}
             {% endblock %}
-            <main class=" {% if not app.user %} col-sm-12 main-content {% else %} col-sm-9 main-content {% endif %}">
+            <main class="main-content {% if not app.user %} container {% else %} col-sm-9 after-fixed-sidebar {% endif %}">
                 {% block content %}
 
                 {% endblock %}
