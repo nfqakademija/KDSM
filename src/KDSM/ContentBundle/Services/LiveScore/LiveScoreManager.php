@@ -42,8 +42,6 @@ class LiveScoreManager{
      */
     protected $cacheMan;
 
-    protected $table;
-
     /**
      * @param LiveScore $liveScore
      * @param BusyCheck $busyCheck
@@ -69,18 +67,14 @@ class LiveScoreManager{
         $status = $this->busyCheck->busyCheck($checkDateTime);
 
         if($status == 'free'){
-            $response['tableStatus'] = $status;
             $this->cacheMan->resetScoreCache();
         }
         else if ($status == 'busy'){
-            $response['tableStatus'] = $status;
-            if($this->readEvents())
-                $response['tableData'] = $this->table;
+            $this->readEvents();
         }
         else
-            $response['tableStatus'] = 'error';
-        return $response;
-
+            $status = 'error';
+        $this->cacheMan->setTableStatusCache($status);
     }
 
 
@@ -90,27 +84,30 @@ class LiveScoreManager{
      **/
 
     private function readEvents(){
-        $this->table = $this->cacheMan->getScoreCache(); //gets latest result
-        if(in_array(10, $this->table['score']))//reset to 0 if latest game ended with a score of 10
-            $this->table = $this->cacheMan->resetScoreCache();
+        $table = $this->cacheMan->getScoreCache(); //gets latest result
+        if(in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
+            $table = $this->cacheMan->resetScoreCache();
 
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
 
         foreach($events as $event){
             if(is_object($event) && $event instanceof TableEvent) {
                 if (json_decode($event->getData())->team == 1)
-                    $this->table['score']['white']++;
-                else $this->table['score']['black']++;
+                    $table['score']['white']++;
+                else $table['score']['black']++;
 
-                if (in_array(10, $this->table['score'])) {
-                    //$this->setLatestCheckedTableGoalId($event->getId());
-                    print_r($this->table['score']);
-                    $this->cacheMan->setScoreCache($this->table['score']);
-                    //cache up  stuff
+                if (in_array(10, $table['score'])) {
                     break;
                 }
             }
         }
+        //cache up  stuff
+        //$this->setLatestCheckedTableGoalId($event->getId());
+        $this->cacheMan->setScoreCache($table['score']);
+        //cleanup
+        unset($events);
+        unset($event);
+
         return true;
     }
 }

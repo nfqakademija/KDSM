@@ -47,5 +47,13 @@ class CacheManager {
         $this->redis->hset('table:LiveScore', 'scoreBlack', $score['black']);
     }
 
+    public function getTableStatusCache(){
+        return $this->redis->hget('table:LiveScore', 'tableStatus');
+    }
+
+    public function setTableStatusCache($status){
+        return $this->redis->hset('table:LiveScore', 'tableStatus', $status);
+    }
+
 
 }

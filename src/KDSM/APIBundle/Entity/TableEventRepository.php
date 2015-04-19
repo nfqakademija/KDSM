@@ -57,7 +57,6 @@ class TableEventRepository extends EntityRepository
 //    }
 
     public function getGoalEventsFromId($id){
-        echo $id . "<br/>";
         $query = $this->createQueryBuilder('tb');
         $query->select()
             ->where('tb.id >= ?1')
