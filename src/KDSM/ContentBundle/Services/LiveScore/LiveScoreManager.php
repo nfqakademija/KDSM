@@ -58,7 +58,7 @@ class LiveScoreManager{
     {
         $status = $this->busyCheck->busyCheck($checkDateTime);
 
-        if($status == 'free'){
+        if($status == 'free') {
             $response['tableStatus'] = $status;
         }
         else if ($status == 'busy'){

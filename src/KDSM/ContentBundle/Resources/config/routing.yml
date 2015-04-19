@@ -1,6 +1,15 @@
 admin:
     path:     /admin
     defaults: { _controller: KDSMContentBundle:Admin:index }
+
+admin_changeparameter:
+    path: /adminChangeParameter
+    defaults: { _controller: KDSMContentBundle:Admin:change }
+
+admin_removeparameter:
+    path: /adminRemoveParameter
+    defaults: {_controller: KDSMContentBundle:Admin:remove}
+
 kdsm_content_homepage:
     path:     /
     defaults: { _controller: KDSMContentBundle:Default:index }
@@ -20,6 +29,7 @@ user_view:
 queue:
     path:     /queue
     defaults: { _controller: KDSMContentBundle:Queue:index }
+
 ksdm_live_game:
     path:     /content/live_game
     defaults: { _controller: KDSMContentBundle:Default:liveGame }

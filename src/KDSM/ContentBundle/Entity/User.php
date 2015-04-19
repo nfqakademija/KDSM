@@ -11,6 +11,7 @@ namespace KDSM\ContentBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -23,8 +24,16 @@ class User extends BaseUser
         parent::__construct();
     }
 
-    /*
-     * @var integer
+    /**
+     * @ORM\Column(type="integer", length=11)
+     *
+     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
+     * @Assert\Length(
+     *     min=3,
+     *     max="11",
+     *     minMessage="The name is too short.",
+     *     maxMessage="The name is too long."
+     * )
      */
     protected $cardId;
 
@@ -62,7 +71,7 @@ class User extends BaseUser
      */
     public function setCardId($cardId)
     {
-        $this->cardId = $cardId;
+        (isset($cardId)) ? $this->cardId = $cardId  : $this->cardId = 0;
 
         return $this;
     }
