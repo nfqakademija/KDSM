@@ -36,6 +36,7 @@ class DbManager {
         $newEvent->setType($object['type']);
         $newEvent->setData($object['data']);
         $this->rep->persistObject($newEvent);
+        unset($newEvent);
     }
 
     public function setIterator($iterator){
@@ -56,7 +57,10 @@ class DbManager {
         foreach($apiResponse['records'] as $object){
             $this->insertObject($object);
         }
-        return sizeof($apiResponse['records']) == 100 ? true : false;
+        unset($object);
+        $responseSize = sizeof($apiResponse['records']);
+        unset($apiResponse);
+        return $responseSize == 100 ? true : false;
     }
 
     public function getLatest(Caller $apiCaller, $dumpAll){
