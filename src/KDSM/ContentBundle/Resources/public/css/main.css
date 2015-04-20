@@ -27,7 +27,8 @@ header {
 }
 
 .full-screen {
-    position: fixed;
+    position: absolute;
+    background-attachment: fixed;
     top: 0;
     left: 0;
     height: 100%;
@@ -44,6 +45,23 @@ header {
 
 .result-page {
     margin-top:10%;
+}
+
+.content-heading h4 {
+    background: rgba(0,0,0,0.8);
+    padding: 1em 2em;
+    margin: 0;
+    color: white;
+    margin: 1em 0 1em 0;
+}
+
+table {
+    background: rgba(0, 0, 0, 0.9) !important;
+    color:white;
+}
+
+table td {
+    border-color: #222222 !important;
 }
 
 /* Login Form */
@@ -66,7 +84,7 @@ header {
     font-size: 1.8em;
     padding-top: 20px;
     padding-bottom: 10px;
-    color: #4278A6;
+    color: white;
     text-align: center;
     border-bottom: 1px solid #CACACA;
 }
@@ -275,10 +293,13 @@ header {
     overflow: hidden;
     text-align: center;
     margin: 5% 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2em 1em;
+    border: 1px solid black;280
 }
 
 .result-box span.result {
-    font-size: 8em;
+    font-size: 5.4em;
     font-family: Open Sans !important;
     font-weight: 400;
     font-style: italic;
