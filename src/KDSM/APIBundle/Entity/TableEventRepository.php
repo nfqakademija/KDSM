@@ -13,14 +13,14 @@ use DateInterval;
  */
 class TableEventRepository extends EntityRepository
 {
-//    public function getLatestEventId(){
-//        $query = $this->createQueryBuilder('tb');
-//        $query->select('MAX(tb.eventId)');
-//        if($query->getQuery()->getResult()[0][1])
-//            return $query->getQuery()->getResult()[0][1];
-//        else
-//            return 1;
-//    }
+    public function getLatestEventId(){
+        $query = $this->createQueryBuilder('tb');
+        $query->select('MAX(tb.eventId)');
+        if($query->getQuery()->getResult()[0][1])
+            return $query->getQuery()->getResult()[0][1];
+        else
+            return 1;
+    }
 
     public function getLatestTableEvent(){
         $result = null;
