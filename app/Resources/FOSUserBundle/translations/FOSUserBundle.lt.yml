@@ -14,7 +14,7 @@ group:
 # Security
 security:
     login:
-        heading: 'Prisijungimo forma'
+        heading: Prisijungimas
         username: "Naudotojo vardas:"
         password: "Slaptažodis:"
         remember_me: Atsiminti
@@ -38,11 +38,11 @@ change_password:
 
 # Registration
 registration:
-    heading: 'Registracija'
     check_email: El. pašto pranešimas išsiųstas adresu %email%. Jame rasite nuorodą, kurią aplankę, aktyvuosite savo paskyrą.
     confirmed: Sveikiname, jūsų paskyra aktyvuota.
     back: Grįžti atgal
     submit: Registruotis
+    form: Registracija
     flash:
         user_created: Naudotojas sukurtas
     email:
