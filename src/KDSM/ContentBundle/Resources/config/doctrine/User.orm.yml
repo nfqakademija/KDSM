@@ -11,19 +11,25 @@ KDSM\ContentBundle\Entity\User:
         cardId:
             column: card_id
             type: integer
+            nullable: TRUE
         profilePicturePath:
             column: profile_picture_path
             type: string
             length: '255'
+            nullable: TRUE
         skillLevel:
             column: skill_level
             type: integer
+            nullable: TRUE
         lastPlayed:
             column: last_played
             type: datetime
+            nullable: TRUE
         wins:
             column: wins
             type: integer
+            nullable: TRUE
         losses:
             column: losses
             type: integer
+            nullable: TRUE
