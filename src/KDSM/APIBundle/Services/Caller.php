@@ -11,11 +11,11 @@ class Caller {
     protected $password;
     protected $client;
 
-    public function __construct($url, $user, $password){
+    public function __construct($url, $user, $password, $client){
         $this->url = $url;
         $this->user = $user;
         $this->password = $password;
-        $this->client = new GuzzleHttp\Client();
+        $this->client = $client;
     }
 
     public function callApi($count = 100, $startId = 1){
