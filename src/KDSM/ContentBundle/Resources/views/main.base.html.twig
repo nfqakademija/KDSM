@@ -53,7 +53,7 @@
             function TableData() {
                 $.ajax({
                     type: "post",
-                    url: "http://localhost/KDSM/web/content/live_game",
+                    url: "{{ path('ksdm_live_game') }}",
                     success: function (response_json) {
                         var response = $.parseJSON(response_json);
                         if (response.status == 'free') {
