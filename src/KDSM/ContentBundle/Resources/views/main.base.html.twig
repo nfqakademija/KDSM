@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
 {% endblock %}
 {% block body %}
-    <div class="container-fluid wallpaper full-screen">
+    <div class="container-fluid">
         {% if not app.user %}
         {% block header %}
             <header class="row">
@@ -49,7 +49,7 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
-            //setInterval(TableData, 2000);
+            setInterval(TableData, 2000);
             function TableData() {
                 $.ajax({
                     type: "post",
@@ -57,12 +57,14 @@
                     success: function (response_json) {
                         var response = $.parseJSON(response_json);
                         if (response.status == 'free') {
-                            $("div.result-box").hide();
+                            $("div.result-box").addClass("hidden");
+                            $("div.table-free").removeClass("hidden");
                         }
                         else if (response.status == 'busy') {
                             $("span.result.white").text(response.scoreWhite);
                             $("span.result.black").text(response.scoreBlack);
-                            $("div.result-box").show();
+                            $("div.result-box").removeClass("hidden");
+                            $("div.table-free").addClass("hidden");
                         }
                     }
                 });

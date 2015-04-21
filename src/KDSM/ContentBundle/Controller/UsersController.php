@@ -16,6 +16,7 @@ class UsersController extends Controller
         return $this->render('KDSMContentBundle:Users:view.html.twig', array('route' => $this->get('kernel')->getRootDir()));
 
     }
+
     public function logoutAction()
     {
     }
