@@ -1,14 +1,18 @@
 parameters:
     table.busy_threshold: 10
+    table.check_period: 60
 services:
+    kdsm_content.cache_manager:
+        class: KDSM\ContentBundle\Services\Redis\CacheManager
+        arguments: [@snc_redis.default]
     kdsm_content.table_busy_check:
         class: KDSM\ContentBundle\Services\Statistics\BusyCheck
-        arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%]
+        arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%, %table.check_period%]
     kdsm_content.live_score:
         class: KDSM\ContentBundle\Entity\LiveScore
     kdsm_content.live_score_manager:
         class: KDSM\ContentBundle\Services\LiveScore\LiveScoreManager
-        arguments: [@kdsm_content.live_score, @kdsm_content.table_busy_check, @doctrine.orm.entity_manager]
+        arguments: [@kdsm_content.live_score, @kdsm_content.table_busy_check, @doctrine.orm.entity_manager, @kdsm_content.cache_manager]
     kdsm_content.parameter_getter:
         class: KDSM\ContentBundle\Services\ParameterService
         arguments: [@doctrine.orm.entity_manager]
