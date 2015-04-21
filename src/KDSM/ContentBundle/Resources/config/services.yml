@@ -16,3 +16,7 @@ services:
     kdsm_content.parameter_getter:
         class: KDSM\ContentBundle\Services\ParameterService
         arguments: [@doctrine.orm.entity_manager]
+    kdsm_content.registration.form.type:
+        class: KDSM\ContentBundle\Form\Type\RegistrationFormType
+        tags:
+           - { name: form.type, alias: kdsm_content_registration }

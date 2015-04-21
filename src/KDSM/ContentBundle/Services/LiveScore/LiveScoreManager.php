@@ -63,13 +63,15 @@ class LiveScoreManager{
     public function getTableStatus(/*$checkDateTime = '2014-10-06 09:02:00'*/)
     {
         //todo set to now() at live
-        $checkDateTime = strtotime('2014-10-06 09:05:00');
+//        $checkDateTime = strtotime('2014-10-07 09:05:00');
+        $checkDateTime = strtotime('now');
         $status = $this->busyCheck->busyCheck($checkDateTime);
-
+//
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
 
         if($status == 'free'){
             $this->cacheMan->resetScoreCache();
+            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestEventId());
         }
         else if ($status == 'busy'){
             $this->readEvents();

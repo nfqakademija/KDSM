@@ -40,7 +40,6 @@ class TableEventRepository extends EntityRepository
             ->andWhere('tb.timesec <= ?3');
 
         $query->setParameters(array(1 => 'TableShake', 2 => date('Y-m-d H:i:s', $timestamp-$period), 3 => date('Y-m-d H:i:s', $timestamp)));
-
         if($query->getQuery()->getResult()[0][1])
             return $query->getQuery()->getResult()[0][1];
         else

@@ -29,6 +29,11 @@ user_view:
 queue:
     path:     /queue
     defaults: { _controller: KDSMContentBundle:Queue:index }
+
+statistics:
+    path:     /statistics
+    defaults: { _controller: KDSMContentBundle:Statistics:index }
+
 ksdm_live_game:
     path:     /content/live_game
     defaults: { _controller: KDSMContentBundle:Default:liveGame }
