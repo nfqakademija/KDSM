@@ -15,28 +15,25 @@ class BusyCheck {
      */
     private $rep;
     private $busyThreshold;
+    private $checkPeriod;
 
-    public function __construct(EntityManager $entityManager, $threshold){
+    public function __construct(EntityManager $entityManager, $threshold, $checkPeriod){
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
         $this->busyThreshold = $threshold;
-    }
-
-    private function getShakesPerMinute($eventDateTime){
-        return $this->rep->getShakeCountAtMinute($eventDateTime);
+        $this->checkPeriod = $checkPeriod;
     }
 
     public function busyCheck($checkDateTime){
-        $shakesNow = $this->getShakesPerMinute(strtotime($checkDateTime));
+        $shakesNow = $this->rep->getShakeCountAtPeriod($checkDateTime, $this->checkPeriod);
+        $tableStatus = null;
         if($shakesNow <= $this->busyThreshold) {
-            $shakesMinuteAgo = $this->getShakesPerMinute(strtotime($checkDateTime)-60);
-            if($shakesMinuteAgo <= $this->busyThreshold)
-                return 'free';
+//            $shakesMinuteAgo = $this->getShakesPerMinute($checkDateTime-60);
+//            if($shakesMinuteAgo <= $this->busyThreshold)
+                $tableStatus = 'free';
         }
-        return 'busy';
-    }
-
-    private function refreshAPIEvents(){
-
+        else
+            $tableStatus = 'busy';
+        return $tableStatus;
     }
 }
