@@ -38,7 +38,7 @@ class Parameter
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -61,7 +61,7 @@ class Parameter
     /**
      * Get parameterName
      *
-     * @return string 
+     * @return string
      */
     public function getParameterName()
     {
@@ -84,7 +84,7 @@ class Parameter
     /**
      * Get parameterValue
      *
-     * @return string 
+     * @return string
      */
     public function getParameterValue()
     {
@@ -107,7 +107,7 @@ class Parameter
     /**
      * Get timeChanged
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTimeChanged()
     {

@@ -1,65 +1,69 @@
 {% extends 'KDSMContentBundle::main.base.html.twig' %}
 {% block content %}
-        <div class="row table-free black-bg hidden">
-            <p class="col-sm-10">Stalas šiuo metu laisvas</p>
-            <button class="col-sm-2 pull-right btn btn-success">Užsakyti eilę</button>
-        </div>
-        <div class="row result-box black-bg hidden">
-                <div class="col-sm-4">
-                    <div class="row team-white">
-                        <div class="first user-photo pull-left">
-                            <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt="Logo"/>
-                        </div>
-                        <div class="first user-photo pull-right">
-                            <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt="Logo"/>
-                        </div>
-                    </div>
+    <div class="row table-free black-bg hidden">
+        <p class="col-sm-10">Stalas šiuo metu laisvas</p>
+        <button class="col-sm-2 pull-right btn btn-success">Užsakyti eilę</button>
+    </div>
+    <div class="row result-box black-bg hidden">
+        <div class="col-sm-4">
+            <div class="row team-white">
+                <div class="first user-photo pull-left">
+                    <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}"
+                         alt="Logo"/>
                 </div>
-                <div class="col-sm-4">
-                    <div class="row">
-                        <span class="result white">0</span>
-                        <span class="separator result">:</span>
-                        <span class="result black">0</span>
-                    </div>
+                <div class="first user-photo pull-right">
+                    <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}"
+                         alt="Logo"/>
                 </div>
-                <div class="col-sm-4">
-                    <div class="row team-black">
-                        <div class="first user-photo pull-right">
-                            <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt="Logo"/>
-                        </div>
-                        <div class="second user-photo pull-left">
-                            <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt="Logo"/>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <span class="result white">0</span>
+                <span class="separator result">:</span>
+                <span class="result black">0</span>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row team-black">
+                <div class="first user-photo pull-right">
+                    <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}"
+                         alt="Logo"/>
                 </div>
+                <div class="second user-photo pull-left">
+                    <img class="img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}"
+                         alt="Logo"/>
+                </div>
+            </div>
         </div>
-        <div class="row content-heading">
-            <h4>Next 5 games in the queue</h4>
-        </div>
-        <table class="table table-responsive table-bordered" cellpadding="0">
-            <thead>
-                <th class="team">Team</th>
-                <th class="vs"></th>
-                <th class="opponents">Opponents</th>
-            </thead>
-            <tbody>
-                {% for i in 0..4 %}
-                <tr>
-                    <td>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                        <span class="col-sm-8 text-center">Dainius & Jonas</span>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                    </td>
-                    <td>
-                        <p>VS</p>
-                    </td>
-                    <td>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                        <span class="col-sm-8 text-center">Rokas & Tomas</span>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    </div>
+    <div class="row content-heading">
+        <h4>Next 5 games in the queue</h4>
+    </div>
+    <table class="table table-responsive table-bordered" cellpadding="0">
+        <thead>
+        <th class="team">Team</th>
+        <th class="vs"></th>
+        <th class="opponents">Opponents</th>
+        </thead>
+        <tbody>
+        {% for i in 0..4 %}
+            <tr>
+                <td>
+                    <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    <span class="col-sm-8 text-center">Dainius & Jonas</span>
+                    <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                </td>
+                <td>
+                    <p>VS</p>
+                </td>
+                <td>
+                    <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    <span class="col-sm-8 text-center">Rokas & Tomas</span>
+                    <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

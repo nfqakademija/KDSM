@@ -1,28 +1,32 @@
 {% extends 'KDSMContentBundle::main.base.html.twig' %}
 {% block content %}
-   <div class="queue-container">
-       {% for i in 1..5 %}
-       <div class="row queue-game">
-            <div class="col-sm-5">
-                <div class="row">
-                   <img class="col-sm-3 img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                   <span class="col-sm-6 text-center">Dainius & Jonas</span>
-                   <img class="col-sm-3 img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+    <div class="queue-container">
+        {% for i in 1..5 %}
+            <div class="row queue-game">
+                <div class="col-sm-5">
+                    <div class="row">
+                        <img class="col-sm-3 img-responsive"
+                             src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                        <span class="col-sm-6 text-center">Dainius & Jonas</span>
+                        <img class="col-sm-3 img-responsive"
+                             src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        <p>VS</p>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <img class="col-sm-3 img-responsive"
+                             src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                        <span class="col-sm-6 text-center">Rokas & Tomas</span>
+                        <img class="col-sm-3 img-responsive"
+                             src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <div class="row">
-                   <p>VS</p>
-                </div>
-            </div>
-            <div class="col-sm-5">
-                <div class="row">
-                   <img class="col-sm-3 img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                   <span class="col-sm-6 text-center">Rokas & Tomas</span>
-                   <img class="col-sm-3 img-responsive" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                </div>
-            </div>
-       </div>
-       {% endfor %}
-   </div>
+        {% endfor %}
+    </div>
 {% endblock %}

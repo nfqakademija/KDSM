@@ -14,3 +14,6 @@ Fresh install after cloning from Git: (caution as fixtures:load command will tru
     php app/console doctrine:schema:update  --force
 
     php app/console doctrine:fixtures:load
+
+Download latest data from api by console: (not using --env=prod leads to memory leak during processing
+php app/console api:getlatest --all --env=prod

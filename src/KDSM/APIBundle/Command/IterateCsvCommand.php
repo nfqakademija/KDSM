@@ -8,6 +8,7 @@
 
 namespace KDSM\APIBundle\Command;
 
+use KDSM\APIBundle\Entity\TableEventTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,14 +16,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-use Doctrine\ORM\EntityManager;
-use KDSM\APIBundle\Entity\TableEventTypeRepository;
-
-class IterateCsvCommand extends ContainerAwareCommand{
+class IterateCsvCommand extends ContainerAwareCommand
+{
     protected function configure()
     {
         $this->setName('api:iterate');
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $iterator = $this->getContainer()->get('api.api_csv_iterator');

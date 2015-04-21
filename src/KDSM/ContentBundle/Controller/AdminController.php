@@ -2,9 +2,9 @@
 
 namespace KDSM\ContentBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use KDSM\ContentBundle\Form\ParameterType;
 use KDSM\ContentBundle\Entity\Parameter;
+use KDSM\ContentBundle\Form\ParameterType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
@@ -26,12 +26,13 @@ class AdminController extends Controller
         }
 
         return $this->render('KDSMContentBundle:Admin:index.html.twig', array(
-                'form' => $form->createView(),
-                'parameters' => $rep->getAllParameters()
-            ));
+            'form' => $form->createView(),
+            'parameters' => $rep->getAllParameters()
+        ));
     }
 
-    public function changeAction(Request $request){
+    public function changeAction(Request $request)
+    {
 
         $parameter = new Parameter();
 
@@ -47,9 +48,10 @@ class AdminController extends Controller
         ));
     }
 
-    public function removeAction(Request $request){
+    public function removeAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $rep= $em->getRepository('KDSMContentBundle:Parameter');
+        $rep = $em->getRepository('KDSMContentBundle:Parameter');
 
         $rep->removeParameter($request->request->get('parameter'));
     }

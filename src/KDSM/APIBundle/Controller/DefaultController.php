@@ -8,6 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('KDSMAPIBundle:Default:index.html.twig', array('route' => $this->get('kernel')->getRootDir()));
+        return $this->render('KDSMAPIBundle:Default:index.html.twig',
+            array('route' => $this->get('kernel')->getRootDir()));
     }
 }

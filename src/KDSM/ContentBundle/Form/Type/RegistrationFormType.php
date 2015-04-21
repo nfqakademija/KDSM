@@ -19,7 +19,8 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('cardId', 'integer', array(
                 'label' => 'Kortelės ID',
-                'data' => '0'));
+                'data' => '0'
+            ));
     }
 
     public function getParent()

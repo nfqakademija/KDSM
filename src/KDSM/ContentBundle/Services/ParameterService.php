@@ -8,18 +8,19 @@
 
 namespace KDSM\ContentBundle\Services;
 
-use Doctrine\ORM\EntityManager;
-
-class ParameterService {
+class ParameterService
+{
 
     protected $rep;
 
-    public function __construct($entityManager){
+    public function __construct($entityManager)
+    {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMContentBundle:Parameter');
     }
-    
-    public function getParameterValue($name){
+
+    public function getParameterValue($name)
+    {
         return $this->rep->getParameterValueByName($name);
     }
 }

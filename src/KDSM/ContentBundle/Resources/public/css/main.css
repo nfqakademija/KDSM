@@ -19,7 +19,7 @@ header {
 }
 
 .logo {
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 body {
@@ -36,19 +36,19 @@ body {
     background-attachment: fixed;
     top: 0;
     left: 0;
-    bottom:0;
-    right:0;
+    bottom: 0;
+    right: 0;
     height: 100%;
     width: 100%;
     z-index: 0;
 }
 
 .result-page {
-    margin-top:10%;
+    margin-top: 10%;
 }
 
 .content-heading {
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     padding: 0em 1em;
     color: white;
     margin: 1em 0 0 0;
@@ -57,7 +57,7 @@ body {
 
 table {
     background: rgba(0, 0, 0, 0.9) !important;
-    color:white;
+    color: white;
 }
 
 table td {
@@ -66,7 +66,7 @@ table td {
 
 /* Login Form */
 .login-form,
-.register-form{
+.register-form {
     float: none;
     margin: 2em auto;
     padding-bottom: 1em;
@@ -79,7 +79,7 @@ table td {
 }
 
 .login-form h2,
-.register-form h2{
+.register-form h2 {
     font-family: 'Roboto', 'PT Sans', sans-serif;
     font-size: 1.8em;
     padding-top: 20px;
@@ -100,7 +100,7 @@ table td {
 }
 
 .register-form label {
-    color:white;
+    color: white;
     font-weight: 300;
     display: inline-block;
     width: 35%;
@@ -128,7 +128,7 @@ table td {
     margin: 5px;
 }
 
-.login-form input[type=checkbox]:before{
+.login-form input[type=checkbox]:before {
     width: 20px;
     height: 20px;
 }
@@ -149,6 +149,7 @@ table td {
     display: block;
     margin: 0 auto;
 }
+
 /* Users */
 .users-list {
 
@@ -177,7 +178,7 @@ table td {
 .sidebar {
     height: 100%;
     background: #212121;
-    position:fixed;
+    position: fixed;
     left: 0;
     top: 0;
 }
@@ -191,11 +192,11 @@ table td {
     max-height: 60%;
     margin: 5% auto;
     display: block;
-    -webkit-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
-    -moz-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
-    -ms-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
-    -o-box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
-    box-shadow: 0 0 3px 1px rgba(0,0,0,.2);
+    -webkit-box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+    -ms-box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+    -o-box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
@@ -205,8 +206,8 @@ table td {
 
 .user-info span.user-name {
     display: block;
-    height:10%;
-    color:white;
+    height: 10%;
+    color: white;
     font-size: 1.2em;
     font-family: Open Sans !important;
     font-weight: 400;
@@ -282,7 +283,7 @@ table td {
 }
 
 .main-content.after-fixed-sidebar {
-    left:8%;
+    left: 8%;
 }
 
 /* Logged homepage*/
@@ -294,7 +295,7 @@ table td {
 
 .table-free p {
     color: white;
-    font-size:18px;
+    font-size: 18px;
 }
 
 .table-free button {
@@ -320,7 +321,7 @@ table td {
 }
 
 .result-box span.separator {
-    padding:0 5%;
+    padding: 0 5%;
 }
 
 .user-photo {

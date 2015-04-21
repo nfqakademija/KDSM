@@ -9,8 +9,8 @@
 namespace KDSM\ContentBundle\Entity;
 
 
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -71,7 +71,7 @@ class User extends BaseUser
      */
     public function setCardId($cardId)
     {
-        (isset($cardId)) ? $this->cardId = $cardId  : $this->cardId = 0;
+        (isset($cardId)) ? $this->cardId = $cardId : $this->cardId = 0;
 
         return $this;
     }
@@ -79,7 +79,7 @@ class User extends BaseUser
     /**
      * Get cardId
      *
-     * @return integer 
+     * @return integer
      */
     public function getCardId()
     {
@@ -102,7 +102,7 @@ class User extends BaseUser
     /**
      * Get profilePicturePath
      *
-     * @return string 
+     * @return string
      */
     public function getProfilePicturePath()
     {
@@ -125,7 +125,7 @@ class User extends BaseUser
     /**
      * Get skillLevel
      *
-     * @return integer 
+     * @return integer
      */
     public function getSkillLevel()
     {
@@ -148,7 +148,7 @@ class User extends BaseUser
     /**
      * Get lastPlayed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastPlayed()
     {
@@ -171,7 +171,7 @@ class User extends BaseUser
     /**
      * Get wins
      *
-     * @return integer 
+     * @return integer
      */
     public function getWins()
     {
@@ -194,7 +194,7 @@ class User extends BaseUser
     /**
      * Get losses
      *
-     * @return integer 
+     * @return integer
      */
     public function getLosses()
     {

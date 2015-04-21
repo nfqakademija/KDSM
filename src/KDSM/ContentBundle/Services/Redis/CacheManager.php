@@ -1,5 +1,6 @@
 <?php
 namespace KDSM\ContentBundle\Services\Redis;
+
 /**
  * Created by PhpStorm.
  * User: Vilkazz
@@ -7,51 +8,67 @@ namespace KDSM\ContentBundle\Services\Redis;
  * Time: 12:02 PM
  */
 
-class CacheManager {
+class CacheManager
+{
 
     private $redis;
 
-    public function __construct($redis){
+    public function __construct($redis)
+    {
         $this->redis = $redis;
     }
 
-    public function getLatestCheckedTableGoalId(){
-        if(!$this->redis->exists('liveScore:lastCheckId')) {
+    public function getLatestCheckedTableGoalId()
+    {
+        if (!$this->redis->exists('liveScore:lastCheckId')) {
 //            $latestEvent = $this->rep->getLatestId();
             //todo uncomment above line when testing on live data
             $latestEvent = 3903;
             $this->redis->set('liveScore:lastCheckId', $latestEvent);
             $eventId = $latestEvent;
-        }
-        else
+        } else {
             $eventId = $this->redis->get('liveScore:lastCheckId');
+        }
+
         return $eventId;
     }
 
-    public function setLatestCheckedTableGoalId($id){
+    public function setLatestCheckedTableGoalId($id)
+    {
         $this->redis->set('liveScore:lastCheckId', $id);
     }
-    public function resetScoreCache(){
+
+    public function resetScoreCache()
+    {
         $this->redis->hset('table:LiveScore', 'scoreWhite', 0);
         $this->redis->hset('table:LiveScore', 'scoreBlack', 0);
+
         return ['score' => ['white' => 0, 'black' => 0]];
     }
 
-    public function getScoreCache(){
-        return ['score' => ['white' => $this->redis->hget('table:LiveScore', 'scoreWhite'),
-            'black' =>  $this->redis->hget('table:LiveScore', 'scoreBlack')]];
+    public function getScoreCache()
+    {
+        return [
+            'score' => [
+                'white' => $this->redis->hget('table:LiveScore', 'scoreWhite'),
+                'black' => $this->redis->hget('table:LiveScore', 'scoreBlack')
+            ]
+        ];
     }
 
-    public function setScoreCache($score){
+    public function setScoreCache($score)
+    {
         $this->redis->hset('table:LiveScore', 'scoreWhite', $score['white']);
         $this->redis->hset('table:LiveScore', 'scoreBlack', $score['black']);
     }
 
-    public function getTableStatusCache(){
+    public function getTableStatusCache()
+    {
         return $this->redis->hget('table:LiveScore', 'tableStatus');
     }
 
-    public function setTableStatusCache($status){
+    public function setTableStatusCache($status)
+    {
         return $this->redis->hset('table:LiveScore', 'tableStatus', $status);
     }
 

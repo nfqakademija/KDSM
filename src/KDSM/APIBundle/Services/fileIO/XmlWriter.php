@@ -1,18 +1,21 @@
 <?php
 namespace KDSM\APIBundle\Services\fileIO;
 
-use \Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use XMLWriter as XMLFileWriter;
 
-class XmlWriter extends ContainerAware implements WriterInterface{
+class XmlWriter extends ContainerAware implements WriterInterface
+{
     protected $xmmWriter;
 
-    public function __construct($rootDir, $filePath){
+    public function __construct($rootDir, $filePath)
+    {
         $this->xmlWriter = new XMLFileWriter();
         $this->xmlWriter->openURI($rootDir . $filePath);
     }
 
-    public function writeArray($convertedArray){
+    public function writeArray($convertedArray)
+    {
         if (is_array($convertedArray['records'])) {
             foreach ($convertedArray['records'] as $record) {
                 $this->xmlWriter->startElement('entry');
@@ -23,17 +26,20 @@ class XmlWriter extends ContainerAware implements WriterInterface{
                 $this->xmlWriter->writeElement('data', $record['data']);
                 $this->xmlWriter->endElement();
             }
+        } else {
+            return false;
         }
-        else return false;
     }
 
-    public function writeDocumentHead(){
-        $this->xmlWriter->startDocument('1.0','UTF-8');
+    public function writeDocumentHead()
+    {
+        $this->xmlWriter->startDocument('1.0', 'UTF-8');
         $this->xmlWriter->setIndent(4);
         $this->xmlWriter->startElement('results');
     }
 
-    public function writeDocumentFooter(){
+    public function writeDocumentFooter()
+    {
         $this->xmlWriter->endElement();
         $this->xmlWriter->endDocument();
         $this->xmlWriter->flush();

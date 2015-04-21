@@ -8,7 +8,8 @@ namespace KDSM\APIBundle\Services\fileIO;
  * Time: 5:56 PM
  */
 
-interface WriterInterface {
+interface WriterInterface
+{
 
     public function __construct($rootDir, $filePath);
 

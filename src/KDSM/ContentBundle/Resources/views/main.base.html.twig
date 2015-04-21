@@ -1,33 +1,35 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}"/>
     {% stylesheets 'bundles/kdsmcontent/css/main.css' filter='cssrewrite' %}
-    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {# Fonts #}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}" />
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
 {% endblock %}
 {% block body %}
     <div class="container-fluid">
         {% if not app.user %}
-        {% block header %}
-            <header class="row">
-                <div class="container">
-                    <img class="col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logotype.png') }}" alt=""/>
-                    <div class="col-sm-7">
-                        <div class="nav row">
+            {% block header %}
+                <header class="row">
+                    <div class="container">
+                        <img class="col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logotype.png') }}" alt=""/>
 
+                        <div class="col-sm-7">
+                            <div class="nav row">
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            </header>
-        {% endblock %}
+                </header>
+            {% endblock %}
         {% endif %}
         <div class="row">
             {% block sidebar %}
                 {% if app.user %}
-                     {{ include('KDSMContentBundle::Includes/sidebar.html.twig') }}
+                    {{ include('KDSMContentBundle::Includes/sidebar.html.twig') }}
                 {% endif %}
             {% endblock %}
             <main class="main-content {% if not app.user %} container {% else %} col-sm-9 after-fixed-sidebar {% endif %}">
@@ -41,14 +43,14 @@
 {% block javascripts %}
     {# jQuery include#}
     {% javascripts '@KDSMContentBundle/Resources/public/jquery.js' %}
-        <script src="{{ asset_url }}"></script>
+    <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {# Others js files includes#}
     {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
-        <script src="{{ asset_url }}"></script>
+    <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             setInterval(TableData, 2000);
             function TableData() {
                 $.ajax({
