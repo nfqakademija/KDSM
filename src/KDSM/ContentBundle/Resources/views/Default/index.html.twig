@@ -1,8 +1,6 @@
 {% extends 'KDSMContentBundle::main.base.html.twig' %}
 {% block content %}
     {% if not app.user %}
-        {% render url('fos_user_security_login') %}
-    {% else %}
-        {{ include('KDSMContentBundle::Default/tableDataMain.html.twig') }}
+         {% render url('fos_user_security_login') %}
     {% endif %}
 {% endblock %}

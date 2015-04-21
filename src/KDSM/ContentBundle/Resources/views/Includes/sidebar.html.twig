@@ -3,12 +3,7 @@
     <div class="row user-info">
         <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-            <span class="user-name text-center"><em> {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</em></span>
-            <span class="user-name text-center">
-                        <a href="{{ path('fos_user_security_logout') }}">
-                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-                        </a>
-                    </span>
+            <span class="user-name text-center"><em> {{ app.user.username }}</em></span>
         {% endif %}
         <span class="notifications-icon"><i class="fa fa-bell"></i></span>
     </div>
@@ -27,7 +22,7 @@
                 </a>
             </li>
             <li>
-                <a href="#category1">
+                <a href="{{ path('statistics') }}">
                     <i class="fa fa-line-chart"></i>
                     <span>Statistics</span>
                 </a>
