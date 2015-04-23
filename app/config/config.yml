@@ -73,6 +73,13 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: redis://localhost
+
 fos_user:
     db_driver: orm
     firewall_name: main

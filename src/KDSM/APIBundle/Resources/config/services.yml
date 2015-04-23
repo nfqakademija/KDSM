@@ -7,11 +7,14 @@ parameters:
     api.csv_iterator_delimiter: ','
     api.csv_iterator_keys: ['id', 'timeSec', 'usec', 'type', 'data']
 
+
 services:
+    api.http_client:
+      class: GuzzleHttp\Client
     api.api_caller:
         class: KDSM\APIBundle\Services\Caller
         arguments:
-            [%api.url%, %api.user%, %api.password%]
+            [%api.url%, %api.user%, %api.password%, @api.http_client]
     api.api_db_manager:
         class: KDSM\APIBundle\Services\DbManager
         arguments:

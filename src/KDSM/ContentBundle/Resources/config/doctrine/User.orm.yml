@@ -11,6 +11,7 @@ KDSM\ContentBundle\Entity\User:
         cardId:
             column: card_id
             type: integer
+            nullable: TRUE
         profilePicturePath:
             column: profile_picture_path
             type: string

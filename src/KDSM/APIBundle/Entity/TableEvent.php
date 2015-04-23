@@ -44,10 +44,14 @@ class TableEvent
      */
     private $eventType;
 
+    public function __construct()
+    {
+    }
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,6 +75,16 @@ class TableEvent
     }
 
     /**
+     * Get timesec
+     *
+     * @return \DateTime
+     */
+    public function getTimesec()
+    {
+        return $this->timesec;
+    }
+
+    /**
      * Set timesec
      *
      * @param \DateTime $timesec
@@ -84,13 +98,13 @@ class TableEvent
     }
 
     /**
-     * Get timesec
+     * Get usec
      *
-     * @return \DateTime 
+     * @return string
      */
-    public function getTimesec()
+    public function getUsec()
     {
-        return $this->timesec;
+        return $this->usec;
     }
 
     /**
@@ -98,7 +112,8 @@ class TableEvent
      *
      * @param string $usec
      * @return TableEvent
-     */public function setUsec($usec)
+     */
+    public function setUsec($usec)
     {
         $this->usec = $usec;
 
@@ -106,13 +121,13 @@ class TableEvent
     }
 
     /**
-     * Get usec
+     * Get data
      *
-     * @return string 
+     * @return string
      */
-    public function getUsec()
+    public function getData()
     {
-        return $this->usec;
+        return $this->data;
     }
 
     /**
@@ -129,16 +144,13 @@ class TableEvent
     }
 
     /**
-     * Get data
+     * Get type
      *
-     * @return string 
+     * @return string
      */
-    public function getData()
+    public function getType()
     {
-        return $this->data;
-    }
-
-    public function __construct(){
+        return $this->type;
     }
 
     /**
@@ -152,15 +164,5 @@ class TableEvent
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

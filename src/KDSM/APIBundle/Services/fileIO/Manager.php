@@ -7,10 +7,12 @@
  */
 
 namespace KDSM\APIBundle\Services\fileIO;
-use Symfony\Component\Form\Exception\BadMethodCallException;
-use KDSM\APIBundle\Services\Caller;
 
-class Manager {
+use KDSM\APIBundle\Services\Caller;
+use Symfony\Component\Form\Exception\BadMethodCallException;
+
+class Manager
+{
 
     /**
      * @var Caller
@@ -22,24 +24,30 @@ class Manager {
      */
     protected $writer;
 
-    public function setCaller(Caller $caller){
+    public function setCaller(Caller $caller)
+    {
         $this->caller = $caller;
     }
 
-    public function setParser($type = 'csv', $name = 'xml_writer_output', $path = 'app/uploads/'){
+    public function setParser($type = 'csv', $name = 'xml_writer_output', $path = 'app/uploads/')
+    {
 //        if (!file_exists($path)) {
 //            mkdir($path, 0777, true);
 //        }
-        if ($type == 'xml')
+        if ($type == 'xml') {
             $this->writer = new XmlWriter($path, $name . '.xml');
-        else if ($type == 'csv')
-            $this->writer = new CsvWriter($path, $name . '.csv');
-        else throw new BadMethodCallException('Incorrect file type provided. Only [csv] and [xml] are accepted');
+        } else {
+            if ($type == 'csv') {
+                $this->writer = new CsvWriter($path, $name . '.csv');
+            } else {
+                throw new BadMethodCallException('Incorrect file type provided. Only [csv] and [xml] are accepted');
+            }
+        }
     }
 
     public function crawlAPI()
     {
-        $writer= $this->writer;
+        $writer = $this->writer;
         $caller = $this->caller;
 
         echo "writing document head... \r\n";

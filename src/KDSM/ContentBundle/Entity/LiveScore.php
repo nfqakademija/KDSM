@@ -9,12 +9,14 @@
 namespace KDSM\ContentBundle\Entity;
 
 
-class LiveScore {
+class LiveScore
+{
 
     private $players;
     private $score;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->players['player1'] = new User;
         $this->players['player2'] = new User;
         $this->players['player3'] = new User;

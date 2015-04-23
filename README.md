@@ -6,5 +6,14 @@ __Komandos nariai__: Simas Joneliūnas, Dainius Šležas, Martynas Stankevičius
 __Komandos mentorius__: Kęstutis Bartkus
 
 Fresh install after cloning from Git: (caution as fixtures:load command will truncate the database tables)
+
+    connection to vagrant:
+        open gitbash
+        type: vagrant ssh
+
     php app/console doctrine:schema:update  --force
+
     php app/console doctrine:fixtures:load
+
+Download latest data from api by console: (not using --env=prod leads to memory leak during processing
+php app/console api:getlatest --all --env=prod
