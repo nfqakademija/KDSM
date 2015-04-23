@@ -38,17 +38,18 @@
             {% block rightSidebar %}
                 {% if app.user %}
                     <aside class="col-sm-2 sidebar right">
-                        <div class="ui-widget">
-                            <label for="tags">Tags: </label>
-                            <input id="tags">
+                        <div class="ui-widget search-box">
+                            <i class="search-users-icon glyphicon glyphicon-search"></i>
+                            <input id="search-users" placeholder="Search...">
                         </div>
-                        <div id="results" style="border-width: 2px; border-style: dotted; border-color: red;height: 50%;
-  margin: 10px 0px; ">
-                            I would like to see the results here
-                        </div>
-                        <div class="ui-widget" style="margin-top:2em; font-family:Arial">
-                            Result:
-                            <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+                        <div id="results" class="found-users"></div>
+                        <div class="ui-widget selected-users">
+                            <h5>Pasirinkti žaidėjai:</h5>
+                            <div id="log" class="ui-widget-content">
+                                <ul class="log-list">
+
+                                </ul>
+                            </div>
                         </div>
                     </aside>
                 {% endif %}
@@ -67,37 +68,24 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
-            var availableTags = [
-                "ActionScript",
-                "AppleScript",
-                "Asp",
-                "BASIC",
-                "C",
-                "C++",
-                "Clojure",
-                "COBOL",
-                "ColdFusion",
-                "Erlang",
-                "Fortran",
-                "Groovy",
-                "Haskell",
-                "Java",
-                "JavaScript",
-                "Lisp",
-                "Perl",
-                "PHP",
-                "Python",
-                "Ruby",
-                "Scala",
-                "Scheme"
-            ];
-            function log( message ) {
-                $( "<div>" ).text( message ).prependTo( "#log" );
-                $( "#log" ).scrollTop( 0 );
-            }
+            var availableTags = [{"id":"32","value":"Text"},{"id":"62","value":"Text2"},{"id":"68","value":"Text3"},{"id":"61","value":"Text4"}] ;
 
-            $( "#tags" ).autocomplete({
-                autoFocus: true,
+            var selectedUsersNum = 0;
+            var selectedUsersIds = [];
+
+            //when needs to disselect user
+            $("#log").on("click", "li", function() {
+                selectedUsersNum--;
+                var removedUserRow = $(this);
+                var removedRowIdTag = removedUserRow.attr("id");
+                var removedUserId = removedUserRow.attr("user-id");
+                selectedUsersIds.splice(selectedUsersIds.indexOf(removedUserId), 1);
+                $(this).remove();
+                //get back user to list
+                $(".sidebar").find("li#"+removedRowIdTag).show();
+            });
+
+            $( "#search-users" ).autocomplete({
                 source: availableTags,
                 create: function( event, ui ) {
                     $(this).autocomplete("widget")
@@ -109,8 +97,26 @@
                             .appendTo("#results")
                             .css("position", "static");
                 },
-                select: function( event, ui ) {
-                    log( ui.item.value + " aka " + ui.item.id);
+                select: function(event, ui) {
+                    //when user is selected
+                    if(selectedUsersNum < 3) {
+                        selectedUsersNum++;
+                        selectedUsersIds.push(ui.item.id);
+                        var selectedUserRow = $(event.toElement.outerHTML);
+                        var selectedRowIdTag = selectedUserRow.attr("id");
+                        selectedUserRow.removeClass("ui-state-focus");
+                        selectedUserRow.attr("user-id",ui.item.id);
+                        $("li#"+selectedRowIdTag).hide();
+                        $("#log").children("ul.log-list").prepend(selectedUserRow);
+                    }
+
+                    //if ateleast one user is selected, add button to save the queue
+                    if(selectedUsersNum >= 1) {
+                        var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
+                        $("#log").append(saveButtonHtml);
+                    }
+
+                    //Add game to queue
                     var canAddGame = ($(".queue-container").children("div.appended").length) == 0 ? true: false;
                     if(canAddGame) {
                         $(".queue-container").append('<div class="row queue-game appended">' +
@@ -136,6 +142,16 @@
                         '</div>');
                     }
                 }
+            });
+            $("#log").on("click", "button#save-queue-element", function() {
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('ksdm_live_game') }}",
+                    data: { usersIds: selectedUsersIds },
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
             });
         });
     </script>
