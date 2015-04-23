@@ -1,0 +1,28 @@
+# src/KDSM/ContentBundle/Resources/config/doctrine/Queue.orm.yml
+KDSM\ContentBundle\Entity\Queue:
+    type:  entity
+    repositoryClass: KDSM\ContentBundle\Entity\QueueRepository
+    table: queue
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        isFourPlayers:
+            column: is_four_players
+            type: boolean
+        reservationDateTime:
+            column: reservation_date_time
+            type: datetime
+    manyToMany:
+        users:
+            targetEntity: User
+            joinTable:
+                name: queues_users
+                joinColumns:
+                    queue_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    user_id:
+                        referencedColumnName: id

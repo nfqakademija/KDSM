@@ -11,7 +11,7 @@ namespace KDSM\APIBundle\Services\fileIO;
 use Iterator;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
-class CsvIterator  implements Iterator
+class CsvIterator implements Iterator
 {
     /**
      * Must be greater than the longest line (in characters) to be found in
@@ -61,14 +61,16 @@ class CsvIterator  implements Iterator
      */
     public function __construct($path, $file, $delimiter = ',', $keys = null)
     {
-        $file = $path.$file;
-        if (! file_exists($file))
+        $file = $path . $file;
+        if (!file_exists($file)) {
             throw new InvalidArgumentException("{$file}");
+        }
 
         $this->_filePointer = fopen($file, 'rt');
         $this->_delimiter = $delimiter;
-        if($keys)
+        if ($keys) {
             $this->_keys = $keys;
+        }
     }
 
     /*
@@ -87,10 +89,11 @@ class CsvIterator  implements Iterator
     {
         $this->_currentElement =
             fgetcsv($this->_filePointer, self::ROW_LENGTH, $this->_delimiter);
-        $this->_rowCounter ++;
+        $this->_rowCounter++;
 
-        if($this->_keys)
+        if ($this->_keys) {
             $this->_currentElement = array_combine($this->_keys, array_values($this->_currentElement));
+        }
 
         return $this->_currentElement;
     }
@@ -108,10 +111,11 @@ class CsvIterator  implements Iterator
      */
     public function next()
     {
-        if (!feof($this->_filePointer))
+        if (!feof($this->_filePointer)) {
             return true;
-        else
-        return false;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -119,9 +123,11 @@ class CsvIterator  implements Iterator
      */
     public function valid()
     {
-        if (! $this->next())
+        if (!$this->next()) {
             fclose($this->_filePointer);
-        return FALSE;
+        }
+
+        return false;
     }
 
 }

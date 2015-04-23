@@ -13,7 +13,8 @@ use KDSM\APIBundle\Entity\TableEvent;
 use KDSM\APIBundle\Services\fileIO\CsvIterator;
 
 
-class DbManager {
+class DbManager
+{
     /**
      * @var CsvIterator
      */
@@ -23,12 +24,14 @@ class DbManager {
      */
     private $rep;
 
-    public function __construct(EntityManager $entityManager){
+    public function __construct(EntityManager $entityManager)
+    {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
     }
 
-    public function insertObject($object){
+    public function insertObject($object)
+    {
         $newEvent = new TableEvent();
         $newEvent->setEventId($object['id']);
         $newEvent->setTimesec(new \DateTime(date("Y-m-d H:i:s", $object['timeSec'])));
@@ -39,37 +42,43 @@ class DbManager {
         unset($newEvent);
     }
 
-    public function setIterator($iterator){
+    public function setIterator($iterator)
+    {
         $this->iterator = $iterator;
     }
 
     /**
      * @param $iterator
      */
-    public function writeCsvToDb(\Iterator $iterator){
+    public function writeCsvToDb(\Iterator $iterator)
+    {
         $this->setIterator($iterator);
-        while ($this->iterator->next()){
+        while ($this->iterator->next()) {
             $this->insertObject($iterator->current());
         }
     }
 
-    public function writeJsonToDb($apiResponse){
-        foreach($apiResponse['records'] as $object){
+    public function writeJsonToDb($apiResponse)
+    {
+        foreach ($apiResponse['records'] as $object) {
             $this->insertObject($object);
         }
         unset($object);
         $responseSize = sizeof($apiResponse['records']);
         unset($apiResponse);
+
         return $responseSize == 100 ? true : false;
     }
 
-    public function getLatest(Caller $apiCaller, $dumpAll){
+    public function getLatest(Caller $apiCaller, $dumpAll)
+    {
         $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEventId()));
         echo $this->rep->getLatestEventId() . "\n";
-        if($dumpAll)
-            while($isFullCall) {
+        if ($dumpAll) {
+            while ($isFullCall) {
                 $isFullCall = $this->writeJsonToDb($apiCaller->callApi(100, $this->rep->getLatestEventId()));
                 echo $this->rep->getLatestEventId() . "\n";
             }
+        }
     }
 }

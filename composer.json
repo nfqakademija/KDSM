@@ -25,10 +25,13 @@
         "guzzlehttp/guzzle": "~5.0@dev",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "predis/predis": "<0.9",
-        "snc/redis-bundle": "2.0.*@dev"
+        "snc/redis-bundle": "2.0.*@dev",
+        "phpmd/phpmd" : "@stable"
+
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "pdepend/pdepend" : "2.0.6"
     },
     "scripts": {
         "post-root-package-install": [

@@ -11,7 +11,8 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use KDSM\APIBundle\Entity\TableEventType;
 
-class LoadTableEventTypeData implements FixtureInterface{
+class LoadTableEventTypeData implements FixtureInterface
+{
     /**
      * Load data fixtures with the passed EntityManager
      *

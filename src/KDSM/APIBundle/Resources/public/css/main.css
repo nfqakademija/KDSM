@@ -19,7 +19,7 @@ body {
 }
 
 header {
-    height:120px;
+    height: 120px;
     background: rgba(255, 255, 255, 0.8);
 }
 
@@ -29,7 +29,7 @@ header {
 }
 
 .logo {
-    padding-top:20px;
+    padding-top: 20px;
 }
 
 .header-bottom {
