@@ -1,5 +1,5 @@
 {% block sidebar %}
-<aside class="col-sm-2 sidebar">
+<aside class="col-sm-2 sidebar left">
     <div class="row user-info">
         <img class="user-photo" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -10,7 +10,7 @@
     <nav class="row sidebar-nav">
         <ul class="nav">
             <li class="active">
-                <a href="{{ path('logged_homepage') }}">
+                <a href="{{ path('kdsm_content_homepage') }}">
                     <i class="fa fa-home"></i>
                     <span>Home</span>
                 </a>

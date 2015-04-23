@@ -6,23 +6,6 @@ body {
     font-weight: 400;
     color: #222;
     font-size: 14px;
-}
-
-header {
-    background: rgba(0, 0, 0, 0.6);
-    height: 8em;
-}
-
-.black-bg {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid black;
-}
-
-.logo {
-    margin-top:20px;
-}
-
-body {
     background-image: url('../images/background2.jpg');
     background-repeat: no-repeat;
     background-position: top right;
@@ -41,6 +24,20 @@ body {
     height: 100%;
     width: 100%;
     z-index: 0;
+}
+
+header {
+    background: rgba(0, 0, 0, 0.6);
+    height: 8em;
+}
+
+.black-bg {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid black;
+}
+
+.logo {
+    margin-top:20px;
 }
 
 .result-page {
@@ -178,8 +175,15 @@ table td {
     height: 100%;
     background: #212121;
     position:fixed;
+    top:0;
+}
+
+.sidebar.left {
     left: 0;
-    top: 0;
+}
+
+.sidebar.right {
+    right: 0px;
 }
 
 .user-info {
@@ -277,14 +281,10 @@ table td {
 /* Main page content */
 .main-content {
     position: relative;
-    float: none;
     margin: 0 auto;
+    float: none;
+    padding: 0 30px;
 }
-
-.main-content.after-fixed-sidebar {
-    left:8%;
-}
-
 /* Logged homepage*/
 
 .table-free {
