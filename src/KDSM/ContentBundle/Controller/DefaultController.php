@@ -9,12 +9,12 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Default:index.html.twig');
-    }
-
-    public function loggedHomepageAction()
-    {
-        return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
+        if ( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
+        }
+        else {
+            return $this->render('KDSMContentBundle:Default:index.html.twig');
+        }
     }
 
     public function liveGameAction(){

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}" />
-    {% stylesheets 'bundles/kdsmcontent/css/main.css' filter='cssrewrite' %}
+    {% stylesheets 'bundles/kdsmcontent/css/*' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
     {# Fonts #}
@@ -30,11 +30,29 @@
                      {{ include('KDSMContentBundle::Includes/sidebar.html.twig') }}
                 {% endif %}
             {% endblock %}
-            <main class="main-content {% if not app.user %} container {% else %} col-sm-9 after-fixed-sidebar {% endif %}">
+            <main class="main-content {% if not app.user %} container {% else %} col-sm-8 after-fixed-sidebar {% endif %}">
                 {% block content %}
 
                 {% endblock %}
             </main>
+            {% block rightSidebar %}
+                {% if app.user %}
+                    <aside class="col-sm-2 sidebar right">
+                        <div class="ui-widget">
+                            <label for="tags">Tags: </label>
+                            <input id="tags">
+                        </div>
+                        <div id="results" style="border-width: 2px; border-style: dotted; border-color: red;height: 50%;
+  margin: 10px 0px; ">
+                            I would like to see the results here
+                        </div>
+                        <div class="ui-widget" style="margin-top:2em; font-family:Arial">
+                            Result:
+                            <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+                        </div>
+                    </aside>
+                {% endif %}
+            {% endblock %}
         </div>
     </div>
 {% endblock %}
@@ -47,6 +65,80 @@
     {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var availableTags = [
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+            ];
+            function log( message ) {
+                $( "<div>" ).text( message ).prependTo( "#log" );
+                $( "#log" ).scrollTop( 0 );
+            }
+
+            $( "#tags" ).autocomplete({
+                autoFocus: true,
+                source: availableTags,
+                create: function( event, ui ) {
+                    $(this).autocomplete("widget")
+                            .appendTo("#results")
+                            .css("position", "static");
+                },
+                open: function() {
+                    $(this).autocomplete("widget")
+                            .appendTo("#results")
+                            .css("position", "static");
+                },
+                select: function( event, ui ) {
+                    log( ui.item.value + " aka " + ui.item.id);
+                    var canAddGame = ($(".queue-container").children("div.appended").length) == 0 ? true: false;
+                    if(canAddGame) {
+                        $(".queue-container").append('<div class="row queue-game appended">' +
+                        '<div class="col-sm-5">' +
+                        '<div class="row">' +
+                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
+                        '<span class="col-sm-6 text-center">Dainius &amp; Jonas</span>' +
+                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-sm-2">' +
+                        '<div class="row">' +
+                        '<p>VS</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-sm-5">' +
+                        '<div class="row">' +
+                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
+                        '<span class="col-sm-6 text-center">Rokas &amp; Tomas</span>' +
+                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    }
+                }
+            });
+        });
+    </script>
     <script type="text/javascript">
         $(document).ready(function() {
             setInterval(TableData, 2000);

@@ -14,10 +14,6 @@ kdsm_content_homepage:
     path:     /
     defaults: { _controller: KDSMContentBundle:Default:index }
 
-logged_homepage:
-    path:     /logged
-    defaults: { _controller: KDSMContentBundle:Default:loggedHomepage }
-
 logout:
         path:     /logout
         defaults: { _controller: KDSMContentBundle:Users:logout }
