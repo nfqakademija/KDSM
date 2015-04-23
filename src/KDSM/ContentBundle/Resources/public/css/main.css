@@ -6,24 +6,7 @@ body {
     font-weight: 400;
     color: #222;
     font-size: 14px;
-}
-
-header {
-    background: rgba(0, 0, 0, 0.6);
-    height: 8em;
-}
-
-.black-bg {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid black;
-}
-
-.logo {
-    margin-top:20px;
-}
-
-body {
-    background-image: url('images/background2.jpg');
+    background-image: url('../images/background2.jpg');
     background-repeat: no-repeat;
     background-position: top right;
     background-color: #333;
@@ -41,6 +24,20 @@ body {
     height: 100%;
     width: 100%;
     z-index: 0;
+}
+
+header {
+    background: rgba(0, 0, 0, 0.6);
+    height: 8em;
+}
+
+.black-bg {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid black;
+}
+
+.logo {
+    margin-top:20px;
 }
 
 .result-page {
