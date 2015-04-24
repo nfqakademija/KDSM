@@ -76,7 +76,7 @@ class LiveScoreManager
 
         if ($status == 'free') {
             $this->cacheMan->resetScoreCache();
-            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestEventId());
+            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
         } else {
             if ($status == 'busy') {
                 $this->readEvents();
@@ -114,7 +114,7 @@ class LiveScoreManager
                 } else {
                     $table['score']['black']++;
                 }
-
+                echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
                     break;
                 }
