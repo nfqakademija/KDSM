@@ -71,6 +71,7 @@ class LiveScoreManager
 //        $checkDateTime = strtotime('2014-10-07 09:05:00');
         $checkDateTime = strtotime('now');
         $status = $this->busyCheck->busyCheck($checkDateTime);
+//        echo date('Y-m-d H:i:s', $checkDateTime);
 //
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
 
@@ -110,9 +111,9 @@ class LiveScoreManager
         foreach ($events as $event) {
             if (is_object($event) && $event instanceof TableEvent) {
                 if (json_decode($event->getData())->team == 1) {
-                    $table['score']['white']++;
-                } else {
                     $table['score']['black']++;
+                } else {
+                    $table['score']['white']++;
                 }
                 echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
