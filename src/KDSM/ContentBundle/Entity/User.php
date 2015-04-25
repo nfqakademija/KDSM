@@ -62,6 +62,10 @@ class User extends BaseUser
      */
     protected $losses;
 
+    /**
+     * @var boolean
+     */
+    private $lookingForGame;
 
     /**
      * Set cardId
@@ -199,5 +203,28 @@ class User extends BaseUser
     public function getLosses()
     {
         return $this->losses;
+    }
+
+    /**
+     * Set lookingForGame
+     *
+     * @param boolean $lookingForGame
+     * @return User
+     */
+    public function setLookingForGame($lookingForGame)
+    {
+        $this->lookingForGame = $lookingForGame;
+
+        return $this;
+    }
+
+    /**
+     * Get lookingForGame
+     *
+     * @return boolean 
+     */
+    public function getLookingForGame()
+    {
+        return $this->lookingForGame;
     }
 }

@@ -34,7 +34,6 @@ class DefaultController extends Controller
             'score' => $cacheMan->getScoreCache()['score']
         ];
 
-
 //        $rand = rand(1,10);
 //        $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
 //        if($rand <= 5) {
