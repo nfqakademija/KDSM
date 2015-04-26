@@ -37,7 +37,7 @@
             </main>
             {% block rightSidebar %}
                 {% if app.user %}
-                    <aside class="col-sm-2 sidebar right">
+                    <aside class="col-sm-2 sidebar right queue-control">
                         <div class="ui-widget search-box">
                             <i class="search-users-icon glyphicon glyphicon-search"></i>
                             <input id="search-users" placeholder="Search...">
@@ -68,6 +68,12 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
+            //Open queue
+            $('button.btn-add-to-queue').click(function() {
+                $('.queue-control').show( "slide" );
+            });
+
+
             var availableTags = [{"id":"32","value":"Text"},{"id":"62","value":"Text2"},{"id":"68","value":"Text3"},{"id":"61","value":"Text4"}] ;
 
             var selectedUsersNum = 0;
@@ -83,6 +89,10 @@
                 $(this).remove();
                 //get back user to list
                 $(".sidebar").find("li#"+removedRowIdTag).show();
+
+                if(selectedUsersNum < 1) {
+                    $("#save-queue-element").remove();
+                }
             });
 
             $( "#search-users" ).autocomplete({
@@ -110,8 +120,8 @@
                         $("#log").children("ul.log-list").prepend(selectedUserRow);
                     }
 
-                    //if ateleast one user is selected, add button to save the queue
-                    if(selectedUsersNum >= 1) {
+                    //if atleast one user is selected, add button to save the queue
+                    if(selectedUsersNum == 1) {
                         var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
                         $("#log").append(saveButtonHtml);
                     }
