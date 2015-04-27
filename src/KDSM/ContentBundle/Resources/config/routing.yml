@@ -56,4 +56,4 @@ ksdm_queue_user_join_decline:
 
 ksdm_queue_create:
     path:     /queue/create_pending_queue
-    defaults: { _controller: KDSMContentBundle:Queue:createPendingQueueElement }
+    defaults: { _controller: KDSMContentBundle:Queue:createPendingQueueElement }xed
