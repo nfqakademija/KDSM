@@ -33,3 +33,7 @@ statistics:
 ksdm_live_game:
     path:     /content/live_game
     defaults: { _controller: KDSMContentBundle:Default:liveGame }
+
+get_notifications:
+    path:     /content/notifications
+    defaults: { _controller: KDSMContentBundle:Default:getNotifications }

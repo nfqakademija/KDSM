@@ -2,8 +2,13 @@
 
 namespace KDSM\ContentBundle\Controller;
 
+use KDSM\ContentBundle\Entity\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 class DefaultController extends Controller
 {
@@ -49,5 +54,20 @@ class DefaultController extends Controller
         $result = json_encode($result);
         $response = new Response($result);
         return $response;
+    }
+
+    public function getNotificationsAction(){
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $rep = $em->getRepository('KDSMContentBundle:Notification');
+
+        $notifications = $rep->getAllUnviewedNotifications(1);
+
+        $notificationsjson = $serializer->serialize($notifications, 'json');
+
+        return new Response($notificationsjson);
     }
 }

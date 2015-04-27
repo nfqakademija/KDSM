@@ -179,4 +179,25 @@
             }
         });
     </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajax({
+                type: "post",
+                url: "{{ path('get_notifications') }}",
+                success: function(response_json) {
+                    var response = $.parseJSON(response_json);
+                    $.each(response, function(key, value){
+                        $("ul#notifications").append(
+                                $('<li>').append(
+                                        $('<a>').attr('href', '#').append(value.notificationText)
+                                )
+                        );
+                    });
+
+                }
+            });
+        });
+
+    </script>
 {% endblock %}
