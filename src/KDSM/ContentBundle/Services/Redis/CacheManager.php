@@ -21,9 +21,9 @@ class CacheManager
     public function getLatestCheckedTableGoalId()
     {
         if (!$this->redis->exists('liveScore:lastCheckId')) {
-//            $latestEvent = $this->rep->getLatestId();
+            $latestEvent = $this->rep->getLatestId();
             //todo uncomment above line when testing on live data
-            $latestEvent = 3903;
+//            $latestEvent = 3903;
             $this->redis->set('liveScore:lastCheckId', $latestEvent);
             $eventId = $latestEvent;
         } else {

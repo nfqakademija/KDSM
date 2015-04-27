@@ -45,7 +45,7 @@ class DefaultController extends Controller
             $result = array('status' => 'busy', 'player1' => $users[array_rand($users)], 'player2' => $users[array_rand($users)],
                 'player3' => $users[array_rand($users)], 'player4' => $users[array_rand($users)], 'scoreWhite' => rand(0,10), 'scoreBlack' => rand(5,10));
         }
-
+        
         $result = json_encode($result);
         $response = new Response($result);
         return $response;

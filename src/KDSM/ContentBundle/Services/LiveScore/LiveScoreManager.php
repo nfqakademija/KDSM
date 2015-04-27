@@ -9,18 +9,18 @@
 namespace KDSM\ContentBundle\Services\LiveScore;
 
 use Doctrine\ORM\EntityManager;
-
 use KDSM\APIBundle\Entity\TableEvent;
 use KDSM\ContentBundle\Entity\LiveScore;
+use KDSM\ContentBundle\Services\Redis\CacheManager;
 use KDSM\ContentBundle\Services\Statistics;
 use KDSM\ContentBundle\Services\Statistics\BusyCheck;
-
 
 /**
  * Class LiveScoreManager
  * @package KDSM\ContentBundle\Services\LiveScore
  */
-class LiveScoreManager{
+class LiveScoreManager
+{
 
     /**
      * @var LiveScore
@@ -37,113 +37,99 @@ class LiveScoreManager{
      */
     protected $rep;
 
-    protected $table;
+    /**
+     * @var CacheManager
+     */
+    protected $cacheMan;
 
     /**
      * @param LiveScore $liveScore
      * @param BusyCheck $busyCheck
      * @param EntityManager $entityManager
+     * @param CacheManager $cacheMan
      */
-    public function __construct(LiveScore $liveScore, BusyCheck $busyCheck, EntityManager $entityManager){
+    public function __construct(
+        LiveScore $liveScore,
+        BusyCheck $busyCheck,
+        EntityManager $entityManager,
+        CacheManager $cacheMan
+    ) {
         $this->liveScore = $liveScore;
         $this->busyCheck = $busyCheck;
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
+        $this->cacheMan = $cacheMan;
     }
+
 
     /**
      *
      */
-    public function getTableStatus($checkDateTime = '2014-10-06 09:02:00')
+    public function getTableStatus(/*$checkDateTime = '2014-10-06 09:02:00'*/)
     {
+        //todo set to now() at live
+//        $checkDateTime = strtotime('2014-10-07 09:05:00');
+        $checkDateTime = strtotime('now');
         $status = $this->busyCheck->busyCheck($checkDateTime);
+//        echo date('Y-m-d H:i:s', $checkDateTime);
+//
+//        $this->cacheMan->setLatestCheckedTableGoalId(3905);
 
-        if($status == 'free'){
-            $response['tableStatus'] = $status;
+        if ($status == 'free') {
+            $this->cacheMan->resetScoreCache();
+            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
+        } else {
+            if ($status == 'busy') {
+                $this->readEvents();
+            } else {
+                $status = 'error';
+            }
         }
-        else if ($status == 'busy'){
-            $this->table =['score' => ['white' => 0, 'black' => 0],'players' => [/*should be set by frontend*/]];
-            $response['tableStatus'] = $status;
-            if($this->readEvents($checkDateTime))
-                $response['tableData'] = $this->table;
-        }
-        else
-            $response['tableStatus'] = 'error';
-        return $response;
-
+        $this->cacheMan->setTableStatusCache($status);
     }
 
 
     /*
-     * gets table events in 1 minute intervals from the given datetime. Counts goals until 10 on one side or
-     * until table free status is reached.
-     * If a cardswipe is encountered before reaching 10 goals on either side, it is treated as newgame flag and score is
-     * immediately displayed.
-     * Afterwards it continues until table free or first cardswipe event. It then checks for other cardswipe events
-     * within 2 minute interval (not affected by able free anymore)
-     **/
-    /*
-     * ISSUES:
-     * TODO only searches for players 2 mins after game ends.
-     * TODO Further on later, when frontend will provide player ID's it will only check until that cardswipe.
-     * TODO Currently players are overwritten by a swipe event
-     * TODO Same player can play on multiple positions
+     * gets latest table events. Counts result until one team wins.
      *
-     */
-    private function readEvents($checkDateTime){
-        $getResults = true;
-        $getPlayers = false;
-        $timestamp = strtotime($checkDateTime);
-        while($getResults){
-            if($this->busyCheck->busyCheck(date('Y-m-d H:i:s', $timestamp)) == 'busy') {
-                //get 1 minutes worth of events
-                $events = $this->rep->getEventsOnDateTime($timestamp);
-                foreach($events as  $event){
-                    if(is_object($event) && $event instanceof TableEvent) {
-                        //scan for goals. break on card swipe if 10 goals are not reached
-                        //if 10 goals are reached, process and count card swipes.
-                        if($event->getType() == 'AutoGoal' && !in_array(10, $this->table['score']))
-                            if(json_decode($event->getData())->team == 1)
-                                $this->table['score']['white']++;
-                            else $this->table['score']['black']++;
-                        if($event->getType() == 'CardSwipe'){
-                            if(!in_array(10, $this->table['score'])) {
-                                $getResults = false; // cardswipe resets the game score counter
-                                break; //stops further result processing
-                            }
-                            else{
-                                $this->addPlayer($event);
-                                $getPlayers = true;
-                            }
-                        }
-                    }
-                }
-                if($getResults) $timestamp = strtotime('-1 minute', $timestamp); //if goal scan is over do not advance the timestamp
-                if(in_array(10, $this->table['score'])) {$getResults = false; $getPlayers = true;} //if game is over stop the goal scan
-            }
-            else {
-                $getResults = false; //if table status = free
-            }
+     * Gets/writes current result to Redis. Tracking is based on the event ID's in the database.
+     * Online check is done counting shake events during last minute.
+     *
+     *  As this event should be ran several times during one
+     * BusyCheck interval, the latter should filter out table busy/free stuff
+     **/
 
+    private function readEvents()
+    {
+        $table = $this->cacheMan->getScoreCache(); //gets latest result
+        if (in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
+        {
+            $table = $this->cacheMan->resetScoreCache();
         }
-        if($getPlayers){
-            $events = $this->rep->getSwipesOnDateTime($timestamp);
-            foreach($events as  $event){
-                if(is_object($event) && $event instanceof TableEvent) {
-                    //add any other detected players
-                    $this->addPlayer($event);
+
+        $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
+        foreach ($events as $event) {
+            if (is_object($event) && $event instanceof TableEvent) {
+                if (json_decode($event->getData())->team == 1) {
+                    $table['score']['black']++;
+                } else {
+                    $table['score']['white']++;
+                }
+                echo $event->getId() . "<br\n>";
+                if (in_array(10, $table['score'])) {
+                    break;
                 }
             }
         }
+        //cache up  stuff
+        if (isset($event)) {
+            $this->cacheMan->setLatestCheckedTableGoalId($event->getId());
+            $this->cacheMan->setScoreCache($table['score']);
+        }
+        //cleanup
+        unset($events);
+        unset($event);
+
         return true;
     }
-
-    private function addPlayer($event){
-        if(is_object($event) && $event instanceof TableEvent) {
-            $playerId = $playerId = json_decode($event->getData())->team == 0 ? 1 +
-                json_decode($event->getData())->player : 3 + json_decode($event->getData())->player;
-            $this->table['players'][$playerId] = ['id' => json_decode($event->getData())->card_id];
-        }
-}
-
 }

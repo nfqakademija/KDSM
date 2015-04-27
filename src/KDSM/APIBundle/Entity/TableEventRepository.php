@@ -23,6 +23,17 @@ class TableEventRepository extends EntityRepository
         }
     }
 
+    public function getLatestId()
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select('MAX(tb.id)');
+        if ($query->getQuery()->getResult()[0][1]) {
+            return $query->getQuery()->getResult()[0][1];
+        } else {
+            return 1;
+        }
+    }
+
     public function getLatestTableEvent()
     {
         $result = null;
