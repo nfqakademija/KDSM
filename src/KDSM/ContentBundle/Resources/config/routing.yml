@@ -15,8 +15,8 @@ kdsm_content_homepage:
     defaults: { _controller: KDSMContentBundle:Default:index }
 
 logout:
-        path:     /logout
-        defaults: { _controller: KDSMContentBundle:Users:logout }
+    path:     /logout
+    defaults: { _controller: KDSMContentBundle:Users:logout }
 
 user_view:
     path:     /users/view/{id}
