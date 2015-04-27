@@ -72,4 +72,11 @@ class DefaultController extends Controller
 
         return new Response($notificationsjson);
     }
+
+    public function viewNotificationAction(Request $request){
+        $em = $this->getDoctrine()->getEntityManager();
+        $rep = $em->getRepository('KDSMContentBundle:Notification');
+        $rep->setViewed($request->request->get('id'));
+        return new Response();
+    }
 }

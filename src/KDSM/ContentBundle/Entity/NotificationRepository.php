@@ -28,4 +28,14 @@ class NotificationRepository extends EntityRepository
         return $result;
     }
 
+    public function setViewed($id){
+        $this->createQueryBuilder('n')
+            ->update()
+            ->set('n.viewed', 1)
+            ->where('n.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
+    }
+
 }

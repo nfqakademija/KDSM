@@ -37,3 +37,7 @@ ksdm_live_game:
 get_notifications:
     path:     /content/notifications
     defaults: { _controller: KDSMContentBundle:Default:getNotifications }
+
+view_notification:
+    path: /content/viewnotification
+    defaults: {_controller: KDSMContentBundle:Default:viewNotification }
