@@ -182,22 +182,27 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            $.ajax({
-                type: "post",
-                url: "{{ path('get_notifications') }}",
-                success: function(response_json) {
-                    var response = $.parseJSON(response_json);
-                    $.each(response, function(key, value){
-                        $("ul#notifications").append(
-                                $('<li>').append(
-                                        $('<a>').attr('href', '#').append(value.notificationText)
-                                )
-                        );
-                    });
-
-                }
-            });
+            var userid = {{ app.user.id }};
+            setInterval( reloadNotifications, 2000);
+            function reloadNotifications(){
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('get_notifications') }}",
+                    data: {id: userid},
+                    success: function(response_json) {
+                        $("ul#notifications").empty();
+                        var response = $.parseJSON(response_json);
+                        $('#notification-count').html(response.length);
+                        $.each(response, function(key, value){
+                            $("ul#notifications").append(
+                                    $('<li>').append(
+                                            $('<a>').attr('href', '#').attr('id', 'notification-'.concat(value.id)).append(value.notificationText)
+                                    )
+                            );
+                        });
+                    }
+                });
+            }
         });
-
     </script>
 {% endblock %}

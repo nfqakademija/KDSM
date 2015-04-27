@@ -21,6 +21,7 @@ class NotificationRepository extends EntityRepository
             ->where('n.userId = :userid')
             ->setParameter('userid', $userid)
             ->andWhere('n.viewed = 0')
+            ->orderBy('n.id', 'DESC')
             ->getQuery()
             ->getResult();
 
