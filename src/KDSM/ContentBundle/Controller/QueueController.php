@@ -15,17 +15,16 @@ class QueueController extends Controller
 
     }
 
-    public function getLookingForGameUsersAction(){
+    public function getLookingForGameUsersAction()
+    {
         $userEm = $this->getDoctrine()->getEntityManager();
         $userRep = $userEm->getRepository('KDSMContentBundle:User');
         $users = $userRep->getUsersLookingForGame();
-//        print_r($users);
-        foreach ($users as $user)
-        {
-            $result = $user->getId();
+        foreach ($users as $user) {
+            $result[] = $user->getId();
         }
 
-//        $result = json_encode($userRep->getUsersLookingForGame());
+        $result = json_encode($userRep->getUsersLookingForGame());
         $response = new Response($result);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -41,9 +40,15 @@ class QueueController extends Controller
 
     public function createPendingQueueElementAction()
     {
+        $queueMan = $this->get('kdsm_content.queue_manager');
+        $newQueueElement = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
+            ->getUser());
         $response = new Response(1);
         $response->headers->set('Content-Type', 'application/json');
-        return $response;
+//        return $response;
+
+        return $this->render('KDSMContentBundle:Queue:queue.html.twig',
+            array('queue' => $newQueueElement));
     }
 
     public function sendUserQueueJoinRequestAction($userIds = null, $queueId = null)
@@ -53,14 +58,20 @@ class QueueController extends Controller
         return $response;
     }
 
-    public function userQueueJoinAcceptAction($userId = null, $queueId = null)
+    public function userQueueJoinAcceptAction($queueId)
     {
+        $queueMan = $this->get('kdsm_content.queue_manager');
+        $queueResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
+            ->getUser());
         $response = new Response(1);
         $response->headers->set('Content-Type', 'application/json');
-        return $response;
+//        return $response;
+
+        return $this->render('KDSMContentBundle:Queue:queue.html.twig',
+            array('queue' => $queueResponse));
     }
 
-    public function userQueueJoinDeclineAction($userId = null, $queueId = null)
+    public function userQueueJoinDeclineAction($queueId = null)
     {
         $response = new Response(1);
         $response->headers->set('Content-Type', 'application/json');

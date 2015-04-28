@@ -12,4 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class QueueRepository extends EntityRepository
 {
+    public function persistObject($newQueue)
+    {
+        $this->getEntityManager()->persist($newQueue);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
 }

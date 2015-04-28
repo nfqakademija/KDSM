@@ -145,7 +145,7 @@
             function TableData() {
                 $.ajax({
                     type: "post",
-                    url: "{{ path('ksdm_live_game') }}",
+                    url: "{{ path('kdsm_live_game') }}",
                     success: function (response_json) {
                         var response = $.parseJSON(response_json);
                         if (response.status == 'free') {

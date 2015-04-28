@@ -1,0 +1,7 @@
+{{ dump() }}
+
+queue controller calls
+<ul id="queue">
+    <li><a href="{{ path('kdsm_queue_create') }}">new queue element</a></li>
+    <li><a href="{{ path('kdsm_queue_user_join_accept', {'queueId': queue.id}) }}">join queue</a></li>
+</ul>
