@@ -86,6 +86,7 @@ class LiveScoreManager
             }
         }
         $this->cacheMan->setTableStatusCache($status);
+        return $status;
     }
 
 
