@@ -3,6 +3,7 @@
 namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -37,8 +38,7 @@ class QueueController extends Controller
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();
                 $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                $userResponse = new Response(json_encode($userRep->getUsersLookingForGame()));
-                $userResponse->headers->set('Content-Type', 'application/json');
+                $userResponse = new JsonResponse($userRep->getUsersLookingForGame());
                 return $userResponse;
             default:
                 throw new NotFoundHttpException('Page not found');
