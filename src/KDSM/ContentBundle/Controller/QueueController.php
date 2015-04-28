@@ -4,6 +4,7 @@ namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QueueController extends Controller
 {
@@ -15,40 +16,34 @@ class QueueController extends Controller
 
     }
 
-    public function getLookingForGameUsersAction()
-    {
-        $userEm = $this->getDoctrine()->getEntityManager();
-        $userRep = $userEm->getRepository('KDSMContentBundle:User');
-        $users = $userRep->getUsersLookingForGame();
-        foreach ($users as $user) {
-            $result[] = $user->getId();
-        }
-
-        $result = json_encode($userRep->getUsersLookingForGame());
-        $response = new Response($result);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-
-    }
-
-    public function getQueueListAction()
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
-
-    public function createPendingQueueElementAction()
+    public function queueAction($method, $queueId = null)
     {
         $queueMan = $this->get('kdsm_content.queue_manager');
-        $newQueueElement = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
-            ->getUser());
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-//        return $response;
 
-        return $this->render('KDSMContentBundle:Queue:queue.html.twig',
-            array('queue' => $newQueueElement));
+        switch($method)
+        {
+            case 'list':
+                $queueListResponse = new Response(json_encode($queueMan->getCurrentQueueList()));
+                $queueListResponse->headers->set('Content-Type', 'application/json');
+                return $queueListResponse;
+            case 'create':
+                $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
+                    ->getUser());
+                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+            case 'accept_invite':
+                $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
+                    ->getUser());
+                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+            case 'lfg':
+                $userEm = $this->getDoctrine()->getEntityManager();
+                $userRep = $userEm->getRepository('KDSMContentBundle:User');
+                $userResponse = new Response(json_encode($userRep->getUsersLookingForGame()));
+                $userResponse->headers->set('Content-Type', 'application/json');
+                return $userResponse;
+            default:
+                throw new NotFoundHttpException('Page not found');
+                break;
+        }
     }
 
     public function sendUserQueueJoinRequestAction($userIds = null, $queueId = null)
@@ -56,19 +51,6 @@ class QueueController extends Controller
         $response = new Response(1);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    }
-
-    public function userQueueJoinAcceptAction($queueId)
-    {
-        $queueMan = $this->get('kdsm_content.queue_manager');
-        $queueResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
-            ->getUser());
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-//        return $response;
-
-        return $this->render('KDSMContentBundle:Queue:queue.html.twig',
-            array('queue' => $queueResponse));
     }
 
     public function userQueueJoinDeclineAction($queueId = null)

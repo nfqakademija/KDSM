@@ -24,7 +24,11 @@ class QueueManager extends ContainerAwareCommand
     {
         $this->entityManager = $entityManager;
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
+    }
 
+    public function getCurrentQueueList()
+    {
+        return $this->queueRepository->getCurrentQueue();
     }
 
     public function createNewQueueElement($user)
@@ -33,6 +37,7 @@ class QueueManager extends ContainerAwareCommand
         $queueElem->setReservationDateTime(new \DateTime('now'));
         $queueElem->setIsFourPlayers(false);
         $queueElem->addUser($user);
+        $queueElem->setStatus('pending');
 
         $this->queueRepository->persistObject($queueElem);
         return $queueElem;
