@@ -1,285 +1,45 @@
-body {
-  padding: 0;
-  margin: 0;
-  background: rgba(226, 226, 226, 0.6);
-  font-family: Open Sans !important;
-  font-weight: 400;
-  color: #222;
-  font-size: 14px;
-  background-image: url("../images/background2.jpg");
-  background-repeat: no-repeat;
-  background-position: top right;
-  background-color: #333;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/background1.jpg',sizingMethod='scale')";
-  position: absolute;
-  background-attachment: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 0; }
+/*
+Error: Invalid CSS after "...ortantOpenSans ": expected ":", was "= 'Open Sans"
+        on line 5 of main.scss
 
-header {
-  background: rgba(0, 0, 0, 0.6);
-  height: 8em; }
+1: $userShadow: 0 0 3px 1px rgba(0,0,0,.2);
+2: $registerShadow: 0 0 3px rgba(0, 0, 0, 0.3);
+3: $borderColor: 1px solid #BABABA;
+4: 
+5: $importantOpenSans = 'Open Sans
+6: 
+7: @mixin transition($value) {
+8:   -webkit-transition: $value;
+9:   -moz-transition: $value;
+10:   -ms-transition: $value;
 
-.black-bg {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid black; }
-
-.logo {
-  margin-top: 20px; }
-
-.result-page {
-  margin-top: 10%; }
-
-.content-heading {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 0em 1em;
-  color: white;
-  margin: 1em 0 0 0;
-  text-align: center; }
-
-table {
-  background: rgba(0, 0, 0, 0.9) !important;
-  color: white; }
-  table td {
-    border-color: #222222 !important; }
-
-/* Login Form */
-.login-form, .register-form {
-  float: none;
-  margin: 2em auto;
-  padding-bottom: 1em;
-  background-color: rgba(0, 0, 0, 0.6);
-  -o-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  -ms-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); }
-
-.login-form h2, .register-form h2 {
-  font-family: 'Roboto', 'PT Sans', sans-serif;
-  font-size: 1.8em;
-  padding-top: 20px;
-  padding-bottom: 10px;
-  color: white;
-  text-align: center;
-  border-bottom: 1px solid #CACACA; }
-
-.login-form input.field {
-  display: block;
-  padding: 0.7em 1em;
-  margin: 1em auto; }
-
-#fos_user_registration_form > div {
-  margin: 1em 0; }
-
-.register-form label {
-  color: white;
-  font-weight: 300;
-  display: inline-block;
-  width: 35%; }
-
-.register-form input[type=text],
-.register-form input[type=email],
-.register-form input[type=number],
-.register-form input[type=password] {
-  padding: 0.2em 0.4em;
-  width: 60%; }
-
-.login-form label.remember-me-label {
-  font-weight: 400;
-  color: #95a5a6;
-  display: inline-block;
-  margin-top: 6px; }
-
-.login-form input[type=checkbox] {
-  height: 1.5em;
-  width: 1.5em;
-  float: left;
-  margin: 5px; }
-
-.login-form input[type=checkbox]:before {
-  width: 20px;
-  height: 20px; }
-
-.login-form input[type=checkbox]:after {
-  top: -20px;
-  width: 16px;
-  height: 16px; }
-
-.login-form input[type=submit],
-.register-form input[type=submit] {
-  background-color: #F48E2B;
-  border: none;
-  padding: 0.5em 2em;
-  color: white;
-  border-color: #CB6E13;
-  display: block;
-  margin: 0 auto; }
-
-/* Users */
-.search-box {
-  border: 1px solid #BABABA;
-  padding: 3% 5%;
-  margin-bottom: 20px; }
-  .search-box .search-box label {
-    display: block; }
-  .search-box .search-box input {
-    width: 80%;
-    padding: 5px 10px; }
-
-/* Sidebar */
-.sidebar {
-  height: 100%;
-  background: #212121;
-  position: fixed;
-  top: 0; }
-  .sidebar .sidebar.left {
-    left: 0; }
-  .sidebar .sidebar.right {
-    right: 0px; }
-
-.user-info {
-  height: 25%; }
-  .user-info .user-info img {
-    max-width: 60%;
-    max-height: 60%;
-    margin: 5% auto;
-    display: block;
-    -webkit-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-    -ms-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%; }
-  .user-info .user-info span.user-name {
-    display: block;
-    height: 10%;
-    color: white;
-    font-size: 1.2em;
-    font-family: Open Sans !important;
-    font-weight: 400; }
-  .user-info .user-info span.notifications-icon {
-    display: block;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #4CAF50;
-    position: absolute;
-    left: 60%;
-    text-align: center;
-    line-height: 35px;
-    font-size: 1.4em;
-    color: white;
-    top: 1%; }
-
-.sidebar-nav ul li {
-  padding: 3% 0;
-  -webkit-transition: all .2s ease-in-out;
-  -moz-transition: all .2s ease-in-out;
-  -ms-transition: all .2s ease-in-out;
-  -o-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out; }
-
-.sidebar-nav ul li a {
-  text-align: center;
-  color: #757575; }
-
-.sidebar-nav ul li a i {
-  font-size: 2.5em;
-  display: block;
-  font-family: FontAwesome;
-  padding: 3% 0; }
-
-.sidebar-nav ul li a span {
-  font-size: 1.2em;
-  font-family: Open Sans !important;
-  font-weight: 300; }
-
-.sidebar-nav ul li:hover,
-.sidebar-nav ul li.active {
-  background: #121212 !important;
-  border-left: 3px solid #4CAF50; }
-
-.sidebar-nav ul li:hover a,
-.sidebar-nav ul li.active a {
-  color: #fff;
-  background: #121212 !important; }
-
-/* Main page content */
-.main-content {
-  position: relative;
-  margin: 0 auto;
-  float: none;
-  padding: 0 30px; }
-
-/* Logged homepage*/
-.table-free {
-  padding: 1em 1em;
-  margin: 1em 0 1em 0; }
-
-.table-free p {
-  color: white;
-  font-size: 18px; }
-
-.result-box {
-  height: 50%;
-  display: block;
-  overflow: hidden;
-  text-align: center;
-  margin: 5% 0;
-  padding: 2em 1em; }
-
-.result-box span.result {
-  font-size: 5.4em;
-  font-family: Open Sans !important;
-  font-weight: 400;
-  font-style: italic;
-  color: #4CAF50; }
-
-.result-box span.separator {
-  padding: 0 5%; }
-
-.user-photo {
-  width: 50.5%;
-  border: 1px solid #BABABA;
-  padding: 2%;
-  background: white; }
-
-/* Tables */
-table {
-  background: white; }
-
-table th {
-  background: #4CAF50;
-  border: none !important;
-  color: white;
-  font-family: Open Sans !important;
-  font-size: 16px;
-  font-weight: 300;
-  text-align: center; }
-
-/* Queue style */
-.queue-game {
-  color: white;
-  display: block;
-  overflow: hidden;
-  text-align: center;
-  margin: 1.5% 0;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 0.5em 1em;
-  border: 1px solid black; }
-
-/*# sourceMappingURL=main.css.map */
+Backtrace:
+main.scss:5
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:1165:in `expected'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:1101:in `expected'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:1096:in `tok!'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:605:in `variable'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:660:in `block_child'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:653:in `block_contents'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:117:in `stylesheet'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/scss/parser.rb:42:in `parse'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/engine.rb:393:in `_to_tree'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/engine.rb:368:in `_render_with_sourcemap'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/engine.rb:285:in `render_with_sourcemap'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/plugin/compiler.rb:209:in `each'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/plugin.rb:82:in `update_stylesheets'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/exec/sass_scss.rb:361:in `watch_or_update'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/exec/sass_scss.rb:51:in `process_result'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/exec/base.rb:52:in `parse'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/lib/sass/exec/base.rb:19:in `parse!'
+c:/Ruby22-x64/lib/ruby/gems/2.2.0/gems/sass-3.4.13/bin/scss:13:in `<top (required)>'
+C:/Ruby22-x64/bin/scss:23:in `load'
+C:/Ruby22-x64/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"...ortantOpenSans \": expected \":\", was \"= 'Open Sans\"\A         on line 5 of main.scss\A \A 1: $userShadow: 0 0 3px 1px rgba(0,0,0,.2);\A 2: $registerShadow: 0 0 3px rgba(0, 0, 0, 0.3);\A 3: $borderColor: 1px solid #BABABA;\A 4: \A 5: $importantOpenSans = 'Open Sans\A 6: \A 7: @mixin transition($value) {\A 8:   -webkit-transition: $value;\A 9:   -moz-transition: $value;\A 10:   -ms-transition: $value;"; }
