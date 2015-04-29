@@ -86,6 +86,7 @@ class LiveScoreManager
             }
         }
         $this->cacheMan->setTableStatusCache($status);
+        return $status;
     }
 
 
@@ -106,7 +107,6 @@ class LiveScoreManager
         {
             $table = $this->cacheMan->resetScoreCache();
         }
-
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
         foreach ($events as $event) {
             if (is_object($event) && $event instanceof TableEvent) {
@@ -115,7 +115,6 @@ class LiveScoreManager
                 } else {
                     $table['score']['white']++;
                 }
-                echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
                     break;
                 }

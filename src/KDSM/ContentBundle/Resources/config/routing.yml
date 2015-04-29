@@ -15,8 +15,8 @@ kdsm_content_homepage:
     defaults: { _controller: KDSMContentBundle:Default:index }
 
 logout:
-        path:     /logout
-        defaults: { _controller: KDSMContentBundle:Users:logout }
+    path:     /logout
+    defaults: { _controller: KDSMContentBundle:Users:logout }
 
 user_view:
     path:     /users/view/{id}
@@ -30,30 +30,18 @@ statistics:
     path:     /statistics
     defaults: { _controller: KDSMContentBundle:Statistics:index }
 
-ksdm_live_game:
+kdsm_live_game:
     path:     /content/live_game
     defaults: { _controller: KDSMContentBundle:Default:liveGame }
 
-ksdm_queue_lfg:
-    path:     /queue/lfg
-    defaults: { _controller: KDSMContentBundle:Queue:getLookingForGameUsers }
+kdsm_queue:
+    path:     /queue/{method}/{queueId}
+    defaults: { _controller: KDSMContentBundle:Queue:queue, queueId: null}
 
-ksdm_queue_group_list:
-    path:     /queue/group_list
-    defaults: { _controller: KDSMContentBundle:Queue:getQueueList }
-
-ksdm_queue_user_join_request:
+kdsm_queue_user_join_request:
     path:     /queue/user_invite/{users}-{queue}
     defaults: { _controller: KDSMContentBundle:Queue:sendUserQueueJoinRequest }
 
-ksdm_queue_user_join_accept:
-    path:     /queue/user_accept/{user}-{queue}
-    defaults: { _controller: KDSMContentBundle:Queue:userQueueJoinAccept }
-
-ksdm_queue_user_join_decline:
-    path:     /queue/user_decline/{user}-{queue}
+kdsm_queue_user_join_decline:
+    path:     /queue/user_decline/{queue}
     defaults: { _controller: KDSMContentBundle:Queue:userQueueJoinDecline }
-
-ksdm_queue_create:
-    path:     /queue/create_pending_queue
-    defaults: { _controller: KDSMContentBundle:Queue:createPendingQueueElement }

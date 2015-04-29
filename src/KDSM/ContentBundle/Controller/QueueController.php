@@ -3,7 +3,9 @@
 namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QueueController extends Controller
 {
@@ -15,35 +17,32 @@ class QueueController extends Controller
 
     }
 
-    public function getLookingForGameUsersAction(){
-        $userEm = $this->getDoctrine()->getEntityManager();
-        $userRep = $userEm->getRepository('KDSMContentBundle:User');
-        $users = $userRep->getUsersLookingForGame();
-//        print_r($users);
-        foreach ($users as $user)
+    public function queueAction($method, $queueId = null)
+    {
+        $queueMan = $this->get('kdsm_content.queue_manager');
+
+        switch($method)
         {
-            $result = $user->getId();
+            case 'list':
+                $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
+                return $queueListResponse;
+            case 'create':
+                $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
+                    ->getUser());
+                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+            case 'accept_invite':
+                $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
+                    ->getUser());
+                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+            case 'lfg':
+                $userEm = $this->getDoctrine()->getEntityManager();
+                $userRep = $userEm->getRepository('KDSMContentBundle:User');
+                $userResponse = new JsonResponse($userRep->getUsersLookingForGame());
+                return $userResponse;
+            default:
+                throw new NotFoundHttpException('Page not found');
+                break;
         }
-
-//        $result = json_encode($userRep->getUsersLookingForGame());
-        $response = new Response($result);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-
-    }
-
-    public function getQueueListAction()
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
-
-    public function createPendingQueueElementAction()
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
     }
 
     public function sendUserQueueJoinRequestAction($userIds = null, $queueId = null)
@@ -53,14 +52,7 @@ class QueueController extends Controller
         return $response;
     }
 
-    public function userQueueJoinAcceptAction($userId = null, $queueId = null)
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
-
-    public function userQueueJoinDeclineAction($userId = null, $queueId = null)
+    public function userQueueJoinDeclineAction($queueId = null)
     {
         $response = new Response(1);
         $response->headers->set('Content-Type', 'application/json');

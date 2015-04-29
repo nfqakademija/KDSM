@@ -12,4 +12,34 @@ use Doctrine\ORM\EntityRepository;
  */
 class QueueRepository extends EntityRepository
 {
+
+    public function getCurrentQueue()
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.status = ?1')
+            ->orWhere('tb.status = ?2');
+        $query->setParameters(array(1 => 'active', 2 => 'in_queue'));
+        $result = $query->getQuery()->getResult();
+        $queryResponse = null;
+        foreach ($result as $key => $queue)
+        {
+            $queryResponse[$key]['id'] = $queue->getId();
+            $queryResponse[$key]['date'] = $queue->getReservationDateTime();
+            $queryResponse[$key]['status'] = $queue->getStatus();
+            foreach ($queue->getUsers() as $userKey => $user)
+            {
+                $queryResponse[$key]['users'][$userKey] = $user->getUserName();
+            }
+        }
+        return $queryResponse;
+    }
+
+    public function persistObject($newQueue)
+    {
+        $this->getEntityManager()->persist($newQueue);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
 }

@@ -34,6 +34,8 @@ class DefaultController extends Controller
 //            'score' => $cacheMan->getScoreCache()['score']
 //        ];
 
+        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $liveScoreManager->getTableStatus();
 
         $rand = rand(1,10);
         $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
