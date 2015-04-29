@@ -24,8 +24,7 @@ class QueueController extends Controller
         switch($method)
         {
             case 'list':
-                $queueListResponse = new Response(json_encode($queueMan->getCurrentQueueList()));
-                $queueListResponse->headers->set('Content-Type', 'application/json');
+                $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
                 return $queueListResponse;
             case 'create':
                 $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
