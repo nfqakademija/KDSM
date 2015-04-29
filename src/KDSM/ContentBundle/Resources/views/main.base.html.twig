@@ -129,7 +129,7 @@
                     //Add game to queue
                     var canAddGame = ($(".queue-container").children("div.appended").length) == 0 ? true: false;
                     if(canAddGame) {
-                        $(".queue-container").append('<div class="row queue-game appended">' +
+                        $(".queue-container").children(".queue-game").last().after('<div class="row queue-game appended">' +
                         '<div class="col-sm-5">' +
                         '<div class="row">' +
                         '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
@@ -154,9 +154,10 @@
                 }
             });
             $("#log").on("click", "button#save-queue-element", function() {
+                alert(selectedUsersIds);
                 $.ajax({
                     type: "post",
-                    url: "{{ path('ksdm_live_game') }}",
+                    url: "{{ path('ksdm_queue_lfg') }}",
                     data: { usersIds: selectedUsersIds },
                     success: function (response) {
                         alert(response);
