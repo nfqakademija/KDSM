@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Request;
 
 class QueueController extends Controller
 {
@@ -27,8 +28,11 @@ class QueueController extends Controller
                 $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
                 return $queueListResponse;
             case 'create':
+                $request = Request::createFromGlobals();
+//                $post = requ
                 $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
                     ->getUser());
+
                 return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
             case 'accept_invite':
                 $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()

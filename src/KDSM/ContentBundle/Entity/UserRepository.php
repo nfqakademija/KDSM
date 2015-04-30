@@ -16,6 +16,7 @@ class UserRepository extends EntityRepository // implements UserProviderInterfac
         $query->select()
             ->where('tb.lookingForGame = true');
         $users = $query->getQuery()->getResult();
+        $result = null;
         foreach ($users as $key => $user) {
             $result[$key]['id'] = $user->getId();
             $result[$key]['value'] = $user->getUsername();
