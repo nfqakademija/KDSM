@@ -68,18 +68,25 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
+            //function to read JSON ffrom url
+            function readJSON(file) {
+                var request = new XMLHttpRequest();
+                request.open('GET', file, false);
+                request.send(null);
+                if (request.status == 200)
+                    return request.responseText;
+            };
+
             //Open queue
             $('button.btn-add-to-queue').click(function() {
                 $('.queue-control').show( "slide" );
-            });
 
-
-            var availableTags = [{"id":"32","value":"Text"},{"id":"62","value":"Text2"},{"id":"68","value":"Text3"},{"id":"61","value":"Text4"}] ;
-
+            var queueId; //got queue id after create
+            var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
             var selectedUsersNum = 0;
             var selectedUsersIds = [];
 
-            //when needs to disselect user
+            //when needs to diselect user
             $("#log").on("click", "li", function() {
                 selectedUsersNum--;
                 var removedUserRow = $(this);
@@ -124,12 +131,20 @@
                     if(selectedUsersNum == 1) {
                         var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
                         $("#log").append(saveButtonHtml);
+                        alert('started');
+                        $.ajax({
+                            type: "post",
+                            url: "{{ path('kdsm_queue', {'method':'create', 'queueId':null}) }}",
+                            success: function (response) {
+                                $("div.appendedQueueElement").attr('id', response.id);
+                            }
+                        });
                     }
 
-                    //Add game to queue
-                    var canAddGame = ($(".queue-container").children("div.appended").length) == 0 ? true: false;
+                    //Add game to queue if it's not already added
+                    var canAddGame = ($(".queue-container").children("div.appendedQueueElement").length) == 0 ? true: false;
                     if(canAddGame) {
-                        $(".queue-container").children(".queue-game").last().after('<div class="row queue-game appended">' +
+                        $(".queue-container").children(".queue-game").last().after('<div class="row queue-game appendedQueueElement">' +
                         '<div class="col-sm-5">' +
                         '<div class="row">' +
                         '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
@@ -154,15 +169,17 @@
                 }
             });
             $("#log").on("click", "button#save-queue-element", function() {
-                alert(selectedUsersIds);
+                var queueElementId = $("div.appendedQueueElement").attr("id");
+                alert("{{ path('kdsm_queue', {'method':'create'}) }}/"+queueElementId);
                 $.ajax({
                     type: "post",
-                    url: "{{ path('ksdm_queue_lfg') }}",
-                    data: { usersIds: selectedUsersIds },
+                    url: "{{ path('kdsm_queue', {'method':'create'}) }}/"+queueElementId,
+                    data: {usersIds: selectedUsersIds },
                     success: function (response) {
-                        alert(response);
+                        console.log(response);
                     }
                 });
+            });
             });
         });
     </script>

@@ -40,7 +40,12 @@ class QueueManager extends ContainerAwareCommand
         $queueElem->setStatus('pending');
 
         $this->queueRepository->persistObject($queueElem);
-        return $queueElem;
+
+        $array = array();
+        $array['id'] = $queueElem->getId();
+        $array['success'] = true;
+        return $array;
+        //return $queueElem;
     }
 
     public function joinQueueRequest($queueId, $user)

@@ -24,12 +24,12 @@ class DefaultController extends Controller
 
     public function liveGameAction()
     {
-        $cacheMan = $this->get('kdsm_content.cache_manager');
-
-        $tableStatusResponse = [
-            'tableStatus' => $cacheMan->getTableStatusCache(),
-            'score' => $cacheMan->getScoreCache()['score']
-        ];
+//        $cacheMan = $this->get('kdsm_content.cache_manager');
+//
+//        $tableStatusResponse = [
+//            'tableStatus' => $cacheMan->getTableStatusCache(),
+//            'score' => $cacheMan->getScoreCache()['score']
+//        ];
 
         $rand = rand(1,10);
         $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
@@ -42,7 +42,7 @@ class DefaultController extends Controller
                 'player3' => $users[array_rand($users)], 'player4' => $users[array_rand($users)], 'scoreWhite' => rand(0,10), 'scoreBlack' => rand(5,10));
         }
 
-        $result = $tableStatusResponse;
+        //$result = $tableStatusResponse;
 
         $result = json_encode($result);
         $response = new Response($result);

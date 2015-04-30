@@ -32,8 +32,10 @@ class QueueController extends Controller
                 $post = $request->request->get('asd', 'adsd');
                 $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
                     ->getUser());
+                $userResponse = new JsonResponse($managerResponse);
+                return $userResponse;
 
-                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+                //return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
             case 'accept_invite':
                 $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
                     ->getUser());
