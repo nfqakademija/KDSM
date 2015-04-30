@@ -29,7 +29,7 @@ class QueueController extends Controller
                 return $queueListResponse;
             case 'create':
                 $request = Request::createFromGlobals();
-//                $post = requ
+                $post = $request->request->get('asd', 'adsd');
                 $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
                     ->getUser());
 
