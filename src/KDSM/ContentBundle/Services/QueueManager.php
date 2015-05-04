@@ -48,16 +48,21 @@ class QueueManager extends ContainerAwareCommand
         //return $queueElem;
     }
 
-    public function joinQueueRequest($queueId, $user)
+    public function joinQueueRequest($queueId, $users)
     {
         $queue = $this->queueRepository->findOneBy(array('id' => $queueId));
-        if (!$queue)
-            return 404;
-        if($this->getIsFull($queue))
-            return $queue;//'full';
-        if($this->getIsAlreadyInQueue($queue, $user))
-            return $queue; //'alreadyInQueue';
-        $queue->addUser($user);
+        $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+        foreach($users as $user)
+        {
+            if (!$queue)
+                return 404;
+            if($this->getIsFull($queue))
+                return $queue;//'full';
+
+    //        if($this->getIsAlreadyInQueue($queue, $user))
+    //            return $queue; //'alreadyInQueue';
+            $queue->addUser($userRepository->findOneBy(array('id' => $user)));
+        }
         $this->queueRepository->persistObject($queue);
         return $queue;
     }
