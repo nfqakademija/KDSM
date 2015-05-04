@@ -3,7 +3,7 @@
 namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -27,13 +27,18 @@ class DefaultController extends Controller
         $cacheMan = $this->get('kdsm_content.cache_manager');
         $players = $cacheMan->getPlayerCache();
 
+//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $liveScoreManager->getTableStatus();
+
+
         $tableStatusResponse = [
-            'tableStatus' => $cacheMan->getTableStatusCache(),
-            'score' => $cacheMan->getScoreCache()['score'],
-            'player1' => $players['players']['player1'],
+            'status' => $cacheMan->getTableStatusCache(),
+            'scoreWhite' => $cacheMan->getScoreCache()['score']['white'],
+            'scoreBlack' => $cacheMan->getScoreCache()['score']['black'],
+            /*'player1' => $players['players']['player1'],
             'player2' => $players['players']['player2'],
             'player3' => $players['players']['player3'],
-            'player4' => $players['players']['player4'],
+            'player4' => $players['players']['player4'],*/
 
         ];
 
@@ -50,9 +55,7 @@ class DefaultController extends Controller
 
         $result = $tableStatusResponse;
 
-        $result = json_encode($result);
-        $response = new Response($result);
-        $response->headers->set('Content-Type', 'application/json');
+        $response = new JsonResponse($result);
         return $response;
     }
 }

@@ -74,9 +74,9 @@ class LiveScoreManager
 //        echo date('Y-m-d H:i:s', $checkDateTime);
 //
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
-        $this->getSwipes();
+//        $this->getSwipes();
+//        $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
         if ($status == 'free') {
-            $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
             $this->cacheMan->resetScoreCache();
         } else {
             if ($status == 'busy') {
@@ -134,7 +134,6 @@ class LiveScoreManager
 
     private function getSwipes()
     {
-        $table = $this->cacheMan->getPlayerCache(); //gets latest players
         $position = 0;
         $swipes = $this->rep->getSwipeEventsFromId($this->cacheMan->getLatestCheckedTableSwipeId());
         foreach ($swipes as $swipe) {

@@ -12,10 +12,14 @@ class CacheManager
 {
 
     private $redis;
+    private $em;
+    private $rep;
 
-    public function __construct($redis)
+    public function __construct($redis, $entityManager)
     {
         $this->redis = $redis;
+        $this->em = $entityManager;
+        $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
     }
 
     public function getLatestCheckedTableGoalId()
