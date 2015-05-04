@@ -9,18 +9,19 @@
 namespace KDSM\ContentBundle\Services\LiveScore;
 
 use Doctrine\ORM\EntityManager;
-
 use KDSM\APIBundle\Entity\TableEvent;
 use KDSM\ContentBundle\Entity\LiveScore;
+use KDSM\ContentBundle\Services\Redis\CacheManager;
 use KDSM\ContentBundle\Services\Statistics;
 use KDSM\ContentBundle\Services\Statistics\BusyCheck;
-use KDSM\ContentBundle\Services\Redis\CacheManager;
+
 
 /**
  * Class LiveScoreManager
  * @package KDSM\ContentBundle\Services\LiveScore
  */
-class LiveScoreManager{
+class LiveScoreManager
+{
 
     /**
      * @var LiveScore
@@ -48,7 +49,12 @@ class LiveScoreManager{
      * @param EntityManager $entityManager
      * @param CacheManager $cacheMan
      */
-    public function __construct(LiveScore $liveScore, BusyCheck $busyCheck, EntityManager $entityManager, CacheManager $cacheMan){
+    public function __construct(
+        LiveScore $liveScore,
+        BusyCheck $busyCheck,
+        EntityManager $entityManager,
+        CacheManager $cacheMan
+    ) {
         $this->liveScore = $liveScore;
         $this->busyCheck = $busyCheck;
         $this->em = $entityManager;
@@ -63,20 +69,26 @@ class LiveScoreManager{
     public function getTableStatus(/*$checkDateTime = '2014-10-06 09:02:00'*/)
     {
         //todo set to now() at live
-        $checkDateTime = strtotime('2014-10-06 09:05:00');
+//        $checkDateTime = strtotime('2014-10-07 09:05:00');
+        $checkDateTime = strtotime('now');
         $status = $this->busyCheck->busyCheck($checkDateTime);
-
+//        echo date('Y-m-d H:i:s', $checkDateTime);
+//
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
 
         if($status == 'free'){
-            $this->cacheMan->resetScoreCache();
+            $response['tableStatus'] = $status;
         }
         else if ($status == 'busy'){
-            $this->readEvents();
+            $this->table =['score' => ['white' => 0, 'black' => 0],'players' => [/*should be set by frontend*/]];
+            $response['tableStatus'] = $status;
+            if($this->readEvents($checkDateTime))
+                $response['tableData'] = $this->table;
         }
         else
-            $status = 'error';
-        $this->cacheMan->setTableStatusCache($status);
+            $response['tableStatus'] = 'error';
+        return $response;
+
     }
 
 
@@ -90,25 +102,30 @@ class LiveScoreManager{
      * BusyCheck interval, the latter should filter out table busy/free stuff
      **/
 
-    private function readEvents(){
+    private function readEvents()
+    {
         $table = $this->cacheMan->getScoreCache(); //gets latest result
-        if(in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
+        if (in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
+        {
             $table = $this->cacheMan->resetScoreCache();
+        }
 
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
-        foreach($events as $event){
-            if(is_object($event) && $event instanceof TableEvent) {
-                if (json_decode($event->getData())->team == 1)
+        foreach ($events as $event) {
+            if (is_object($event) && $event instanceof TableEvent) {
+                if (json_decode($event->getData())->team == 1) {
+                    $table['score']['black']++;
+                } else {
                     $table['score']['white']++;
-                else $table['score']['black']++;
-
+                }
+                echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
                     break;
                 }
             }
         }
         //cache up  stuff
-        if(isset($event)) {
+        if (isset($event)) {
             $this->cacheMan->setLatestCheckedTableGoalId($event->getId());
             $this->cacheMan->setScoreCache($table['score']);
         }
