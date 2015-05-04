@@ -15,7 +15,6 @@ use KDSM\ContentBundle\Services\Redis\CacheManager;
 use KDSM\ContentBundle\Services\Statistics;
 use KDSM\ContentBundle\Services\Statistics\BusyCheck;
 
-
 /**
  * Class LiveScoreManager
  * @package KDSM\ContentBundle\Services\LiveScore
@@ -76,19 +75,18 @@ class LiveScoreManager
 //
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
 
-        if($status == 'free'){
-            $response['tableStatus'] = $status;
+        if ($status == 'free') {
+            $this->cacheMan->resetScoreCache();
+            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
+        } else {
+            if ($status == 'busy') {
+                $this->readEvents();
+            } else {
+                $status = 'error';
+            }
         }
-        else if ($status == 'busy'){
-            $this->table =['score' => ['white' => 0, 'black' => 0],'players' => [/*should be set by frontend*/]];
-            $response['tableStatus'] = $status;
-            if($this->readEvents($checkDateTime))
-                $response['tableData'] = $this->table;
-        }
-        else
-            $response['tableStatus'] = 'error';
-        return $response;
-
+        $this->cacheMan->setTableStatusCache($status);
+        return $status;
     }
 
 
@@ -109,7 +107,6 @@ class LiveScoreManager
         {
             $table = $this->cacheMan->resetScoreCache();
         }
-
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
         foreach ($events as $event) {
             if (is_object($event) && $event instanceof TableEvent) {
@@ -118,7 +115,6 @@ class LiveScoreManager
                 } else {
                     $table['score']['white']++;
                 }
-                echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
                     break;
                 }
