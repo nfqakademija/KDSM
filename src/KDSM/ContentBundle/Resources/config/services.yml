@@ -4,7 +4,7 @@ parameters:
 services:
     kdsm_content.cache_manager:
         class: KDSM\ContentBundle\Services\Redis\CacheManager
-        arguments: [@snc_redis.default]
+        arguments: [@snc_redis.default, @doctrine.orm.entity_manager]
     kdsm_content.table_busy_check:
         class: KDSM\ContentBundle\Services\Statistics\BusyCheck
         arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%, %table.check_period%]

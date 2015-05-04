@@ -4,7 +4,6 @@ namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -26,11 +25,20 @@ class DefaultController extends Controller
     public function liveGameAction()
     {
         $cacheMan = $this->get('kdsm_content.cache_manager');
+        $players = $cacheMan->getPlayerCache();
+
+//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $liveScoreManager->getTableStatus();
+
 
         $tableStatusResponse = [
             'status' => $cacheMan->getTableStatusCache(),
             'scoreWhite' => $cacheMan->getScoreCache()['score']['white'],
             'scoreBlack' => $cacheMan->getScoreCache()['score']['black'],
+            'player1' => $players['players']['player1'],
+            'player2' => $players['players']['player2'],
+            'player3' => $players['players']['player3'],
+            'player4' => $players['players']['player4'],
 
         ];
 
