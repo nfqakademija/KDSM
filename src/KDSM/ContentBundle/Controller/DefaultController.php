@@ -3,6 +3,7 @@
 namespace KDSM\ContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
@@ -27,8 +28,10 @@ class DefaultController extends Controller
         $cacheMan = $this->get('kdsm_content.cache_manager');
 
         $tableStatusResponse = [
-            'tableStatus' => $cacheMan->getTableStatusCache(),
-            'score' => $cacheMan->getScoreCache()['score']
+            'status' => $cacheMan->getTableStatusCache(),
+            'scoreWhite' => $cacheMan->getScoreCache()['score']['white'],
+            'scoreBlack' => $cacheMan->getScoreCache()['score']['black'],
+
         ];
 
         $rand = rand(1,10);
@@ -44,8 +47,7 @@ class DefaultController extends Controller
 
         $result = $tableStatusResponse;
 
-        $result = json_encode($result);
-        $response = new Response($result);
+        $response = new JsonResponse($result);
         return $response;
     }
 }
