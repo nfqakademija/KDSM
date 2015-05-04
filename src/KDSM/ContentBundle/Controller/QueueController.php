@@ -22,16 +22,21 @@ class QueueController extends Controller
     {
         $queueMan = $this->get('kdsm_content.queue_manager');
 
-        switch($method)
-        {
+        switch($method) {
             case 'list':
                 $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
+
                 return $queueListResponse;
             case 'create':
-                $request = Request::createFromGlobals();
-                $post = $request->request->get('asd', 'adsd');
-                $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
-                    ->getUser());
+                if ($queueId != null) {
+                    $request = Request::createFromGlobals();
+                    $request->request->get('usersIds');
+                    $managerResponse = $queueMan->joinQueueRequest($queueId, $_POST['usersIds']);
+                 }
+                else{
+                    $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
+                        ->getUser());
+                }
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 

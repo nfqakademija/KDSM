@@ -168,7 +168,7 @@
                     type: "post",
                     url: "{{ path('kdsm_live_game') }}",
                     success: function (response_json) {
-                        var response = $.parseJSON(response_json);
+                        var response = (response_json);
                         if (response.status == 'free') {
                             $("div.result-box").addClass("hidden");
                             $("div.table-free").removeClass("hidden");
