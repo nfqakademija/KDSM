@@ -25,10 +25,16 @@ class DefaultController extends Controller
     public function liveGameAction()
     {
         $cacheMan = $this->get('kdsm_content.cache_manager');
+        $players = $cacheMan->getPlayerCache();
 
         $tableStatusResponse = [
             'tableStatus' => $cacheMan->getTableStatusCache(),
-            'score' => $cacheMan->getScoreCache()['score']
+            'score' => $cacheMan->getScoreCache()['score'],
+            'player1' => $players['players']['player1'],
+            'player2' => $players['players']['player2'],
+            'player3' => $players['players']['player3'],
+            'player4' => $players['players']['player4'],
+
         ];
 
         $rand = rand(1,10);

@@ -20,14 +20,10 @@ class CacheManager
 
     public function getLatestCheckedTableGoalId()
     {
-        if (!$this->redis->exists('liveScore:lastCheckId')) {
-            $latestEvent = $this->rep->getLatestId();
-            //todo uncomment above line when testing on live data
-//            $latestEvent = 3903;
-            $this->redis->set('liveScore:lastCheckId', $latestEvent);
-            $eventId = $latestEvent;
+        if (!$this->redis->exists('liveScore:lastCheckGoalId')) {
+            $eventId = $this->rep->getLatestId();
         } else {
-            $eventId = $this->redis->get('liveScore:lastCheckId');
+            $eventId = $this->redis->get('liveScore:lastCheckGoalId');
         }
 
         return $eventId;
@@ -35,7 +31,23 @@ class CacheManager
 
     public function setLatestCheckedTableGoalId($id)
     {
-        $this->redis->set('liveScore:lastCheckId', $id);
+        $this->redis->set('liveScore:lastCheckGoalId', $id);
+    }
+
+    public function getLatestCheckedTableSwipeId()
+    {
+        if (!$this->redis->exists('liveScore:lastCheckSwipeId')) {
+            $eventId = $this->rep->getLatestId();
+        } else {
+            $eventId = $this->redis->get('liveScore:lastCheckSwipeId');
+        }
+
+        return $eventId;
+    }
+
+    public function setLatestCheckedTableSwipeId($id)
+    {
+        $this->redis->set('liveScore:lastCheckSwipeId', $id);
     }
 
     public function resetScoreCache()
@@ -60,6 +72,31 @@ class CacheManager
     {
         $this->redis->hset('table:LiveScore', 'scoreWhite', $score['white']);
         $this->redis->hset('table:LiveScore', 'scoreBlack', $score['black']);
+    }
+
+    public function resetPlayerCache()
+    {
+        $this->redis->hset('table:LiveScore', 'player1', '');
+        $this->redis->hset('table:LiveScore', 'player2', '');
+        $this->redis->hset('table:LiveScore', 'player3', '');
+        $this->redis->hset('table:LiveScore', 'player4', '');
+    }
+
+    public function getPlayerCache()
+    {
+        return [
+            'players' => [
+                'player1' => $this->redis->hget('table:LiveScore', 'player1'),
+                'player2' => $this->redis->hget('table:LiveScore', 'player2'),
+                'player3' => $this->redis->hget('table:LiveScore', 'player3'),
+                'player4' => $this->redis->hget('table:LiveScore', 'player4')
+            ]
+        ];
+    }
+
+    public function setPlayerCache($playerPosition, $playerId)
+    {
+        $this->redis->hset('table:LiveScore', 'player'.$playerPosition,$playerId);
     }
 
     public function getTableStatusCache()

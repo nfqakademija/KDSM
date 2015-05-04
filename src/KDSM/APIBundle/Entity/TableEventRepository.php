@@ -88,16 +88,17 @@ class TableEventRepository extends EntityRepository
 
         return $query->getQuery()->getResult();
     }
-// todo unused anymore
-//    public function getSwipesOnDateTime($timestamp){
-//        $query = $this->createQueryBuilder('tb');
-//        $query->select()
-//            ->where('tb.timesec >= ?1')
-//            ->andWhere('tb.timesec <= ?2')
-//            ->andWhere('tb.type = ?3');
-//        $query->setParameters(array(1 => date('Y-m-d H:i:s', strtotime('-2 minutes',$timestamp)), 2 => date('Y-m-d H:i:s', $timestamp), 3 => 'CardSwipe'));
-//        return $query->getQuery()->getResult();
-//    }
+
+    public function getSwipeEventsFromId($id){
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.id > ?1')
+            ->andWhere('tb.type = ?2')
+            ->orderBy('tb.eventId', 'ASC');
+        $query->setParameters(array(1 => $id, 2 => 'CardSwipe'));
+
+        return $query->getQuery()->getResult();
+    }
 
     public function persistObject($newEvent)
     {
