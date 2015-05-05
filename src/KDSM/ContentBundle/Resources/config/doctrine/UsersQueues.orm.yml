@@ -1,0 +1,31 @@
+# src/KDSM/ContentBundle/Resources/config/doctrine/Queue.orm.yml
+KDSM\ContentBundle\Entity\UsersQueues:
+    type:  entity
+    repositoryClass: KDSM\ContentBundle\Entity\UsersQueuesRepository
+    table: users_queues
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        queueId:
+            column: queue_id
+            type: integer
+        userStatusInQueue:
+            column: user_status
+            type: string
+    manyToOne:
+        user:
+          targetEntity: User
+          inversedBy: usersQueues
+          joinColumn:
+              name: user_id
+              referencedColumnName: id
+    manyToOne:
+        queue:
+          targetEntity: Queue
+          inversedBy: usersQueues
+          joinColumn:
+              name: queue_id
+              referencedColumnName: id

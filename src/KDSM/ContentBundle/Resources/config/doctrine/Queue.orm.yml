@@ -18,14 +18,7 @@ KDSM\ContentBundle\Entity\Queue:
         status:
             column: queue_status
             type: string
-    manyToMany:
-        users:
-            targetEntity: User
-            joinTable:
-                name: queues_users
-                joinColumns:
-                    queue_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    user_id:
-                        referencedColumnName: id
+    oneToMany:
+        usersQueues:
+          targetEntity: UsersQueues
+          mappedBy: queue

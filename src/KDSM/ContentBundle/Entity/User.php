@@ -227,4 +227,32 @@ class User extends BaseUser
     {
         return $this->lookingForGame;
     }
+
+    /**
+     * @var string
+     */
+    private $oneToMany;
+
+    /**
+     * Set oneToMany
+     *
+     * @param string $oneToMany
+     * @return User
+     */
+    public function setOneToMany($oneToMany)
+    {
+        $this->oneToMany = $oneToMany;
+
+        return $this;
+    }
+
+    /**
+     * Get oneToMany
+     *
+     * @return string 
+     */
+    public function getOneToMany()
+    {
+        return $this->oneToMany;
+    }
 }
