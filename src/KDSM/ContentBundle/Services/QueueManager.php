@@ -55,13 +55,14 @@ class QueueManager extends ContainerAwareCommand
         foreach($users as $user)
         {
             if (!$queue)
-                return 404;
+                throw new NotFoundHttpException('Page not found');
             if($this->getIsFull($queue))
                 return $queue;//'full';
 
-    //        if($this->getIsAlreadyInQueue($queue, $user))
-    //            return $queue; //'alreadyInQueue';
-            $queue->addUser($userRepository->findOneBy(array('id' => $user)));
+            $userObject = $userRepository->findOneBy(array('id' => $user));
+            if(!$queue->getUsers()->contains($userObject)) {
+                $queue->addUser($user);
+            }
         }
         $this->queueRepository->persistObject($queue);
         return $queue;
