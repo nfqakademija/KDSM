@@ -20,3 +20,8 @@ services:
         class: KDSM\ContentBundle\Form\Type\RegistrationFormType
         tags:
            - { name: form.type, alias: kdsm_content_registration }
+    kdsm_content.listener.notification:
+        class: KDSM\ContentBundle\EventListener\KDSMNotificationListener
+        tags:
+           - { name: kdsm_content.notification_listener, event: kdsm_content.notification_create, method: onNotificationCreate }
+        arguments: [@doctrine.orm.entity_manager]

@@ -182,7 +182,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            var userid = {{ app.user.id }};
+            var userid = 1;
             setInterval( reloadNotifications, 2000);
             function reloadNotifications(){
                 $.ajax({
@@ -194,9 +194,10 @@
                         var response = $.parseJSON(response_json);
                         $('#notification-count').html(response.length);
                         $.each(response, function(key, value){
+                            var aid = 'notification-'.concat(value.id);
                             $("ul#notifications").append(
                                     $('<li>').append(
-                                            $('<a>').attr('href', '#').attr('id', 'notification-'.concat(value.id)).attr('onclick','viewNotification(this)').append(value.notificationText)
+                                            $('<a>').attr('href', '#').attr('id', aid).attr('onclick','viewNotification(this)').append(value.notificationText)
                                     )
                             );
                         });

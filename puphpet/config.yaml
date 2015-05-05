@@ -31,21 +31,8 @@ vagrantfile-local:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
-        synced_folder:
-            cNFSkoCMhP58:
-                owner: www-data
-                group: www-data
-                source: ./
-                target: /var/www
-                sync_type: default
-                rsync:
-                    args:
-                        - '--verbose'
-                        - '--archive'
-                        - '-z'
-                    exclude:
-                        - .vagrant/
-                    auto: 'false'
+        synced_folder: {}
+
         usable_port_range:
             start: 10200
             stop: 10500

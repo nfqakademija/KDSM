@@ -38,4 +38,16 @@ class NotificationRepository extends EntityRepository
             ->execute();
     }
 
+    public function createNotification($userid, $gameid){
+        $notification = new Notification();
+        $notification->setGameId($gameid);
+        $notification->setUserId($userid);
+        $notification->setNotificationText('tave pakviete zaist');
+
+
+        $em = $this->getEntityManager();
+        $em->persist($notification);
+        $em->flush();
+    }
+
 }
