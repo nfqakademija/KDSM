@@ -32,6 +32,8 @@ class Queue
      */
     private $users;
 
+    private $status;
+
     /**
      * Constructor
      */
@@ -127,5 +129,28 @@ class Queue
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     * @return Queue
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

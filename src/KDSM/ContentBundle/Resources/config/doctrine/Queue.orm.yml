@@ -15,6 +15,9 @@ KDSM\ContentBundle\Entity\Queue:
         reservationDateTime:
             column: reservation_date_time
             type: datetime
+        status:
+            column: queue_status
+            type: string
     manyToMany:
         users:
             targetEntity: User

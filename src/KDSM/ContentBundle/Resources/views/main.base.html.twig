@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
     {# Fonts #}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/font-awesome.css') }}" />
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300, 700, 900&amp;subset=latin,latin-ext">
 {% endblock %}
 {% block body %}
@@ -37,7 +37,7 @@
             </main>
             {% block rightSidebar %}
                 {% if app.user %}
-                    <aside class="col-sm-2 sidebar right">
+                    <aside class="col-sm-2 sidebar right queue-control">
                         <div class="ui-widget search-box">
                             <i class="search-users-icon glyphicon glyphicon-search"></i>
                             <input id="search-users" placeholder="Search...">
@@ -58,7 +58,7 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    {# jQuery include#}
+    {# jQuery include #}
     {% javascripts '@KDSMContentBundle/Resources/public/jquery.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -68,88 +68,95 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
-            var availableTags = [{"id":"32","value":"Text"},{"id":"62","value":"Text2"},{"id":"68","value":"Text3"},{"id":"61","value":"Text4"}] ;
+            //function to read JSON ffrom url
+            function readJSON(file) {
+                var request = new XMLHttpRequest();
+                request.open('GET', file, false);
+                request.send(null);
+                if (request.status == 200)
+                    return request.responseText;
+            };
 
-            var selectedUsersNum = 0;
-            var selectedUsersIds = [];
+            //Open queue
+            $('button.btn-add-to-queue').click(function() {
+                $('.queue-control').show( "slide" );
 
-            //when needs to disselect user
-            $("#log").on("click", "li", function() {
-                selectedUsersNum--;
-                var removedUserRow = $(this);
-                var removedRowIdTag = removedUserRow.attr("id");
-                var removedUserId = removedUserRow.attr("user-id");
-                selectedUsersIds.splice(selectedUsersIds.indexOf(removedUserId), 1);
-                $(this).remove();
-                //get back user to list
-                $(".sidebar").find("li#"+removedRowIdTag).show();
-            });
+                var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
+                var selectedUsersIds = [];
+                var queueElementId;    //here saving added new queue element id
 
-            $( "#search-users" ).autocomplete({
-                source: availableTags,
-                create: function( event, ui ) {
-                    $(this).autocomplete("widget")
-                            .appendTo("#results")
-                            .css("position", "static");
-                },
-                open: function() {
-                    $(this).autocomplete("widget")
-                            .appendTo("#results")
-                            .css("position", "static");
-                },
-                select: function(event, ui) {
-                    //when user is selected
-                    if(selectedUsersNum < 3) {
-                        selectedUsersNum++;
-                        selectedUsersIds.push(ui.item.id);
-                        var selectedUserRow = $(event.toElement.outerHTML);
-                        var selectedRowIdTag = selectedUserRow.attr("id");
-                        selectedUserRow.removeClass("ui-state-focus");
-                        selectedUserRow.attr("user-id",ui.item.id);
-                        $("li#"+selectedRowIdTag).hide();
-                        $("#log").children("ul.log-list").prepend(selectedUserRow);
+                $("#search-users").autocomplete({
+                    source: availableTags,
+                    create: function( event, ui ) {
+                        $(this).autocomplete("widget")
+                                .appendTo("#results")
+                                .css("position", "static");
+                    },
+                    open: function() {
+                        $(this).autocomplete("widget")
+                                .appendTo("#results")
+                                .css("position", "static");
+                    },
+                    select: function(event, ui) {
+                        //when user is selected
+                        if(selectedUsersIds.length < 3) {
+                            //get selected user id and push it to selected users array
+                            var selectedUserId = ui.item.id;
+                            selectedUsersIds.push(selectedUserId);
+
+                            //get selected user html and add it to selected container
+                            var selectedUserRowHTML = $(".found-users").find("li#user-"+selectedUserId).clone();
+                            $("li#user-"+selectedUserId).hide();
+                            $("#log").children("ul.log-list").prepend(selectedUserRowHTML);
+                        }
+
+                        //if at least one user is selected, add button to save the queue
+                        if(selectedUsersIds.length == 1) {
+                            var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
+                            $("#log").append(saveButtonHtml);
+                            //send request to create new empty row element
+                            $.ajax({
+                                type: "post",
+                                url: "{{ path('kdsm_queue', {'method':'create', 'queueId':null}) }}",
+                                success: function (response) {
+                                    queueElementId = response.id;
+                                }
+                            });
+                        }
                     }
+                })
+                .autocomplete( "instance" )._renderItem = function( ul, item ) {
+                    return $("<li id='user-"+ item.id +"'>")
+                            .append(item.value+" "+item.id)
+                            .appendTo( ul );
+                };
 
-                    //if ateleast one user is selected, add button to save the queue
-                    if(selectedUsersNum >= 1) {
-                        var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
-                        $("#log").append(saveButtonHtml);
-                    }
+                //when needs to diselect user
+                $("#log").on("click", "li", function() {
+                    var removedRowId = $(this).attr("id");
+                    var removedRowUserId = removedRowId.split("-")[1];
+                    selectedUsersIds.splice(selectedUsersIds.indexOf(removedRowUserId), 1);
+                    $(this).remove();
+                    //get back user to list
+                    $(".sidebar").find("li#"+removedRowId).show();
 
-                    //Add game to queue
-                    var canAddGame = ($(".queue-container").children("div.appended").length) == 0 ? true: false;
-                    if(canAddGame) {
-                        $(".queue-container").append('<div class="row queue-game appended">' +
-                        '<div class="col-sm-5">' +
-                        '<div class="row">' +
-                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
-                        '<span class="col-sm-6 text-center">Dainius &amp; Jonas</span>' +
-                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="col-sm-2">' +
-                        '<div class="row">' +
-                        '<p>VS</p>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="col-sm-5">' +
-                        '<div class="row">' +
-                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
-                        '<span class="col-sm-6 text-center">Rokas &amp; Tomas</span>' +
-                        '<img class="col-sm-3 img-responsive" src="/KDSM/web/bundles/kdsmcontent/images/empty-user.jpg" alt="">' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>');
+                    if(selectedUsersIds.length < 1) {
+                        $("#save-queue-element").remove();
                     }
-                }
-            });
-            $("#log").on("click", "button#save-queue-element", function() {
-                $.ajax({
-                    type: "post",
-                    url: "{{ path('ksdm_live_game') }}",
-                    data: { usersIds: selectedUsersIds },
-                    success: function (response) {
-                        alert(response);
+                });
+
+                $("#log").on("click", "button#save-queue-element", function() {
+                    if(queueElementId != undefined) {
+                        alert("{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId);
+                        $.ajax({
+                            type: "post",
+                            url: "{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId,
+                            data: {usersIds: selectedUsersIds},
+                            success: function (response) {
+                                console.log(response);
+                                $('.queue-control').hide("slide");
+                            }
+                        });
                     }
                 });
             });
@@ -161,9 +168,9 @@
             function TableData() {
                 $.ajax({
                     type: "post",
-                    url: "{{ path('ksdm_live_game') }}",
+                    url: "{{ path('kdsm_live_game') }}",
                     success: function (response_json) {
-                        var response = $.parseJSON(response_json);
+                        var response = (response_json);
                         if (response.status == 'free') {
                             $("div.result-box").addClass("hidden");
                             $("div.table-free").removeClass("hidden");

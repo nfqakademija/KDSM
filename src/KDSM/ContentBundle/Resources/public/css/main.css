@@ -160,6 +160,7 @@ table td {
 }
 
 .sidebar.right {
+    display: none;
     right: 0px;
     padding:0px;
 }

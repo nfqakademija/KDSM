@@ -1,6 +1,7 @@
 # src/KDSM/ContentBundle/Resources/config/doctrine/User.orm.yml
 KDSM\ContentBundle\Entity\User:
     type:  entity
+    repositoryClass: KDSM\ContentBundle\Entity\UserRepository
     table: fos_user
     id:
         id:
@@ -32,4 +33,8 @@ KDSM\ContentBundle\Entity\User:
         losses:
             column: losses
             type: integer
+            nullable: TRUE
+        lookingForGame:
+            column: looking_for_game
+            type: boolean
             nullable: TRUE

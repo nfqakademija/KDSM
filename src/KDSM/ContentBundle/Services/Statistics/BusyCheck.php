@@ -30,6 +30,8 @@ class BusyCheck
     {
         $shakesNow = $this->rep->getShakeCountAtPeriod($checkDateTime, $this->checkPeriod);
         $tableStatus = null;
+        echo date('H:i:s', $checkDateTime);
+        echo $shakesNow;
         if ($shakesNow <= $this->busyThreshold) {
 //            $shakesMinuteAgo = $this->getShakesPerMinute($checkDateTime-60);
 //            if($shakesMinuteAgo <= $this->busyThreshold)

@@ -4,6 +4,7 @@ namespace KDSM\ContentBundle\Controller;
 
 use KDSM\ContentBundle\Entity\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 //use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,16 +33,23 @@ class DefaultController extends Controller
 
     public function liveGameAction()
     {
-//        $cacheMan = $this->get('kdsm_content.cache_manager');
-//
+        $cacheMan = $this->get('kdsm_content.cache_manager');
+        $players = $cacheMan->getPlayerCache();
+
 //        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
 //        $liveScoreManager->getTableStatus();
-//
-//        $tableStatusResponse = [
-//            'tableStatus' => $cacheMan->getTableStatusCache(),
-//            'score' => $cacheMan->getScoreCache()['score']
-//        ];
 
+
+        $tableStatusResponse = [
+            'status' => $cacheMan->getTableStatusCache(),
+            'scoreWhite' => $cacheMan->getScoreCache()['score']['white'],
+            'scoreBlack' => $cacheMan->getScoreCache()['score']['black'],
+            'player1' => $players['players']['player1'],
+            'player2' => $players['players']['player2'],
+            'player3' => $players['players']['player3'],
+            'player4' => $players['players']['player4'],
+
+        ];
 
         $rand = rand(1,10);
         $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
@@ -54,8 +62,9 @@ class DefaultController extends Controller
                 'player3' => $users[array_rand($users)], 'player4' => $users[array_rand($users)], 'scoreWhite' => rand(0,10), 'scoreBlack' => rand(5,10));
         }
 
-        $result = json_encode($result);
-        $response = new Response($result);
+        $result = $tableStatusResponse;
+
+        $response = new JsonResponse($result);
         return $response;
     }
 
