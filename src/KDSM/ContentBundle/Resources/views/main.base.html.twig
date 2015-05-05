@@ -146,16 +146,18 @@
                 });
 
                 $("#log").on("click", "button#save-queue-element", function() {
-                    alert("{{ path('kdsm_queue', {'method':'create'}) }}/"+queueElementId);
-                    $.ajax({
-                        type: "post",
-                        url: "{{ path('kdsm_queue', {'method':'create'}) }}/"+queueElementId,
-                        data: {usersIds: selectedUsersIds },
-                        success: function (response) {
-                            console.log(response);
-                            $('.queue-control').hide( "slide" );
-                        }
-                    });
+                    if(queueElementId != undefined) {
+                        alert("{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId);
+                        $.ajax({
+                            type: "post",
+                            url: "{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId,
+                            data: {usersIds: selectedUsersIds},
+                            success: function (response) {
+                                console.log(response);
+                                $('.queue-control').hide("slide");
+                            }
+                        });
+                    }
                 });
             });
         });
