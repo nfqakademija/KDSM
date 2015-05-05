@@ -52,16 +52,15 @@ class QueueManager extends ContainerAwareCommand
     {
         $queue = $this->queueRepository->findOneBy(array('id' => $queueId));
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+        if (!$queue)
+            throw new NotFoundHttpException('Page not found');
+        if($this->getIsFull($queue))
+            return $queue;//'full';
         foreach($users as $user)
         {
-            if (!$queue)
-                throw new NotFoundHttpException('Page not found');
-            if($this->getIsFull($queue))
-                return $queue;//'full';
-
             $userObject = $userRepository->findOneBy(array('id' => $user));
             if(!$queue->getUsers()->contains($userObject)) {
-                $queue->addUser($user);
+                $queue->addUser($userObject);
             }
         }
         $this->queueRepository->persistObject($queue);
