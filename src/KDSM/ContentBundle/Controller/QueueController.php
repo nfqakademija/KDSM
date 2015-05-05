@@ -48,7 +48,8 @@ class QueueController extends Controller
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();
                 $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                $userResponse = new JsonResponse($userRep->getUsersLookingForGame());
+                $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
+                    ->getUser()));
                 return $userResponse;
             default:
                 throw new NotFoundHttpException('Page not found');

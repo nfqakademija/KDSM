@@ -10,17 +10,19 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserRepository extends EntityRepository // implements UserProviderInterface
 {
-    public function getUsersLookingForGame()
+    public function getUsersLookingForGame($myUser)
     {
         $query = $this->createQueryBuilder('tb');
         $query->select()
-            ->where('tb.lookingForGame = true');
+            ->where('tb.lookingForGame = true')
+            ->andWhere('tb.id != ?1');
+        $query->setParameters(array(1 => $myUser->getId()));
         $users = $query->getQuery()->getResult();
         $result = null;
         foreach ($users as $key => $user) {
-            $result[$key]['id'] = $user->getId();
-            $result[$key]['value'] = $user->getUsername();
-            $result[$key]['user-photo'] = $user->getProfilePicturePath();
+                $result[$key]['id'] = $user->getId();
+                $result[$key]['value'] = $user->getUsername();
+                $result[$key]['user-photo'] = $user->getProfilePicturePath();
         }
         return $result;
     }
