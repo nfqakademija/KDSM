@@ -44,7 +44,7 @@ kdsm_queue_user_join_request:
 
 kdsm_queue_user_join_decline:
     path:     /queue/user_decline/{queue}
-    defaults: { _controller: KDSMContentBundle:Queue:userQueueJoinDecline }    defaults: { _controller: KDSMContentBundle:Default:liveGame }
+    defaults: { _controller: KDSMContentBundle:Queue:userQueueJoinDecline }
 
 get_notifications:
     path:     /content/notifications
