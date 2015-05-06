@@ -51,8 +51,8 @@ class QueueManager extends ContainerAwareCommand
 
     public function queueCreateRequest($users)
     {
-        $queue = new Queue();
-        $this->queueRepository->persistObject($queue);
+        $queueObject = new Queue();
+        $this->queueRepository->persistObject($queueObject);
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
         $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
@@ -64,20 +64,24 @@ class QueueManager extends ContainerAwareCommand
         foreach ($users as $user)
         {
             $userQueues = new UsersQueues();
-//            $userQueues->setQueue($queue);
+
             $userObject = $userRepository->findOneBy(array('id' => $user));
             if ($userObject != null)
             {
                 $userQueues->setUser($userObject);
-                $userQueues->setUserStatusInQueue('invitePending');
                 $userObject->addUsersQueue($userQueues);
             }
-//            $queue->addUsersQueue($userQueues);
-//            $this->queueRepository->flushObject();
+
+            $userQueues->setUserStatusInQueue('invitePending');
+
+            $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
+            $userQueues->setQueue($queueObject);
+            $queueObject->addUsersQueue($userQueues);
+
             $usersQueuesRepository->persistObject($userQueues);
         }
 
-        return $queue;
+        return $queueObject;
     }
 
     private function getIsFull($queue)
