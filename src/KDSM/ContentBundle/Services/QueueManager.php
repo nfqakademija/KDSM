@@ -11,9 +11,7 @@ namespace KDSM\ContentBundle\Services;
 use Doctrine\ORM\EntityManager;
 use KDSM\ContentBundle\Entity\Queue;
 use KDSM\ContentBundle\Entity\UsersQueues;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
 
 class QueueManager extends ContainerAwareCommand
 {
@@ -32,26 +30,14 @@ class QueueManager extends ContainerAwareCommand
         return $this->queueRepository->getCurrentQueue();
     }
 
-    public function createNewQueueElement($user)
-    {
-        $queueElem = new Queue();
-        $queueElem->setReservationDateTime(new \DateTime('now'));
-        $queueElem->setIsFourPlayers(false);
-        $queueElem->addUser($user);
-        $queueElem->setStatus('pending');
-
-        $this->queueRepository->persistObject($queueElem);
-
-        $array = array();
-        $array['id'] = $queueElem->getId();
-        $array['success'] = true;
-        return $array;
-        //return $queueElem;
-    }
-
+    /**
+     * @param $users
+     */
     public function queueCreateRequest($users)
     {
         $queueObject = new Queue();
+        $queueObject->setStatus('creatingGame');
+        $queueObject->setReservationDateTime(new \DateTime());
         $this->queueRepository->persistObject($queueObject);
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
@@ -61,13 +47,11 @@ class QueueManager extends ContainerAwareCommand
 //            throw new NotFoundHttpException('Page not found');
 //        if($this->getIsFull($queue))
 //            return $queue;//'full';
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             $userQueues = new UsersQueues();
 
             $userObject = $userRepository->findOneBy(array('id' => $user));
-            if ($userObject != null)
-            {
+            if ($userObject != null) {
                 $userQueues->setUser($userObject);
                 $userObject->addUsersQueue($userQueues);
             }
@@ -81,26 +65,60 @@ class QueueManager extends ContainerAwareCommand
             $usersQueuesRepository->persistObject($userQueues);
         }
 
-        return $queueObject;
+        return $this->parseQueue($queueObject);
     }
 
+    /**
+     * @param Queue $queue
+     * @return null
+     */
+    private function parseQueue($queue)
+    {
+        $response = null;
+        if ($queue != null) {
+            $response['queueId'] = $queue->getId();
+            $response['queueStatus'] = $queue->getStatus();
+            $response['queueCreateTime'] = $queue->getReservationDateTime();
+            $usersQueues = $queue->getUsersQueues();
+            foreach ($usersQueues as $key => $uq) {
+                $response['players'][$key]['userId'] = $uq->getUser()->getId();
+                $response['players'][$key]['userName'] = $uq->getUser()->getUsername();
+                $response['players'][$key]['userPicturePath'] = $uq->getUser()->getProfilePicturePath();
+                $response['players'][$key]['userStatus'] = $uq->getUserStatusInQueue();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * @param Queue $queue
+     * @return bool
+     */
     private function getIsFull($queue)
     {
         $isFull = false;
-        if (count($queue->getUsers()) == 2 && !$queue->getIsFourPlayers())
-            $isFull = true;
-        if (count($queue->getUsers()) == 4 && !$queue->getIsFourPlayers())
-            $isFull = true;
+//        if (count($queue->getUsers()) == 2 && !$queue->getIsFourPlayers()) {
+//            $isFull = true;
+//        }
+//        if (count($queue->getUsers()) == 4 && !$queue->getIsFourPlayers()) {
+//            $isFull = true;
+//        }
         return $isFull;
     }
 
+    /**
+     * @param $queue
+     * @param $user
+     * @return bool
+     */
     private function getIsAlreadyInQueue($queue, $user)
     {
         $isInQueue = false;
-        foreach ($queue->getUsers() as $u)
-            if ($u->getId() == $user->getId())
-                $isInQueue = true;
+//        foreach ($queue->getUsers() as $u) {
+//            if ($u->getId() == $user->getId()) {
+//                $isInQueue = true;
+//            }
+//        }
         return $isInQueue;
     }
-
 }
