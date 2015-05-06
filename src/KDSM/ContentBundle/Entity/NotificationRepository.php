@@ -42,7 +42,8 @@ class NotificationRepository extends EntityRepository
         $notification = new Notification();
         $notification->setGameId($gameid);
         $notification->setUserId($userid);
-        $notification->setNotificationText('tave pakviete zaist');
+        $notification->setNotificationText('testo xdd');
+        $notification->setViewed(0);
 
 
         $em = $this->getEntityManager();

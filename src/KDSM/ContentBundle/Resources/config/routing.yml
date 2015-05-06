@@ -53,3 +53,7 @@ get_notifications:
 view_notification:
     path: /content/viewnotification
     defaults: {_controller: KDSMContentBundle:Default:viewNotification }
+
+test:
+  path: /test
+  defaults: {_controller: KDSMContentBundle:Default:testEvent}

@@ -3,6 +3,8 @@
 namespace KDSM\ContentBundle\Controller;
 
 use KDSM\ContentBundle\Entity\Notification;
+use KDSM\ContentBundle\EventListener\KDSMNotificationListener;
+use KDSM\ContentBundle\KDSMContentBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 //use Symfony\Component\BrowserKit\Request;
@@ -12,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 
 class DefaultController extends Controller
@@ -86,6 +91,22 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $rep = $em->getRepository('KDSMContentBundle:Notification');
         $rep->setViewed($request->request->get('id'));
+        return new Response();
+    }
+
+    public function testEventAction(){
+        $dispatcher = new EventDispatcher();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $listener = new KDSMNotificationListener($em);
+        $dispatcher->addListener('kdsm_content.notification_create', array($listener, 'onNotificationCreate'));
+
+        $event = new GenericEvent();
+        $event->setArgument('gameid', 123);
+        $event->setArgument('userid', 1);
+
+        $dispatcher->dispatch('kdsm_content.notification_create', $event);
+
         return new Response();
     }
 }

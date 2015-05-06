@@ -9,6 +9,7 @@
 namespace KDSM\ContentBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\EventDispatcher\Event;
 
 class KDSMNotificationListener {
 
@@ -17,9 +18,9 @@ class KDSMNotificationListener {
         $this->em = $em;
     }
 
-    public function onNotificationCreate(){
+    public function onNotificationCreate(Event $event){
         $rep = $this->em->getRepository('KDSMContentBundle:Notification');
-        $rep->createNotification(1, 100);
+        $rep->createNotification($event->getArgument('userid'), $event->getArgument('gameid'));
     }
 
 }
