@@ -30,7 +30,10 @@ class QueueController extends Controller
             case 'create':
                 $request = Request::createFromGlobals();
                 $request->request->get('usersIds');
-                $managerResponse = $queueMan->queueCreateRequest($_POST['usersIds']);
+                $users = $_POST['usersIds'];
+                array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
+                $managerResponse = $queueMan->queueCreateRequest($users);
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 
