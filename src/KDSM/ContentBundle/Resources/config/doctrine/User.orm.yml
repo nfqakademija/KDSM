@@ -38,7 +38,8 @@ KDSM\ContentBundle\Entity\User:
             column: looking_for_game
             type: boolean
             nullable: TRUE
-        oneToMany:
-            usersQueues:
-              targetEntity: UsersQueues
-              mappedBy: user
+    oneToMany:
+        usersQueues:
+          targetEntity: UsersQueues
+          mappedBy: user
+          cascade: [ persist ]

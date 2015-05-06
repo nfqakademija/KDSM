@@ -15,37 +15,44 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Queue
 {
+
     /**
      * @var integer
      */
     private $id;
+
     /**
      * @var boolean
      */
     private $isFourPlayers;
+
     /**
      * @var \DateTime
      */
     private $reservationDateTime;
+
+    /**
+     * @var string
+     */
+    private $status;
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $users;
-
-    private $status;
+    private $usersQueues;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->usersQueues = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -68,7 +75,7 @@ class Queue
     /**
      * Get isFourPlayers
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getIsFourPlayers()
     {
@@ -91,44 +98,11 @@ class Queue
     /**
      * Get reservationDateTime
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getReservationDateTime()
     {
         return $this->reservationDateTime;
-    }
-
-    /**
-     * Add users
-     *
-     * @param \KDSM\ContentBundle\Entity\User $users
-     * @return Queue
-     */
-    public function addUser(\KDSM\ContentBundle\Entity\User $users)
-    {
-        $this->users[] = $users;
-
-        return $this;
-    }
-
-    /**
-     * Remove users
-     *
-     * @param \KDSM\ContentBundle\Entity\User $users
-     */
-    public function removeUser(\KDSM\ContentBundle\Entity\User $users)
-    {
-        $this->users->removeElement($users);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
-    {
-        return $this->users;
     }
 
     /**
@@ -153,11 +127,6 @@ class Queue
     {
         return $this->status;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $usersQueues;
-
 
     /**
      * Add usersQueues

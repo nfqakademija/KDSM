@@ -28,15 +28,12 @@ class QueueController extends Controller
 
                 return $queueListResponse;
             case 'create':
-                if ($queueId != null) {
-                    $request = Request::createFromGlobals();
-                    $request->request->get('usersIds');
-                    $managerResponse = $queueMan->joinQueueRequest($queueId, $_POST['usersIds']);
-                 }
-                else{
-                    $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
-                        ->getUser());
-                }
+                $request = Request::createFromGlobals();
+                $request->request->get('usersIds');
+                $users = $_POST['usersIds'];
+                array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
+                $managerResponse = $queueMan->queueCreateRequest($users);
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 

@@ -12,13 +12,17 @@ KDSM\ContentBundle\Entity\Queue:
         isFourPlayers:
             column: is_four_players
             type: boolean
+            nullable: TRUE
         reservationDateTime:
             column: reservation_date_time
             type: datetime
+            nullable: TRUE
         status:
             column: queue_status
             type: string
+            nullable: TRUE
     oneToMany:
         usersQueues:
           targetEntity: UsersQueues
           mappedBy: queue
+          cascade: [ persist ]
