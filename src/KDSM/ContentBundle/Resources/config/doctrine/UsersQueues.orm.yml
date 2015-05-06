@@ -26,3 +26,4 @@ KDSM\ContentBundle\Entity\UsersQueues:
           joinColumn:
               name: queue_id
               referencedColumnName: id
+              onUpdate: CASCADE

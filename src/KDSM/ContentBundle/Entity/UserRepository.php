@@ -34,4 +34,10 @@ class UserRepository extends EntityRepository // implements UserProviderInterfac
         $this->getEntityManager()->clear();
     }
 
+    public function flushObject()
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
 }

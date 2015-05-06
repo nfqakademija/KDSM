@@ -61,17 +61,19 @@ class QueueManager extends ContainerAwareCommand
 //            throw new NotFoundHttpException('Page not found');
 //        if($this->getIsFull($queue))
 //            return $queue;//'full';
-        foreach($users as $user)
+        foreach ($users as $user)
         {
-        $userQueues = new UsersQueues();
-            $userQueues->setQueue($queue);
+            $userQueues = new UsersQueues();
+//            $userQueues->setQueue($queue);
             $userObject = $userRepository->findOneBy(array('id' => $user));
-//            if(!$queue->getUsers()->contains($userObject)) {
+            if ($userObject != null)
+            {
                 $userQueues->setUser($userObject);
-            $userQueues->setUserStatusInQueue('invitePending');
-//            }
-//            $this->queueRepository->persistObject($queue);
-//            $userRepository->persistObject($userObject);
+                $userQueues->setUserStatusInQueue('invitePending');
+                $userObject->addUsersQueue($userQueues);
+            }
+//            $queue->addUsersQueue($userQueues);
+//            $this->queueRepository->flushObject();
             $usersQueuesRepository->persistObject($userQueues);
         }
 

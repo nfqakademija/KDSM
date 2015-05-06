@@ -42,4 +42,10 @@ class QueueRepository extends EntityRepository
         $this->getEntityManager()->clear();
     }
 
+    public function flushObject()
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
 }
