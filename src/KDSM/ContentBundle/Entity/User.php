@@ -255,4 +255,42 @@ class User extends BaseUser
     {
         return $this->oneToMany;
     }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $usersQueues;
+
+    /**
+     * Add usersQueues
+     *
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     * @return User
+     */
+    public function addUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
+    {
+        $this->usersQueues[] = $usersQueues;
+
+        return $this;
+    }
+
+    /**
+     * Remove usersQueues
+     *
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     */
+    public function removeUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
+    {
+        $this->usersQueues->removeElement($usersQueues);
+    }
+
+    /**
+     * Get usersQueues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsersQueues()
+    {
+        return $this->usersQueues;
+    }
 }

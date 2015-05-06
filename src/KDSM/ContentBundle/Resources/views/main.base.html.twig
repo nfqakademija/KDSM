@@ -114,14 +114,6 @@
                         if(selectedUsersIds.length == 1) {
                             var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
                             $("#log").append(saveButtonHtml);
-                            //send request to create new empty row element
-                            $.ajax({
-                                type: "post",
-                                url: "{{ path('kdsm_queue', {'method':'create', 'queueId':null}) }}",
-                                success: function (response) {
-                                    queueElementId = response.id;
-                                }
-                            });
                         }
                     }
                 })
@@ -146,18 +138,18 @@
                 });
 
                 $("#log").on("click", "button#save-queue-element", function() {
-                    if(queueElementId != undefined) {
-                        alert("{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId);
+
+                        alert("{{ path('kdsm_queue', {'method':'create'}) }}");
                         $.ajax({
                             type: "post",
-                            url: "{{ path('kdsm_queue', {'method':'create'}) }}/" + queueElementId,
+                            url: "{{ path('kdsm_queue', {'method':'create'}) }}",
                             data: {usersIds: selectedUsersIds},
                             success: function (response) {
                                 console.log(response);
                                 $('.queue-control').hide("slide");
                             }
                         });
-                    }
+
                 });
             });
         });

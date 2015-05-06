@@ -18,20 +18,21 @@ class UsersQueues {
     private $id;
 
     /**
-     * @var integer
-     */
-    private $queueId;
-
-    /**
      * @var string
      */
     private $userStatusInQueue;
 
     /**
+     *
      * @var \KDSM\ContentBundle\Entity\User
      */
     private $user;
 
+    /**
+     * @ManyToOne(targetEntity="Queue", cascade={"persist", "remove"})
+     * @var \KDSM\ContentBundle\Entity\Queue
+     */
+    private $queue;
 
     /**
      * Get id
@@ -41,29 +42,6 @@ class UsersQueues {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set queueId
-     *
-     * @param integer $queueId
-     * @return UsersQueues
-     */
-    public function setQueueId($queueId)
-    {
-        $this->queueId = $queueId;
-
-        return $this;
-    }
-
-    /**
-     * Get queueId
-     *
-     * @return integer 
-     */
-    public function getQueueId()
-    {
-        return $this->queueId;
     }
 
     /**
@@ -110,5 +88,28 @@ class UsersQueues {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set queue
+     *
+     * @param \KDSM\ContentBundle\Entity\Queue $queue
+     * @return UsersQueues
+     */
+    public function setQueue(\KDSM\ContentBundle\Entity\Queue $queue = null)
+    {
+        $this->queue = $queue;
+
+        return $this;
+    }
+
+    /**
+     * Get queue
+     *
+     * @return \KDSM\ContentBundle\Entity\Queue 
+     */
+    public function getQueue()
+    {
+        return $this->queue;
     }
 }

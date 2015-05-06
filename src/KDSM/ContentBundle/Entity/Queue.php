@@ -40,6 +40,9 @@ class Queue
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->isFourPlayers = 1;
+        $this->reservationDateTime = new \DateTime();
+        $this->status = 'pending';
     }
 
     /**
@@ -153,6 +156,7 @@ class Queue
     {
         return $this->status;
     }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */

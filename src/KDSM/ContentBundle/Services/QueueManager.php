@@ -10,6 +10,7 @@ namespace KDSM\ContentBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use KDSM\ContentBundle\Entity\Queue;
+use KDSM\ContentBundle\Entity\UsersQueues;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
@@ -48,22 +49,32 @@ class QueueManager extends ContainerAwareCommand
         //return $queueElem;
     }
 
-    public function joinQueueRequest($queueId, $users)
+    public function queueCreateRequest($users)
     {
-        $queue = $this->queueRepository->findOneBy(array('id' => $queueId));
+        $queue = new Queue();
+        $this->queueRepository->persistObject($queue);
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
-        if (!$queue)
-            throw new NotFoundHttpException('Page not found');
-        if($this->getIsFull($queue))
-            return $queue;//'full';
+
+        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+
+//        if (!$queue) //neveikia
+//            throw new NotFoundHttpException('Page not found');
+//        if($this->getIsFull($queue))
+//            return $queue;//'full';
         foreach($users as $user)
         {
+        $userQueues = new UsersQueues();
+            $userQueues->setQueue($queue);
             $userObject = $userRepository->findOneBy(array('id' => $user));
-            if(!$queue->getUsers()->contains($userObject)) {
-                $queue->addUser($userObject);
-            }
+//            if(!$queue->getUsers()->contains($userObject)) {
+                $userQueues->setUser($userObject);
+            $userQueues->setUserStatusInQueue('invitePending');
+//            }
+//            $this->queueRepository->persistObject($queue);
+//            $userRepository->persistObject($userObject);
+            $usersQueuesRepository->persistObject($userQueues);
         }
-        $this->queueRepository->persistObject($queue);
+
         return $queue;
     }
 

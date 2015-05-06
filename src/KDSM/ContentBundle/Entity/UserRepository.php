@@ -27,4 +27,11 @@ class UserRepository extends EntityRepository // implements UserProviderInterfac
         return $result;
     }
 
+    public function persistObject($user)
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
 }

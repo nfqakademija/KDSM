@@ -22,3 +22,4 @@ KDSM\ContentBundle\Entity\Queue:
         usersQueues:
           targetEntity: UsersQueues
           mappedBy: queue
+          cascade: [ persist ]
