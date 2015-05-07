@@ -24,7 +24,8 @@ class QueueController extends Controller
 
         switch($method) {
             case 'list':
-                $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
+                $response = $queueMan->getCurrentQueueList();
+                $queueListResponse = new JsonResponse($response);
 
                 return $queueListResponse;
             case 'create':

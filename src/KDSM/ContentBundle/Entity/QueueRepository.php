@@ -27,9 +27,10 @@ class QueueRepository extends EntityRepository
             $queryResponse[$key]['id'] = $queue->getId();
             $queryResponse[$key]['date'] = $queue->getReservationDateTime();
             $queryResponse[$key]['status'] = $queue->getStatus();
-            foreach ($queue->getUsers() as $userKey => $user)
+            $uq = $queue->getUsersQueues();
+            foreach ($queue->getUsersQueues() as $userKey => $userQueue)
             {
-                $queryResponse[$key]['users'][$userKey] = $user->getUserName();
+                $queryResponse[$key]['users'][$userKey] = $userQueue->getUser()->getUserName();
             }
         }
         return $queryResponse;
