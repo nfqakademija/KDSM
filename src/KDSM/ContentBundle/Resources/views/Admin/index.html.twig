@@ -2,28 +2,64 @@
 
 {% block title %}Admin{% endblock %}
 
-{% block body %}
-    <h1>Welcome to the Admin page</h1>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
-    <br>
+{% block stylesheets %}
 
-    {% for param in parameters %}
-        <div class={{ param['parameter_name'] }}>
-            <b>{{ param['parameter_name'] }}</b> :
-            <span class="edit" id={{ param['parameter_name'] }}>{{ param['parameter_value'] }}</span>
-            <span style="padding-left:5em"><b>last changed</b>: {{ param['time_changed'] }}</span>
-            <img src="http://www.iconmay.com/thumbnails/detail/3/delete%20close%20button%20remove%20erase%20delete%20button%20red%20delete%20icon.png"
-                 onclick="deleteParameter('{{ param['parameter_name'] }}')" width="20" height="20">
-        </div>
-    {% endfor %}
+    <link rel="stylesheet" href="{{ asset('bundles/kdsmcontent/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/kdsmcontent/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/kdsmcontent/css/admin.css') }}">
+
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1>Parameter management</h1>
+        <h3>Add parameter</h3>
+        {{ form_start(form) }}
+            {{ form_label(form.parameterName) }}
+            <div>{{ form_widget(form.parameterName) }}</div>
+
+            {{ form_label(form.parameterValue) }}
+            <div>{{ form_widget(form.parameterValue) }}</div>
+
+            <br>
+            <div>{{ form_widget(form.save) }}</div>
+        {{ form_end(form) }}
+        <br>
+
+        <h3>Parameter list</h3>
+        {#TODO: Make the table collapsable, past tries below#}
+        {#<h3 data-toggle="collapse" data-target="#parameter_table">Parameter list</h3>#}
+        {#<table class="table collapse in" id="parameter_table" style="display: table">#}
+        <table class="table" id="parameter_table">
+        {#<table class="table collapse in" id="parameter_table">#}
+            <tablehead>
+                <tr>
+                    <th>Parameter name</th>
+                    <th>Parameter value</th>
+                    <th>Last changed</th>
+                    <th>Remove</th>
+                </tr>
+            </tablehead>
+            <tablebody>
+                {% for param in parameters %}
+                    <tr class={{ param['parameter_name'] }}>
+                        <td>{{ param['parameter_name'] }}</td>
+                        <td><span class="edit" id={{ param['parameter_name'] }}>{{ param['parameter_value'] }}</span></td>
+                        <td>{{ param['time_changed'] }}</td>
+                        <td><img src="http://www.iconmay.com/thumbnails/detail/3/delete%20close%20button%20remove%20erase%20delete%20button%20red%20delete%20icon.png" onclick="deleteParameter('{{ param['parameter_name'] }}')" width="20" height="20" title="Delete parameter"></td>
+                     </tr>
+                {% endfor %}
+            </tablebody>
+        </table>
+
+    </div>
 
 {% endblock %}
 
 {% block javascripts %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
+    <script src="{{ asset('bundles/kdsmcontent/js/bootstrap.js') }}"></script>
 
     <script>
         $(document).ready(function () {
@@ -33,23 +69,17 @@
                 cancel: 'Cancel',
                 submit: 'OK'
             });
-            $('.edit_area').editable('{{ path('admin_changeparameter') }}', {
-                type: 'textarea',
-                cancel: 'Cancel',
-                submit: 'OK',
-                tooltip: 'Click to edit...'
-            });
         });
     </script>
 
     <script>
-        function deleteParameter(parameter) {
-            if (confirm('Are you sure you would like to delete parameter ' + parameter + ' ?')) {
-                $.post('{{ path('admin_removeparameter') }}',
-                        {
-                            parameter: parameter
-                        }
-                );
+        function deleteParameter(parameter){
+            if(confirm('Are you sure you would like to delete parameter ' + parameter + ' ?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('admin_removeparameter') }}",
+                    data: {"parameter": parameter}
+                });
                 var element = document.getElementsByClassName(parameter)[0];
                 element.parentNode.removeChild(element);
             }
