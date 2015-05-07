@@ -95,11 +95,11 @@ class DefaultController extends Controller
     }
 
     public function testEventAction(){
-        $dispatcher = new EventDispatcher();
-        $em = $this->getDoctrine()->getEntityManager();
+        $dispatcher = $this->get('event_dispatcher');
+//        $em = $this->getDoctrine()->getEntityManager();
 
-        $listener = new KDSMNotificationListener($em);
-        $dispatcher->addListener('kdsm_content.notification_create', array($listener, 'onNotificationCreate'));
+//        $listener = new KDSMNotificationListener($em);
+//        $dispatcher->addListener('kdsm_content.notification_create', array($listener, 'onNotificationCreate'));
 
         $event = new GenericEvent();
         $event->setArgument('gameid', 123);

@@ -26,5 +26,5 @@ services:
     kdsm_content.listener.notification:
         class: KDSM\ContentBundle\EventListener\KDSMNotificationListener
         tags:
-           - { name: kdsm_content.notification_listener, event: kdsm_content.notification_create, method: onNotificationCreate }
+           - { name: kernel.event_listener, event: kdsm_content.notification_create, method: onNotificationCreate }
         arguments: [@doctrine.orm.entity_manager]
