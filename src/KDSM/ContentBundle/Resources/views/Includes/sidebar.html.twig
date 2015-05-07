@@ -15,12 +15,6 @@
                     <span>Home</span>
                 </a>
             </li>
-            <li {% if app.request.attributes.get('_route') == 'queue'  %} class='active' {% endif %}>
-                <a href="{{ path('queue') }}">
-                    <i class="fa fa-sitemap"></i>
-                    <span>Queue</span>
-                </a>
-            </li>
             <li {% if app.request.attributes.get('_route') == 'statistics'  %} class='active' {% endif %}>
                 <a href="{{ path('statistics') }}">
                     <i class="fa fa-line-chart"></i>

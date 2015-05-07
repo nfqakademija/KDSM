@@ -49,6 +49,7 @@
                                 <ul class="log-list">
 
                                 </ul>
+                                <button id="save-queue-element" class="btn btn-xs btn-success hidden">Kviesti</button>
                             </div>
                         </div>
                     </aside>
@@ -66,94 +67,6 @@
     {% javascripts '@KDSMContentBundle/Resources/public/js/*' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            //function to read JSON ffrom url
-            function readJSON(file) {
-                var request = new XMLHttpRequest();
-                request.open('GET', file, false);
-                request.send(null);
-                if (request.status == 200)
-                    return request.responseText;
-            };
-
-            //Open queue
-            $('button.btn-add-to-queue').click(function() {
-                $('.queue-control').show( "slide" );
-
-                var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
-                var selectedUsersIds = [];
-                var queueElementId;    //here saving added new queue element id
-
-                $("#search-users").autocomplete({
-                    source: availableTags,
-                    create: function( event, ui ) {
-                        $(this).autocomplete("widget")
-                                .appendTo("#results")
-                                .css("position", "static");
-                    },
-                    open: function() {
-                        $(this).autocomplete("widget")
-                                .appendTo("#results")
-                                .css("position", "static");
-                    },
-                    select: function(event, ui) {
-                        //when user is selected
-                        if(selectedUsersIds.length < 3) {
-                            //get selected user id and push it to selected users array
-                            var selectedUserId = ui.item.id;
-                            selectedUsersIds.push(selectedUserId);
-
-                            //get selected user html and add it to selected container
-                            var selectedUserRowHTML = $(".found-users").find("li#user-"+selectedUserId).clone();
-                            $("li#user-"+selectedUserId).hide();
-                            $("#log").children("ul.log-list").prepend(selectedUserRowHTML);
-                        }
-
-                        //if at least one user is selected, add button to save the queue
-                        if(selectedUsersIds.length == 1) {
-                            var saveButtonHtml = '<button id="save-queue-element" class="btn btn-xs btn-success">Išsaugoti</button>';
-                            $("#log").append(saveButtonHtml);
-                        }
-                    }
-                })
-                .autocomplete( "instance" )._renderItem = function( ul, item ) {
-                    return $("<li id='user-"+ item.id +"'>")
-                            .append(item.value+" "+item.id)
-                            .appendTo( ul );
-                };
-
-                //when needs to diselect user
-                $("#log").on("click", "li", function() {
-                    var removedRowId = $(this).attr("id");
-                    var removedRowUserId = removedRowId.split("-")[1];
-                    selectedUsersIds.splice(selectedUsersIds.indexOf(removedRowUserId), 1);
-                    $(this).remove();
-                    //get back user to list
-                    $(".sidebar").find("li#"+removedRowId).show();
-
-                    if(selectedUsersIds.length < 1) {
-                        $("#save-queue-element").remove();
-                    }
-                });
-
-                $("#log").on("click", "button#save-queue-element", function() {
-
-                        alert("{{ path('kdsm_queue', {'method':'create'}) }}");
-                        $.ajax({
-                            type: "post",
-                            url: "{{ path('kdsm_queue', {'method':'create'}) }}",
-                            data: {usersIds: selectedUsersIds},
-                            success: function (response) {
-                                console.log(response);
-                                $('.queue-control').hide("slide");
-                            }
-                        });
-
-                });
-            });
-        });
-    </script>
     <script type="text/javascript">
         $(document).ready(function() {
             setInterval(TableData, 2000);

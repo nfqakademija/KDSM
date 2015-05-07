@@ -13,7 +13,7 @@ class QueueController extends Controller
 
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Queue:index.html.twig',
+        return $this->render('KDSMContentBundle:Includes:queue.html.twig',
             array('route' => $this->get('kernel')->getRootDir()));
 
     }
