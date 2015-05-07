@@ -32,6 +32,7 @@ class QueueRepository extends EntityRepository
                 $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
                 $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
                 $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
             }
         }
         return $queryResponse;
