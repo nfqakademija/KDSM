@@ -13,6 +13,7 @@
                         console.log(response_json);
                         $(".queue-container .dinamically-added").remove();
                         for(var i = 0; i < response_json.length; i++) {
+
                             var queueElement = $(".queue-game.default-queue-element").clone().removeClass("hidden").removeClass("default-queue-element").addClass("dinamically-added");
                             //get users
 
@@ -38,9 +39,6 @@
                             queueElement.find(".team-black .players-names").text(blackTeam);
                             $(".queue-container").prepend(queueElement);
                         }
-                    },
-                    error: function(e) {
-                        alert(e);
                     }
                 });
             }
