@@ -15,35 +15,44 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Queue
 {
+
     /**
      * @var integer
      */
     private $id;
+
     /**
      * @var boolean
      */
     private $isFourPlayers;
+
     /**
      * @var \DateTime
      */
     private $reservationDateTime;
+
+    /**
+     * @var string
+     */
+    private $status;
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $users;
+    private $usersQueues;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->usersQueues = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -66,7 +75,7 @@ class Queue
     /**
      * Get isFourPlayers
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getIsFourPlayers()
     {
@@ -89,7 +98,7 @@ class Queue
     /**
      * Get reservationDateTime
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getReservationDateTime()
     {
@@ -97,35 +106,58 @@ class Queue
     }
 
     /**
-     * Add users
+     * Set status
      *
-     * @param \KDSM\ContentBundle\Entity\User $users
+     * @param string $status
      * @return Queue
      */
-    public function addUser(\KDSM\ContentBundle\Entity\User $users)
+    public function setStatus($status)
     {
-        $this->users[] = $users;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Remove users
+     * Get status
      *
-     * @param \KDSM\ContentBundle\Entity\User $users
+     * @return string 
      */
-    public function removeUser(\KDSM\ContentBundle\Entity\User $users)
+    public function getStatus()
     {
-        $this->users->removeElement($users);
+        return $this->status;
     }
 
     /**
-     * Get users
+     * Add usersQueues
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     * @return Queue
      */
-    public function getUsers()
+    public function addUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
     {
-        return $this->users;
+        $this->usersQueues[] = $usersQueues;
+
+        return $this;
+    }
+
+    /**
+     * Remove usersQueues
+     *
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     */
+    public function removeUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
+    {
+        $this->usersQueues->removeElement($usersQueues);
+    }
+
+    /**
+     * Get usersQueues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsersQueues()
+    {
+        return $this->usersQueues;
     }
 }

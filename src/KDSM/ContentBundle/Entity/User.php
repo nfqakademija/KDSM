@@ -62,6 +62,10 @@ class User extends BaseUser
      */
     protected $losses;
 
+    /**
+     * @var boolean
+     */
+    private $lookingForGame;
 
     /**
      * Set cardId
@@ -200,4 +204,94 @@ class User extends BaseUser
     {
         return $this->losses;
     }
+
+    /**
+     * Set lookingForGame
+     *
+     * @param boolean $lookingForGame
+     * @return User
+     */
+    public function setLookingForGame($lookingForGame)
+    {
+        $this->lookingForGame = $lookingForGame;
+
+        return $this;
+    }
+
+    /**
+     * Get lookingForGame
+     *
+     * @return boolean 
+     */
+    public function getLookingForGame()
+    {
+        return $this->lookingForGame;
+    }
+
+    /**
+     * @var string
+     */
+    private $oneToMany;
+
+    /**
+     * Set oneToMany
+     *
+     * @param string $oneToMany
+     * @return User
+     */
+    public function setOneToMany($oneToMany)
+    {
+        $this->oneToMany = $oneToMany;
+
+        return $this;
+    }
+
+    /**
+     * Get oneToMany
+     *
+     * @return string 
+     */
+    public function getOneToMany()
+    {
+        return $this->oneToMany;
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $usersQueues;
+
+    /**
+     * Add usersQueues
+     *
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     * @return User
+     */
+    public function addUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
+    {
+        $this->usersQueues[] = $usersQueues;
+
+        return $this;
+    }
+
+    /**
+     * Remove usersQueues
+     *
+     * @param \KDSM\ContentBundle\Entity\UsersQueues $usersQueues
+     */
+    public function removeUsersQueue(\KDSM\ContentBundle\Entity\UsersQueues $usersQueues)
+    {
+        $this->usersQueues->removeElement($usersQueues);
+    }
+
+    /**
+     * Get usersQueues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsersQueues()
+    {
+        return $this->usersQueues;
+    }
+
 }

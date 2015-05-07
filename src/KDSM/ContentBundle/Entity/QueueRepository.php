@@ -12,4 +12,36 @@ use Doctrine\ORM\EntityRepository;
  */
 class QueueRepository extends EntityRepository
 {
+
+    public function getCurrentQueue()
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.status = ?1')
+            ->orWhere('tb.status = ?2');
+        $query->setParameters(array(1 => 'active', 2 => 'in_queue'));
+        $result = $query->getQuery()->getResult();
+        $queryResponse = null;
+        foreach ($result as $key => $queue)
+        {
+            $queryResponse[$key]['id'] = $queue->getId();
+            $queryResponse[$key]['date'] = $queue->getReservationDateTime();
+            $queryResponse[$key]['status'] = $queue->getStatus();
+            foreach ($queue->getUsersQueues() as $userKey => $userQueue)
+            {
+                $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
+                $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
+            }
+        }
+        return $queryResponse;
+    }
+
+    public function persistObject($newQueue)
+    {
+        $this->getEntityManager()->persist($newQueue);
+        $this->getEntityManager()->flush();
+//        $this->getEntityManager()->clear();
+    }
 }

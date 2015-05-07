@@ -74,7 +74,8 @@ class LiveScoreManager
 //        echo date('Y-m-d H:i:s', $checkDateTime);
 //
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
-
+        $this->getSwipes();
+        $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
         if ($status == 'free') {
             $this->cacheMan->resetScoreCache();
             $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
@@ -107,7 +108,6 @@ class LiveScoreManager
         {
             $table = $this->cacheMan->resetScoreCache();
         }
-
         $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
         foreach ($events as $event) {
             if (is_object($event) && $event instanceof TableEvent) {
@@ -116,7 +116,6 @@ class LiveScoreManager
                 } else {
                     $table['score']['white']++;
                 }
-                echo $event->getId() . "<br\n>";
                 if (in_array(10, $table['score'])) {
                     break;
                 }
@@ -130,6 +129,32 @@ class LiveScoreManager
         //cleanup
         unset($events);
         unset($event);
+
+        return true;
+    }
+
+    private function getSwipes()
+    {
+        $position = 0;
+        $swipes = $this->rep->getSwipeEventsFromId($this->cacheMan->getLatestCheckedTableSwipeId());
+        foreach ($swipes as $swipe) {
+            if (is_object($swipe) && $swipe instanceof TableEvent) {
+                if (json_decode($swipe->getData())->team == 0) {
+                    json_decode($swipe->getData())->player == 0 ? $position = 1 : $position = 2;
+                }
+                if (json_decode($swipe->getData())->team == 1) {
+                    json_decode($swipe->getData())->player == 0 ? $position = 3 : $position = 4;
+                }
+                $this->cacheMan->setPlayerCache($position, json_decode($swipe->getData())->card_id);
+            }
+        }
+        if(isset($event))
+        {
+            $this->cacheMan->setLatestCheckedTableSwipeId($event->getId());
+            //cleanup
+            unset($events);
+            unset($event);
+        }
 
         return true;
     }
