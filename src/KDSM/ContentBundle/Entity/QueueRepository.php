@@ -18,8 +18,9 @@ class QueueRepository extends EntityRepository
         $query = $this->createQueryBuilder('tb');
         $query->select()
             ->where('tb.status = ?1')
-            ->orWhere('tb.status = ?2');
-        $query->setParameters(array(1 => 'active', 2 => 'in_queue'));
+            ->orWhere('tb.status = ?2')
+            ->orWhere('tb.status = ?3');
+        $query->setParameters(array(1 => 'active', 2 => 'in_queue', 3 => 'creatingGame'));
         $result = $query->getQuery()->getResult();
         $queryResponse = null;
         foreach ($result as $key => $queue)
