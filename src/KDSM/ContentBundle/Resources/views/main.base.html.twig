@@ -187,9 +187,11 @@
         });
     </script>
 
+
+    {% if app.user %}
     <script type="text/javascript">
         $(document).ready(function(){
-            var userid = 1;
+            var userid = {{ app.user.id }};
             setInterval( reloadNotifications, 2000);
             function reloadNotifications(){
                 $.ajax({
@@ -204,7 +206,9 @@
                             var aid = 'notification-'.concat(value.id);
                             $("ul#notifications").append(
                                     $('<li>').append(
-                                            $('<a>').attr('href', '#').attr('id', aid).attr('onclick','viewNotification(this)').append(value.notificationText)
+                                            $('<a>').addClass('notification col-xs-7').attr('id', aid).attr('onclick','viewNotification(this)').append(value.notificationText)
+                                            ,$('<img>').addClass('cancel_button').attr('src', "{{ asset('bundles/kdsmcontent/images/cancel.png') }}" )
+
                                     )
                             );
                         });
@@ -229,4 +233,6 @@
         }
 
     </script>
+        {% endif %}
+
 {% endblock %}
