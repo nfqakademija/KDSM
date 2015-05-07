@@ -13,7 +13,7 @@ class QueueController extends Controller
 
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Queue:index.html.twig',
+        return $this->render('KDSMContentBundle:Includes:queue.html.twig',
             array('route' => $this->get('kernel')->getRootDir()));
 
     }
@@ -24,19 +24,17 @@ class QueueController extends Controller
 
         switch($method) {
             case 'list':
-                $queueListResponse = new JsonResponse($queueMan->getCurrentQueueList());
+                $response = $queueMan->getCurrentQueueList();
+                $queueListResponse = new JsonResponse($response);
 
                 return $queueListResponse;
             case 'create':
-                if ($queueId != null) {
-                    $request = Request::createFromGlobals();
-                    $request->request->get('usersIds');
-                    $managerResponse = $queueMan->joinQueueRequest($queueId, $_POST['usersIds']);
-                 }
-                else{
-                    $managerResponse = $queueMan->createNewQueueElement($this->get('security.token_storage')->getToken()
-                        ->getUser());
-                }
+                $request = Request::createFromGlobals();
+                $request->request->get('usersIds');
+                $users = $_POST['usersIds'];
+                array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
+                $managerResponse = $queueMan->queueCreateRequest($users);
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 
@@ -48,7 +46,8 @@ class QueueController extends Controller
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();
                 $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                $userResponse = new JsonResponse($userRep->getUsersLookingForGame());
+                $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
+                    ->getUser()));
                 return $userResponse;
             default:
                 throw new NotFoundHttpException('Page not found');

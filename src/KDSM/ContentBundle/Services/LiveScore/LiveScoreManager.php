@@ -74,10 +74,11 @@ class LiveScoreManager
 //        echo date('Y-m-d H:i:s', $checkDateTime);
 //
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
-//        $this->getSwipes();
-//        $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
+        $this->getSwipes();
+        $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
         if ($status == 'free') {
             $this->cacheMan->resetScoreCache();
+            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
         } else {
             if ($status == 'busy') {
                 $this->readEvents();
@@ -139,12 +140,12 @@ class LiveScoreManager
         foreach ($swipes as $swipe) {
             if (is_object($swipe) && $swipe instanceof TableEvent) {
                 if (json_decode($swipe->getData())->team == 0) {
-                    json_encode($swipe->getData())->player == 0 ? $position = 1 : $position = 2;
+                    json_decode($swipe->getData())->player == 0 ? $position = 1 : $position = 2;
                 }
                 if (json_decode($swipe->getData())->team == 1) {
-                    json_encode($swipe->getData())->player == 0 ? $position = 3 : $position = 4;
+                    json_decode($swipe->getData())->player == 0 ? $position = 3 : $position = 4;
                 }
-                $this->cacheMan->setPlayerCache($position, json_decode($swipe->getData()->card_id));
+                $this->cacheMan->setPlayerCache($position, json_decode($swipe->getData())->card_id);
             }
         }
         if(isset($event))

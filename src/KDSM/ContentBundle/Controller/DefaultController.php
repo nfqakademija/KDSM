@@ -27,35 +27,19 @@ class DefaultController extends Controller
         $cacheMan = $this->get('kdsm_content.cache_manager');
         $players = $cacheMan->getPlayerCache();
 
-//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
-//        $liveScoreManager->getTableStatus();
-
-
         $tableStatusResponse = [
             'status' => $cacheMan->getTableStatusCache(),
             'scoreWhite' => $cacheMan->getScoreCache()['score']['white'],
             'scoreBlack' => $cacheMan->getScoreCache()['score']['black'],
-            /*'player1' => $players['players']['player1'],
+            'player1' => $players['players']['player1'],
             'player2' => $players['players']['player2'],
             'player3' => $players['players']['player3'],
-            'player4' => $players['players']['player4'],*/
+            'player4' => $players['players']['player4'],
 
         ];
 
-        $rand = rand(1,10);
-        $users = array(125234243, 135513113, 643434232, 533435335, 234234236, '', '', '', '', '');
-        $result = array();
-        if($rand <= 5) {
-            $result =  array('status' => 'free');
-        }
-        if($rand > 3){
-            $result = array('status' => 'busy', 'player1' => $users[array_rand($users)], 'player2' => $users[array_rand($users)],
-                'player3' => $users[array_rand($users)], 'player4' => $users[array_rand($users)], 'scoreWhite' => rand(0,10), 'scoreBlack' => rand(5,10));
-        }
 
-        $result = $tableStatusResponse;
-
-        $response = new JsonResponse($result);
+        $response = new JsonResponse($tableStatusResponse);
         return $response;
     }
 }

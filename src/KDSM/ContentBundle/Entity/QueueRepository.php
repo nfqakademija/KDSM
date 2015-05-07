@@ -27,9 +27,12 @@ class QueueRepository extends EntityRepository
             $queryResponse[$key]['id'] = $queue->getId();
             $queryResponse[$key]['date'] = $queue->getReservationDateTime();
             $queryResponse[$key]['status'] = $queue->getStatus();
-            foreach ($queue->getUsers() as $userKey => $user)
+            foreach ($queue->getUsersQueues() as $userKey => $userQueue)
             {
-                $queryResponse[$key]['users'][$userKey] = $user->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
+                $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
+                $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
             }
         }
         return $queryResponse;
@@ -39,7 +42,6 @@ class QueueRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($newQueue);
         $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
+//        $this->getEntityManager()->clear();
     }
-
 }
