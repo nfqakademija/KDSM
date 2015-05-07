@@ -264,7 +264,7 @@ table td {
     height: 25%;
 }
 
-.user-info img {
+.user-info > img {
     max-width: 60%;
     max-height: 60%;
     margin: 5% auto;
@@ -290,7 +290,7 @@ table td {
     font-weight: 400;
 }
 
-.user-info span.notifications-icon {
+.notifications-icon{
     display: block;
     width: 35px;
     height: 35px;
@@ -303,6 +303,23 @@ table td {
     font-size: 1.4em;
     color: white;
     top: 1%;
+    cursor: pointer;
+}
+
+.queue-up{
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: red;
+    position: absolute;
+    left: 60%;
+    text-align: center;
+    line-height: 35px;
+    font-size: 1.4em;
+    color: white;
+    top: 12%;
+    cursor: pointer;
 }
 
 .sidebar-nav {
@@ -433,4 +450,16 @@ table th {
     background: rgba(0, 0, 0, 0.7);
     padding: 0.5em 1em;
     border: 1px solid black;
+}
+
+.cancel_button{
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: 25%;
+
+}
+
+.notification{
+
 }

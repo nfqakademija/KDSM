@@ -45,3 +45,15 @@ kdsm_queue_user_join_request:
 kdsm_queue_user_join_decline:
     path:     /queue/user_decline/{queue}
     defaults: { _controller: KDSMContentBundle:Queue:userQueueJoinDecline }
+
+get_notifications:
+    path:     /content/notifications
+    defaults: { _controller: KDSMContentBundle:Default:getNotifications }
+
+view_notification:
+    path: /content/viewnotification
+    defaults: {_controller: KDSMContentBundle:Default:viewNotification }
+
+test:
+  path: /test
+  defaults: {_controller: KDSMContentBundle:Default:testEvent}

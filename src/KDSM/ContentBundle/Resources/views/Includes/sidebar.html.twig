@@ -5,7 +5,11 @@
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
             <span class="user-name text-center"><em> {{ app.user.username }}</em></span>
         {% endif %}
-        <span class="notifications-icon"><i class="fa fa-bell"></i></span>
+        <div class="btn-group notifications-icon">
+            <div class=" dropdown-toggle" data-toggle="dropdown" id="notification-count"></div>
+            <ul class="dropdown-menu" id="notifications" role="menu"></ul>
+        </div>
+        <div class="btn-group queue-up"></div>
     </div>
     <nav class="row sidebar-nav">
         <ul class="nav">
