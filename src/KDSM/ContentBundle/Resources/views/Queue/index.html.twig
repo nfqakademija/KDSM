@@ -38,6 +38,9 @@
                             queueElement.find(".team-black .players-names").text(blackTeam);
                             $(".queue-container").prepend(queueElement);
                         }
+                    },
+                    error: function(e) {
+                        alert(e);
                     }
                 });
             }

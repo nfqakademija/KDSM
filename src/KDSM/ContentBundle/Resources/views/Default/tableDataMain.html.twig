@@ -34,32 +34,8 @@
                 </div>
         </div>
         <div class="row content-heading">
-            <h4>Next 5 games in the queue</h4>
+            <h4>Next games in the queue</h4>
+            {% include('KDSMContentBundle::Queue/index.html.twig') %}
         </div>
-        <table class="table table-responsive table-bordered" cellpadding="0">
-            <thead>
-                <th class="team">Team</th>
-                <th class="vs"></th>
-                <th class="opponents">Opponents</th>
-            </thead>
-            <tbody>
-                {% for i in 0..4 %}
-                <tr>
-                    <td>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                        <span class="col-sm-8 text-center">Dainius & Jonas</span>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                    </td>
-                    <td>
-                        <p>VS</p>
-                    </td>
-                    <td>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                        <span class="col-sm-8 text-center">Rokas & Tomas</span>
-                        <img class="col-sm-2" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
 {% endblock %}
