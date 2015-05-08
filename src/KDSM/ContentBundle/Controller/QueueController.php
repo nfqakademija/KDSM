@@ -23,11 +23,12 @@ class QueueController extends Controller
         $queueMan = $this->get('kdsm_content.queue_manager');
 
         switch($method) {
+            case 'getSingleQueue':
+                return 1;
             case 'list':
                 $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $queueListResponse = new JsonResponse($response);
-
                 return $queueListResponse;
             case 'create':
                 $request = Request::createFromGlobals();
@@ -39,8 +40,11 @@ class QueueController extends Controller
                     ->getUser()->getId());
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
-
-                //return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+            case 'remove':
+                $response = $queueMan->removeQueue($queueId, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
+                $queueRemoveResponse = new JsonResponse($response);
+                return $queueRemoveResponse;
             case 'accept_invite':
                 $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
                     ->getUser());
@@ -51,6 +55,8 @@ class QueueController extends Controller
                 $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
                     ->getUser()));
                 return $userResponse;
+            case 'joinUsers':
+                break;
             default:
                 throw new NotFoundHttpException('Page not found');
                 break;
