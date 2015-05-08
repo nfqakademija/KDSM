@@ -27,7 +27,6 @@ class QueueController extends Controller
             case 'list':
                 $response = $queueMan->getCurrentQueueList();
                 $queueListResponse = new JsonResponse($response);
-
                 return $queueListResponse;
             case 'create':
                 $request = Request::createFromGlobals();
@@ -38,21 +37,9 @@ class QueueController extends Controller
                 array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $managerResponse = $queueMan->queueCreateRequest($users);
-//                $queueMan->sendInvites($_POST['usersIds'], $managerResponse['queueId'], $this->get('event_dispatcher'));
-
-//                $dispatcher = $this->get('event_dispatcher');
-//                foreach ($_POST['usersIds'] as $userId){
-//                    $event = new GenericEvent();
-//                    $event->setArgument('gameid', $managerResponse['queueId']);
-//                    $event->setArgument('userid', $userId);
-//                    $
-//                    $dispatcher->dispatch('kdsm_content.notification_create', $event);
-//                }
 
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
-
-                //return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
             case 'accept_invite':
                 $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
                     ->getUser());

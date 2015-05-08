@@ -43,6 +43,7 @@ class QueueManager extends ContainerAwareCommand
         $queueObject->setStatus('creatingGame');
         $queueObject->setReservationDateTime(new \DateTime());
         $this->queueRepository->persistObject($queueObject);
+        $this->sendInvites($users, $queueObject->getId());
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
         $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
