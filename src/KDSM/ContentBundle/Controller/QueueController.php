@@ -23,8 +23,11 @@ class QueueController extends Controller
         $queueMan = $this->get('kdsm_content.queue_manager');
 
         switch($method) {
-            case 'getSingleQueue':
-                return 1;
+            case 'single_queue':
+                $response = $queueMan->getSingleQueue($queueId, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
+                $queueListResponse = new JsonResponse($response);
+                return $queueListResponse;
             case 'list':
                 $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
@@ -55,7 +58,7 @@ class QueueController extends Controller
                 $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
                     ->getUser()));
                 return $userResponse;
-            case 'joinUsers':
+            case 'join_users':
                 break;
             default:
                 throw new NotFoundHttpException('Page not found');

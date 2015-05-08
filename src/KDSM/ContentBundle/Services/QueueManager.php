@@ -34,6 +34,11 @@ class QueueManager extends ContainerAwareCommand
         return $this->queueRepository->getCurrentQueue($userId);
     }
 
+    public function getSingleQueue($queueId, $userId)
+    {
+        return $this->queueRepository->getSingleQueue($queueId, $userId);
+    }
+
     /**
      * @param $users
      * @param $ownerId

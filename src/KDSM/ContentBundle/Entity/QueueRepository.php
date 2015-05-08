@@ -23,20 +23,38 @@ class QueueRepository extends EntityRepository
         $result = $query->getQuery()->getResult();
         $queryResponse = null;
         foreach ($result as $key => $queue) {
-            $queryResponse[$key]['id'] = $queue->getId();
-            $queryResponse[$key]['date'] = $queue->getReservationDateTime();
-            $queryResponse[$key]['status'] = $queue->getStatus();
-            $queryResponse[$key]['queueRights'] = 'restricted';
-            foreach ($queue->getUsersQueues() as $userKey => $userQueue) {
-                $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
-                $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
-                $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
-                $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
-                if ($userQueue->getUser()->getId() == $currentUserId) {
-                    $queryResponse[$key]['queueRights'] = 'queueMember';
-                    if ($queryResponse[$key]['users'][$userKey]['userStatus'] == 'queueOwner') {
-                        $queryResponse[$key]['queueRights'] = 'queueOwner';
-                    }
+            $queryResponse[$key] = $this->parseSingleQueueResponse($queue, $currentUserId);
+        }
+        return $queryResponse;
+    }
+
+    public function getSingleQueue($id, $currentUserId)
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.id = ?1');
+        $query->setParameters(array(1 => $id));
+        $result = $query->getQuery()->getResult();
+        $queryResponse = $this->parseSingleQueueResponse($result[0], $currentUserId);
+        return $queryResponse;
+    }
+
+    private function parseSingleQueueResponse($queue, $currentUserId)
+    {
+        $queryResponse['id'] = $queue->getId();
+        $queryResponse['date'] = $queue->getReservationDateTime();
+        $queryResponse['status'] = $queue->getStatus();
+        $queryResponse['queueRights'] = 'restricted';
+        $queryResponse['loggedUserId'] = $currentUserId;
+        foreach ($queue->getUsersQueues() as $userKey => $userQueue) {
+            $queryResponse['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
+            $queryResponse['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
+            $queryResponse['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
+            $queryResponse['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
+            if ($userQueue->getUser()->getId() == $currentUserId) {
+                $queryResponse['queueRights'] = 'queueMember';
+                if ($queryResponse['users'][$userKey]['userStatus'] == 'queueOwner') {
+                    $queryResponse['queueRights'] = 'queueOwner';
                 }
             }
         }
