@@ -24,7 +24,8 @@ class QueueController extends Controller
 
         switch($method) {
             case 'list':
-                $response = $queueMan->getCurrentQueueList();
+                $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
                 $queueListResponse = new JsonResponse($response);
 
                 return $queueListResponse;
@@ -34,7 +35,8 @@ class QueueController extends Controller
                 $users = $_POST['usersIds'];
                 array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
-                $managerResponse = $queueMan->queueCreateRequest($users);
+                $managerResponse = $queueMan->queueCreateRequest($users, (string)$this->get('security.token_storage')->getToken()
+                    ->getUser()->getId());
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 

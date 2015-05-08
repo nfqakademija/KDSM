@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class QueueRepository extends EntityRepository
 {
 
-    public function getCurrentQueue()
+    public function getCurrentQueue($currentUserId)
     {
         $query = $this->createQueryBuilder('tb');
         $query->select()
@@ -23,17 +23,22 @@ class QueueRepository extends EntityRepository
         $query->setParameters(array(1 => 'active', 2 => 'in_queue', 3 => 'creatingGame'));
         $result = $query->getQuery()->getResult();
         $queryResponse = null;
-        foreach ($result as $key => $queue)
-        {
+        foreach ($result as $key => $queue) {
             $queryResponse[$key]['id'] = $queue->getId();
             $queryResponse[$key]['date'] = $queue->getReservationDateTime();
             $queryResponse[$key]['status'] = $queue->getStatus();
-            foreach ($queue->getUsersQueues() as $userKey => $userQueue)
-            {
+            $queryResponse[$key]['queueRights'] = 'restricted';
+            foreach ($queue->getUsersQueues() as $userKey => $userQueue) {
                 $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
                 $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
                 $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
                 $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
+                if ($userQueue->getUser()->getId() == $currentUserId) {
+                    $queryResponse[$key]['queueRights'] = 'queueMember';
+                    if ($queryResponse[$key]['users'][$userKey]['userStatus'] == 'queueOwner') {
+                        $queryResponse[$key]['queueRights'] = 'queueOwner';
+                    }
+                }
             }
         }
         return $queryResponse;
