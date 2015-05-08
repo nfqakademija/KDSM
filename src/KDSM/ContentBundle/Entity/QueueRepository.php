@@ -47,6 +47,6 @@ class QueueRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($newQueue);
         $this->getEntityManager()->flush();
-//        $this->getEntityManager()->clear();
+        $this->getEntityManager()->clear();
     }
 }

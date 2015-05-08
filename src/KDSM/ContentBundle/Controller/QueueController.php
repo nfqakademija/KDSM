@@ -27,7 +27,6 @@ class QueueController extends Controller
                 $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $queueListResponse = new JsonResponse($response);
-
                 return $queueListResponse;
             case 'create':
                 $request = Request::createFromGlobals();
@@ -39,8 +38,6 @@ class QueueController extends Controller
                     ->getUser()->getId());
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
-
-                //return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
             case 'accept_invite':
                 $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
                     ->getUser());
