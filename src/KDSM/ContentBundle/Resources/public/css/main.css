@@ -448,10 +448,29 @@ table th {
     text-align: center;
     margin: 1.5% 0;
     background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em 1em;
+    padding: 0.5em 1em 0 1em;
     border: 1px solid black;
 }
 
+.queue-game .player-photo {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #BABABA;
+    padding:1px;
+}
+
+.queue-game.creatingGame {
+    background: rgba(92, 184, 92, 0.7);
+    border: 1px solid #4cae4c;
+}
+
+.queue-element-info {
+    border-top: 1px solid #BABABA;
+    margin-top: 0.5em;
+    background: rgba(81, 74, 74, 0.8);
+    padding: 0.2em 0;
+}
+
+/* Notifications part*/
 .cancel_button{
     width: 25px;
     height: 25px;

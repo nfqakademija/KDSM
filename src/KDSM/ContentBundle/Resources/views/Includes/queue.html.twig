@@ -9,32 +9,39 @@
                     url: "{{ path('kdsm_queue', {'method':'list', 'queueId':null}) }}",
                     success: function (response_json) {
                         console.log(response_json);
+                        //remove all queue elements of container
                         $(".queue-container .dinamically-added").remove();
+
+                        //show all queue elements from received json
                         for(var i = 0; i < response_json.length; i++) {
-
                             var queueElement = $(".queue-game.default-queue-element").clone().removeClass("hidden").removeClass("default-queue-element").addClass("dinamically-added");
-                            //get users
-                            var whiteTeam = "";
-                            if (response_json[i].users[0] != undefined) {
-                                whiteTeam += response_json[i].users[0].userName;
-                            }
-                            if (response_json[i].users[1] != undefined) {
-                                whiteTeam += " & ";
-                                whiteTeam += response_json[i].users[1].userName;
+                            //if status is creating, add class to change element design
+                            if(response_json[i].status == 'creatingGame') {
+                                queueElement.addClass("creatingGame");
                             }
 
-                            var blackTeam = "";
-                            if (response_json[i].users[2] != undefined) {
-                                blackTeam += response_json[i].users[2].userName;
-                            }
-                            if (response_json[i].users[3] != undefined) {
-                                blackTeam += " & ";
-                                blackTeam += response_json[i].users[3].userName;
+                            //if not queue element owner, remove control possibility
+                            if (response_json[i].accessRights != "queueOwner") {
+                                queueElement.find("div.queue-actions").remove();
                             }
 
-                            queueElement.find(".team-white .players-names").text(whiteTeam);
-                            queueElement.find(".team-black .players-names").text(blackTeam);
-                            $(".queue-container").prepend(queueElement);
+                            //get queue element users
+                            for(var x = 0; x < response_json[i].users.length; x++) {
+                                //if user is defined add user name to queue element
+                                if (response_json[i].users[x] != undefined) {
+                                    queueElement.find(".row.player-" + x + " .player-name").text(response_json[i].users[x].userName);
+                                }
+
+                                //if user photo is defined add user photo to queue element
+                                if (response_json[i].users[x].userStatus == "invitePending") {
+                                    queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
+                                }
+                                else if (response_json[i].users[x].userPicturePath != undefined) {
+                                    queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
+                                }
+                            }
+
+                            $(".queue-container").append(queueElement);
                         }
                     }
                 });
@@ -43,8 +50,7 @@
     </script>
         <script type="text/javascript">
             $(document).ready(function() {
-                alert("ok");
-                //function to read JSON ffrom url
+                //function to read JSON from url
                 function readJSON(file) {
                     var request = new XMLHttpRequest();
                     request.open('GET', file, false);
@@ -55,6 +61,7 @@
 
                 //Open queue
                 $('button.btn-add-to-queue').click(function() {
+                    var queueControlSource = $('.queue-control').clone()
                     $('.queue-control').show( "slide" );
 
                     var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
@@ -112,14 +119,12 @@
                     });
 
                     $("button#save-queue-element").click(function() {
-                        alert('labas');
                         $.ajax({
                             type: "post",
                             url: "{{ path('kdsm_queue', {'method':'create'}) }}",
                             data: {usersIds: selectedUsersIds},
                             success: function (response) {
-                                console.log(response);
-                                $('.queue-control').hide("slide");
+                                $('.queue-control').replaceWith(queueControlSource);
                             }
                         });
                     });
@@ -129,25 +134,28 @@
     {% endblock %}
    <div class="queue-container">
        <div class="row queue-game default-queue-element hidden">
-            <div class="col-sm-5 team-white">
-                <div class="row">
-                   <img class="col-sm-3 img-responsive first" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                   <span class="col-sm-6 text-center players-names"></span>
-                   <img class="col-sm-3 img-responsive second" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
+           <div class="row">
+               {%  for i in 0..3 %}
+                <div class="col-sm-3">
+                    <div class="row player-{{ i }}">
+                       <img class="col-sm-4 img-responsive player-photo" src="{{ asset('bundles/kdsmcontent/images/add_user.png') }}" alt=""/>
+                       <span class="col-sm-8 text-center player-name"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="row">
-                   <p>VS</p>
-                </div>
-            </div>
-            <div class="col-sm-5 team-black">
-                <div class="row">
-                   <img class="col-sm-3 img-responsive first" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                   <span class="col-sm-6 text-center players-names"></span>
-                   <img class="col-sm-3 img-responsive second" src="{{ asset('bundles/kdsmcontent/images/empty-user.jpg') }}" alt=""/>
-                </div>
-            </div>
+               {% endfor %}
+           </div>
+           <div class="row queue-element-info">
+               <div class="col-sm-2 queue-actions pull-right">
+                   <div class="row">
+                       <div class="col-sm-6">
+                           <i class="fa fa-pencil-square-o"></i>
+                       </div>
+                       <div class="col-sm-6">
+                           <i class="fa fa-times"></i>
+                       </div>
+                   </div>
+               </div>
+           </div>
        </div>
        <button class="btn btn-success btn-add-to-queue">Stoti į eilę</button>
    </div>
