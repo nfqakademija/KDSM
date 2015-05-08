@@ -25,15 +25,15 @@ class QueueManager extends ContainerAwareCommand
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
     }
 
-    public function getCurrentQueueList()
+    public function getCurrentQueueList($userId)
     {
-        return $this->queueRepository->getCurrentQueue();
+        return $this->queueRepository->getCurrentQueue($userId);
     }
 
     /**
      * @param $users
      */
-    public function queueCreateRequest($users)
+    public function queueCreateRequest($users, $ownerId)
     {
         $queueObject = new Queue();
         $queueObject->setStatus('creatingGame');
@@ -54,9 +54,10 @@ class QueueManager extends ContainerAwareCommand
             if ($userObject != null) {
                 $userQueues->setUser($userObject);
                 $userObject->addUsersQueue($userQueues);
-            }
 
-            $userQueues->setUserStatusInQueue('invitePending');
+                $userObject->getId() == $ownerId ? $userQueues->setUserStatusInQueue('queueOwner') :
+                    $userQueues->setUserStatusInQueue('invitePending');
+            }
 
             $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
             $userQueues->setQueue($queueObject);
