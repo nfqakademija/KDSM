@@ -118,10 +118,12 @@ class QueueManager extends ContainerAwareCommand
     {
         $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
 
+        $response = null;
+
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         if ($queueObject != null) {
             if ($queueObject->getStatus() == 'deleted') {
-                $response = 'ERROR: the queue is already deleted.';
+                $response['deleteStatus'] = 'ERROR: the queue is already deleted.';
             } else if ($this->getQueueOwner($queueObject) == $userId) {
                 $usersQueues = $queueObject->getUsersQueues();
                 foreach ($usersQueues as $usersQueue) {
@@ -137,12 +139,12 @@ class QueueManager extends ContainerAwareCommand
 
                 $queueObject->setStatus('deleted');
                 $this->queueRepository->persistObject($queueObject);
-                $response = 'SUCCESS';
+                $response['deleteStatus'] = 'SUCCESS';
             } else {
-                $response = 'ERROR: the user does not have the permissions to delete this queue.';
+                $response['deleteStatus'] = 'ERROR: the user does not have the permissions to delete this queue.';
             }
         } else {
-            $response = 'ERROR: the queue does not exist.';
+            $response['deleteStatus'] = 'ERROR: the queue does not exist.';
         }
 
         return $response;
