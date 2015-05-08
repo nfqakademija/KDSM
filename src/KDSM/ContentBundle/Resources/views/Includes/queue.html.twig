@@ -174,14 +174,15 @@
 
                 //removing queue element
                 $("div.queue-container").on("click", "div.remove-queue-element", function() {
-                    {#$.ajax({#}
-                        {#type: "post",#}
-                        {#url: "{{ path('kdsm_queue', {'method':'remove'}) }}",#}
-                        {#success: function (response) {#}
-                            {#console.log(response);#}
-                            {#alert("sent");#}
-                        {#}#}
-                    {#});#}
+                    var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+                    $.ajax({
+                        type: "post",
+                        url: "{{ path('kdsm_queue', {'method':'remove'}) }}/"+queueElementId,
+                        success: function (response) {
+                            console.log(response);
+                            alert("sent");
+                        }
+                    });
                 });
             });
         </script>
