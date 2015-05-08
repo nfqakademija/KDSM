@@ -33,18 +33,21 @@ class QueueController extends Controller
                 $request = Request::createFromGlobals();
                 $request->request->get('usersIds');
                 $users = $_POST['usersIds'];
+                $queueMan->sendInvites($_POST['usersIds'], 99);
+
                 array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $managerResponse = $queueMan->queueCreateRequest($users);
 //                $queueMan->sendInvites($_POST['usersIds'], $managerResponse['queueId'], $this->get('event_dispatcher'));
 
-                $dispatcher = $this->get('event_dispatcher');
-                foreach ($_POST['usersIds'] as $userId){
-                    $event = new GenericEvent();
-                    $event->setArgument('gameid', $managerResponse['queueId']);
-                    $event->setArgument('userid', $userId);
-                    $dispatcher->dispatch('kdsm_content.notification_create', $event);
-                }
+//                $dispatcher = $this->get('event_dispatcher');
+//                foreach ($_POST['usersIds'] as $userId){
+//                    $event = new GenericEvent();
+//                    $event->setArgument('gameid', $managerResponse['queueId']);
+//                    $event->setArgument('userid', $userId);
+//                    $
+//                    $dispatcher->dispatch('kdsm_content.notification_create', $event);
+//                }
 
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
