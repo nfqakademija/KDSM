@@ -20,6 +20,7 @@ KDSM\ContentBundle\Entity\UsersQueues:
               name: user_id
               referencedColumnName: id
               onUpdate: CASCADE
+              onDelete: CASCADE
         queue:
           targetEntity: Queue
           inversedBy: usersQueues
@@ -27,3 +28,4 @@ KDSM\ContentBundle\Entity\UsersQueues:
               name: queue_id
               referencedColumnName: id
               onUpdate: CASCADE
+              onDelete: CASCADE
