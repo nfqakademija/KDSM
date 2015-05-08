@@ -52,7 +52,7 @@ class QueueManager extends ContainerAwareCommand
         $queueObject->setReservationDateTime(new \DateTime());
         $this->queueRepository->persistObject($queueObject);
 
-        $this->sendInvites($users, $queueObject->getId());
+        $this->sendInvites($users, $ownerId, $queueObject->getId());
 
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
@@ -109,13 +109,15 @@ class QueueManager extends ContainerAwareCommand
      * @param $gameId
      */
 
-    public function sendInvites($usersIds, $gameId)
+    public function sendInvites($usersIds, $ownerId, $gameId)
     {
         foreach ($usersIds as $userId) {
-            $event = new GenericEvent();
-            $event->setArgument('gameid', $gameId);
-            $event->setArgument('userid', $userId);
-            $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
+            if ($userId != $ownerId) {
+                $event = new GenericEvent();
+                $event->setArgument('gameid', $gameId);
+                $event->setArgument('userid', $userId);
+                $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
+            }
         }
     }
 
