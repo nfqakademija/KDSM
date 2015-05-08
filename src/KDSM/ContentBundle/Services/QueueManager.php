@@ -12,16 +12,20 @@ use Doctrine\ORM\EntityManager;
 use KDSM\ContentBundle\Entity\Queue;
 use KDSM\ContentBundle\Entity\UsersQueues;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class QueueManager extends ContainerAwareCommand
 {
     private $entityManager;
+    private $eventDispatcher;
 
     private $queueRepository;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $eventDispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
     }
 
@@ -64,6 +68,8 @@ class QueueManager extends ContainerAwareCommand
 
             $usersQueuesRepository->persistObject($userQueues);
         }
+        $this->entityManager->detach($queueObject);
+        $this->entityManager->detach($userQueues);
 
         return $this->parseQueue($queueObject);
     }
@@ -88,6 +94,21 @@ class QueueManager extends ContainerAwareCommand
             }
         }
         return $response;
+    }
+
+    /**
+     * @param $users
+     * @param $queue
+     * @param $dispatcher
+     */
+    public function sendInvites($usersIds, $gameId)
+    {
+        foreach ($usersIds as $userId) {
+            $event = new GenericEvent();
+            $event->setArgument('gameid', $gameId);
+            $event->setArgument('userid', $userId);
+            $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
+        }
     }
 
     /**

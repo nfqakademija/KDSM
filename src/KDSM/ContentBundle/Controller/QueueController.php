@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class QueueController extends Controller
 {
@@ -35,6 +36,16 @@ class QueueController extends Controller
                 array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $managerResponse = $queueMan->queueCreateRequest($users);
+//                $queueMan->sendInvites($_POST['usersIds'], $managerResponse['queueId'], $this->get('event_dispatcher'));
+
+                $dispatcher = $this->get('event_dispatcher');
+                foreach ($_POST['usersIds'] as $userId){
+                    $event = new GenericEvent();
+                    $event->setArgument('gameid', $managerResponse['queueId']);
+                    $event->setArgument('userid', $userId);
+                    $dispatcher->dispatch('kdsm_content.notification_create', $event);
+                }
+
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
 

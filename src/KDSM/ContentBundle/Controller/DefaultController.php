@@ -87,8 +87,8 @@ class DefaultController extends Controller
 //        $dispatcher->addListener('kdsm_content.notification_create', array($listener, 'onNotificationCreate'));
 
         $event = new GenericEvent();
-        $event->setArgument('gameid', 123);
-        $event->setArgument('userid', 1);
+        $event->setArgument('gameid', 128);
+        $event->setArgument('userid', 4);
 
         $dispatcher->dispatch('kdsm_content.notification_create', $event);
 
