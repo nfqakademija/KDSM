@@ -15,15 +15,25 @@
                         //show all queue elements from received json
                         for(var i = 0; i < response_json.length; i++) {
                             var queueElement = $(".queue-game.default-queue-element").clone().removeClass("hidden").removeClass("default-queue-element").addClass("dinamically-added");
+
+                            //set queue id
+                            queueElement.attr("id", response_json[i].id);
+
                             //if status is creating, add class to change element design
                             if(response_json[i].status == 'creatingGame') {
                                 queueElement.addClass("creatingGame");
                             }
 
-                            //if not queue element owner, remove control possibility
-                            if (response_json[i].accessRights != "queueOwner") {
-                                queueElement.find("div.queue-actions").remove();
+                            //if I am invited to the game, add class to change element design
+                            if(response_json[i].queueRights == 'queueMember') {
+                                queueElement.addClass("gameMember");
                             }
+
+                            //if not queue element owner, remove control possibility
+                            if (response_json[i].queueRights != "queueOwner") {
+                                queueElement.find("div.queue-element-info").remove();
+                            }
+
 
                             //get queue element users
                             for(var x = 0; x < response_json[i].users.length; x++) {
@@ -36,12 +46,13 @@
                                 if (response_json[i].users[x].userStatus == "invitePending") {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
                                 }
+                                //if defined user photo, show it
                                 else if (response_json[i].users[x].userPicturePath != undefined) {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
                                 }
                             }
 
-                            $(".queue-container").append(queueElement);
+                            $(".default-queue-element").after(queueElement);
                         }
                     }
                 });
@@ -57,13 +68,11 @@
                     request.send(null);
                     if (request.status == 200)
                         return request.responseText;
-                };
+                }
 
-                //Open queue
-                $('button.btn-add-to-queue').click(function() {
+                //queue controll function
+                function QueueControl(method, param) {
                     var queueControlSource = $('.queue-control').clone()
-                    $('.queue-control').show( "slide" );
-
                     var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
                     var selectedUsersIds = [];
 
@@ -80,6 +89,7 @@
                                     .css("position", "static");
                         },
                         select: function(event, ui) {
+                            alert(selectedUsersIds);
                             //when user is selected
                             if(selectedUsersIds.length < 3) {
                                 //get selected user id and push it to selected users array
@@ -116,25 +126,69 @@
                         if(selectedUsersIds.length < 1) {
                             $("button#save-queue-element").addClass("hidden");
                         }
+                        alert(selectedUsersIds);
                     });
 
                     $("button#save-queue-element").click(function() {
+                        var path = "{{ path('kdsm_queue', {'method':'HereMethodName', 'queueId':'HereQueueId'}) }}";
+                        path = path.replace("HereMethodName", method);
+                        path = path.replace("HereQueueId", param);
+
                         $.ajax({
                             type: "post",
-                            url: "{{ path('kdsm_queue', {'method':'create'}) }}",
+                            url: path,
                             data: {usersIds: selectedUsersIds},
                             success: function (response) {
                                 $('.queue-control').replaceWith(queueControlSource);
                             }
                         });
                     });
+                }
+
+                //Open queue
+                $('button.btn-add-to-queue').click(function() {
+                    $('.queue-control').show( "slide" );
+                    QueueControl('create', null);
+                });
+
+                //editing queue element
+                $("div.queue-container").on("click", "div.edit-queue-element", function() {
+                    //add already selected users to queue control in editing
+                    $('.queue-control').find("ul.log-list").append("<li id='user-6' class='ui-menu-item ui-state-focus' tabindex='-1'>Justas 6</li>");
+
+                    var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+
+                    //call queue control function
+                    QueueControl("joinUsers", queueElementId);
+
+                    $('.queue-control').show( "slide" );
+                    {#$.ajax({#}
+                        {#type: "post",#}
+                        {#url: "{{ path('kdsm_queue', {'method':'getSingleQueue'}) }}/"+queueElementId,#}
+                        {#success: function (response) {#}
+                            {#console.log(response);#}
+                            {#alert("sent");#}
+                        {#}#}
+                    {#});#}
+                });
+
+                //removing queue element
+                $("div.queue-container").on("click", "div.remove-queue-element", function() {
+                    {#$.ajax({#}
+                        {#type: "post",#}
+                        {#url: "{{ path('kdsm_queue', {'method':'remove'}) }}",#}
+                        {#success: function (response) {#}
+                            {#console.log(response);#}
+                            {#alert("sent");#}
+                        {#}#}
+                    {#});#}
                 });
             });
         </script>
     {% endblock %}
    <div class="queue-container">
        <div class="row queue-game default-queue-element hidden">
-           <div class="row">
+           <div class="row queue-element-users">
                {%  for i in 0..3 %}
                 <div class="col-sm-3">
                     <div class="row player-{{ i }}">
@@ -147,10 +201,10 @@
            <div class="row queue-element-info">
                <div class="col-sm-2 queue-actions pull-right">
                    <div class="row">
-                       <div class="col-sm-6">
+                       <div class="col-sm-6 action edit-queue-element">
                            <i class="fa fa-pencil-square-o"></i>
                        </div>
-                       <div class="col-sm-6">
+                       <div class="col-sm-6 action remove-queue-element">
                            <i class="fa fa-times"></i>
                        </div>
                    </div>

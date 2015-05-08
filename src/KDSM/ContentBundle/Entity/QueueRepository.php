@@ -19,7 +19,8 @@ class QueueRepository extends EntityRepository
         $query->select()
             ->where('tb.status = ?1')
             ->orWhere('tb.status = ?2')
-            ->orWhere('tb.status = ?3');
+            ->orWhere('tb.status = ?3')
+            ->orderBy('tb.reservationDateTime', 'DESC');
         $query->setParameters(array(1 => 'active', 2 => 'in_queue', 3 => 'creatingGame'));
         $result = $query->getQuery()->getResult();
         $queryResponse = null;
