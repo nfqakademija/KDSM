@@ -36,22 +36,23 @@ class QueueManager extends ContainerAwareCommand
 
     /**
      * @param $users
+     * @param $ownerId
+     * @return null
      */
+
     public function queueCreateRequest($users, $ownerId)
     {
         $queueObject = new Queue();
         $queueObject->setStatus('creatingGame');
         $queueObject->setReservationDateTime(new \DateTime());
         $this->queueRepository->persistObject($queueObject);
+
         $this->sendInvites($users, $queueObject->getId());
+
         $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
         $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
 
-//        if (!$queue) //neveikia
-//            throw new NotFoundHttpException('Page not found');
-//        if($this->getIsFull($queue))
-//            return $queue;//'full';
         foreach ($users as $user) {
             $userQueues = new UsersQueues();
 
@@ -99,10 +100,10 @@ class QueueManager extends ContainerAwareCommand
     }
 
     /**
-     * @param $users
-     * @param $queue
-     * @param $dispatcher
+     * @param $usersIds
+     * @param $gameId
      */
+
     public function sendInvites($usersIds, $gameId)
     {
         foreach ($usersIds as $userId) {
@@ -111,6 +112,57 @@ class QueueManager extends ContainerAwareCommand
             $event->setArgument('userid', $userId);
             $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
         }
+    }
+
+    public function removeQueue($queueId, $userId)
+    {
+        $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
+
+        $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
+        if ($queueObject != null) {
+            if ($queueObject->getStatus() == 'deleted') {
+                $response = 'ERROR: the queue is already deleted.';
+            } else if ($this->getQueueOwner($queueObject) == $userId) {
+                $usersQueues = $queueObject->getUsersQueues();
+                foreach ($usersQueues as $usersQueue) {
+                    $usersQueue->setUserStatusInQueue('canceled');
+                }
+
+                $notifications = $notificationRepository->findBy((array('gameId' => $queueId)));
+                if ($notifications != null) {
+                    foreach ($notifications as $notification) {
+                        $notification->setViewed(1);
+                    }
+                }
+
+                $queueObject->setStatus('deleted');
+                $this->queueRepository->persistObject($queueObject);
+                $response = 'SUCCESS';
+            } else {
+                $response = 'ERROR: the user does not have the permissions to delete this queue.';
+            }
+        } else {
+            $response = 'ERROR: the queue does not exist.';
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $queueObject
+     * @return null
+     */
+    private function getQueueOwner($queueObject)
+    {
+        $queueOwner = null;
+        $usersQueues = $queueObject->getUsersQueues();
+        foreach ($usersQueues as $usersQueue) {
+            if ($usersQueue->getUserStatusInQueue() == 'queueOwner') {
+                $queueOwner = $usersQueue->getUser()->getId();
+                break;
+            }
+        }
+        return $queueOwner;
     }
 
     /**
