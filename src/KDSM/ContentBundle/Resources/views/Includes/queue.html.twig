@@ -3,7 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             QueueList();
-            //setInterval(QueueList, 8000);
+            setInterval(QueueList, 8000);
 
             //function updateing queue list
             function QueueList() {
@@ -45,7 +45,7 @@
                                     queueElement.find(".row.player-" + x + " .player-name").text(response_json[i].users[x].userName);
                                 }
 
-                                //if user photo is defined add user photo to queue element
+                                //if user is pending, add spinner instead of photo
                                 if (response_json[i].users[x].userStatus == "invitePending") {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
                                 }
@@ -55,14 +55,16 @@
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
                                 }
 
-                                //if i wam in the queue element players find my place
+                                //if logged user is in the queue element and he is in pending status
+                                // add him response possibility
                                 if(response_json[i].users[x].userId == response_json[i].loggedUserId && response_json[i].users[x].userStatus == "invitePending") {
-                                    queueElement.find(".row.player-" + x + " .player-photo").replaceWith("<div class='col-sm-8 user-response'></div>");                                }
+                                    queueElement.find(".row.player-" + x + " .player-photo").replaceWith("<div class='col-sm-8 user-response'></div>");
                                     queueElement.find(".row.player-" + x + " .player-name").remove();
                                     queueElement.find("div.user-response").append("<div class='row'></div>");
                                     queueElement.find("div.user-response").children(".row")
                                             .append("<div class='col-sm-6 accept-invitation'><i class='fa fa-thumbs-up'></i></div>")
                                             .append("<div class='col-sm-6 decline-invitation'><i class='fa fa-thumbs-down'></i></div>");
+                                }
                             }
 
                             $(".default-queue-element").after(queueElement);
@@ -248,7 +250,7 @@
                {%  for i in 0..3 %}
                 <div class="col-sm-3">
                     <div class="row player-{{ i }}">
-                       <img class="col-sm-4 img-responsive player-photo" src="{{ asset('bundles/kdsmcontent/images/add_user.png') }}" alt=""/>
+                       <img class="col-sm-4 img-responsive player-photo" src="{{ asset('bundles/kdsmcontent/images/add-user.png') }}" alt=""/>
                        <span class="col-sm-8 text-center player-name"></span>
                     </div>
                 </div>
