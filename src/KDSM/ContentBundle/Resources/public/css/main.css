@@ -457,11 +457,34 @@ table th {
     padding: 0 1em;
 }
 
-.queue-game .player-photo {
+.queue-game .player-photo,
+.queue-game .user-response
+{
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid #BABABA;
     padding:1px;
 }
+
+.queue-game .user-response div {
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.queue-game .user-response div i {
+    font-size: 2em;
+    padding: 0.3em 0;
+}
+
+.queue-game .user-response .accept-invitation {
+    background: rgba(66, 160, 46, 0.9);
+}
+
+.queue-game .user-response .decline-invitation
+{
+    background: rgba(215, 23, 23, 0.9);
+}
+
 .queue-game .player-name {
     padding-top: 1em;
 }

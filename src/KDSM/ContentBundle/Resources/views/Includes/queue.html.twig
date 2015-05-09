@@ -2,7 +2,10 @@
     {% block javascripts %}
     <script type="text/javascript">
         $(document).ready(function() {
-            setInterval(QueueList, 8000);
+            QueueList();
+            //setInterval(QueueList, 8000);
+
+            //function updateing queue list
             function QueueList() {
                 $.ajax({
                     type: "post",
@@ -46,10 +49,20 @@
                                 if (response_json[i].users[x].userStatus == "invitePending") {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
                                 }
-                                //if defined user photo, show it
+
+                                //else if defined user photo, show it
                                 else if (response_json[i].users[x].userPicturePath != undefined) {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
                                 }
+
+                                //if i wam in the queue element players find my place
+                                if(response_json[i].users[x].userId == response_json[i].loggedUserId && response_json[i].users[x].userStatus == "invitePending") {
+                                    queueElement.find(".row.player-" + x + " .player-photo").replaceWith("<div class='col-sm-8 user-response'></div>");                                }
+                                    queueElement.find(".row.player-" + x + " .player-name").remove();
+                                    queueElement.find("div.user-response").append("<div class='row'></div>");
+                                    queueElement.find("div.user-response").children(".row")
+                                            .append("<div class='col-sm-6 accept-invitation'><i class='fa fa-thumbs-up'></i></div>")
+                                            .append("<div class='col-sm-6 decline-invitation'><i class='fa fa-thumbs-down'></i></div>");
                             }
 
                             $(".default-queue-element").after(queueElement);
@@ -57,135 +70,177 @@
                     }
                 });
             }
-        });
-    </script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                //function to read JSON from url
-                function readJSON(file) {
-                    var request = new XMLHttpRequest();
-                    request.open('GET', file, false);
-                    request.send(null);
-                    if (request.status == 200)
-                        return request.responseText;
-                }
 
-                //queue controll function
-                function QueueControl(method, param) {
-                    var queueControlSource = $('.queue-control').clone()
-                    var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
-                    var selectedUsersIds = [];
+            //function to read JSON from url
+            function readJSON(file) {
+                var request = new XMLHttpRequest();
+                request.open('GET', file, false);
+                request.send(null);
+                if (request.status == 200)
+                    return request.responseText;
+            }
 
-                    $("#search-users").autocomplete({
-                        source: availableTags,
-                        create: function( event, ui ) {
-                            $(this).autocomplete("widget")
-                                    .appendTo("#results")
-                                    .css("position", "static");
-                        },
-                        open: function() {
-                            $(this).autocomplete("widget")
-                                    .appendTo("#results")
-                                    .css("position", "static");
-                        },
-                        select: function(event, ui) {
-                            alert(selectedUsersIds);
-                            //when user is selected
-                            if(selectedUsersIds.length < 3) {
-                                //get selected user id and push it to selected users array
-                                var selectedUserId = ui.item.id;
-                                selectedUsersIds.push(selectedUserId);
+            //queue control function
+            function QueueControl(method, param, usersArray) {
+                var queueControlSource = $('.queue-control').clone();
+                var availableTags = JSON.parse(readJSON("{{ path('kdsm_queue', {'method':'lfg', 'queueId':null}) }}"));
+                var selectedUsersIds = (usersArray != null) ? usersArray : [];
 
-                                //get selected user html and add it to selected container
-                                var selectedUserRowHTML = $(".found-users").find("li#user-"+selectedUserId).clone();
-                                $("li#user-"+selectedUserId).hide();
-                                $("#log").children("ul.log-list").prepend(selectedUserRowHTML);
-                            }
+                $("#search-users").autocomplete({
+                    source: availableTags,
+                    create: function( event, ui ) {
+                        $(this).autocomplete("widget")
+                                .appendTo("#results")
+                                .css("position", "static");
+                    },
+                    open: function() {
+                        $(this).autocomplete("widget")
+                                .appendTo("#results")
+                                .css("position", "static");
+                    },
+                    select: function(event, ui) {
+                        //when user is selected
+                        if(selectedUsersIds.length < 3) {
+                            //get selected user id and push it to selected users array
+                            var selectedUserId = ui.item.id;
+                            selectedUsersIds.push(selectedUserId);
 
-                            //if at least one user is selected, add button to save the queue
-                            if(selectedUsersIds.length == 1) {
-                                $("button#save-queue-element").removeClass("hidden");
-                            }
+                            //get selected user html and add it to selected container
+                            var selectedUserRowHTML = $(".found-users").find("li#user-"+selectedUserId).clone();
+                            $("li#user-"+selectedUserId).hide();
+                            $("#log").children("ul.log-list").prepend(selectedUserRowHTML);
                         }
-                    })
-                            .autocomplete( "instance" )._renderItem = function( ul, item ) {
-                        return $("<li id='user-"+ item.id +"'>")
-                                .append(item.value+" "+item.id)
-                                .appendTo( ul );
-                    };
 
-                    //when needs to diselect user
-                    $("#log").on("click", "li", function() {
-                        var removedRowId = $(this).attr("id");
-                        var removedRowUserId = removedRowId.split("-")[1];
-                        selectedUsersIds.splice(selectedUsersIds.indexOf(removedRowUserId), 1);
-                        $(this).remove();
-                        //get back user to list
-                        $(".sidebar").find("li#"+removedRowId).show();
-
-                        if(selectedUsersIds.length < 1) {
-                            $("button#save-queue-element").addClass("hidden");
+                        //if at least one user is selected, add button to save the queue
+                        if(selectedUsersIds.length == 1) {
+                            $("button#save-queue-element").removeClass("hidden");
                         }
                         alert(selectedUsersIds);
-                    });
+                    }
+                })
+                        .autocomplete( "instance" )._renderItem = function( ul, item ) {
+                    //check if user wasn't already selected and don't show him if he was
+                    var alreadySelected = false;
+                    for (var i = 0; i < selectedUsersIds.length; i++) {
+                        if(selectedUsersIds[i] == item.id) {
+                            alreadySelected = true;
+                        }
+                    }
+                    if(alreadySelected == false) {
+                        return $("<li id='user-" + item.id + "'>")
+                                .append(item.value + " " + item.id)
+                                .appendTo(ul);
+                    }
+                };
 
-                    $("button#save-queue-element").click(function() {
-                        var path = "{{ path('kdsm_queue', {'method':'HereMethodName', 'queueId':'HereQueueId'}) }}";
-                        path = path.replace("HereMethodName", method);
-                        path = path.replace("HereQueueId", param);
+                //when needs to diselect user
+                $("#log").on("click", "li", function() {
+                    var removedRowId = $(this).attr("id");
+                    var removedRowUserId = removedRowId.split("-")[1];
+                    selectedUsersIds.splice(selectedUsersIds.indexOf(removedRowUserId), 1);
+                    $(this).remove();
+                    //get back user to list
+                    $(".sidebar").find("li#"+removedRowId).show();
 
-                        $.ajax({
-                            type: "post",
-                            url: path,
-                            data: {usersIds: selectedUsersIds},
-                            success: function (response) {
-                                $('.queue-control').replaceWith(queueControlSource);
-                            }
-                        });
-                    });
-                }
-
-                //Open queue
-                $('button.btn-add-to-queue').click(function() {
-                    $('.queue-control').show( "slide" );
-                    QueueControl('create', null);
+                    if(selectedUsersIds.length < 1) {
+                        $("button#save-queue-element").addClass("hidden");
+                    }
+                    alert(selectedUsersIds);
                 });
 
-                //editing queue element
-                $("div.queue-container").on("click", "div.edit-queue-element", function() {
-                    //add already selected users to queue control in editing
-                    $('.queue-control').find("ul.log-list").append("<li id='user-6' class='ui-menu-item ui-state-focus' tabindex='-1'>Justas 6</li>");
+                $("button#save-queue-element").click(function() {
+                    var path = "{{ path('kdsm_queue', {'method':'HereMethodName', 'queueId':'HereQueueId'}) }}";
+                    path = path.replace("HereMethodName", method);
+                    path = path.replace("HereQueueId", param);
 
-                    var queueElementId =  $("div.queue-game").has($(this)).attr("id");
-
-                    //call queue control function
-                    QueueControl("joinUsers", queueElementId);
-
-                    $('.queue-control').show( "slide" );
-                    {#$.ajax({#}
-                        {#type: "post",#}
-                        {#url: "{{ path('kdsm_queue', {'method':'getSingleQueue'}) }}/"+queueElementId,#}
-                        {#success: function (response) {#}
-                            {#console.log(response);#}
-                            {#alert("sent");#}
-                        {#}#}
-                    {#});#}
-                });
-
-                //removing queue element
-                $("div.queue-container").on("click", "div.remove-queue-element", function() {
-                    var queueElementId =  $("div.queue-game").has($(this)).attr("id");
                     $.ajax({
                         type: "post",
-                        url: "{{ path('kdsm_queue', {'method':'remove'}) }}/"+queueElementId,
+                        url: path,
+                        data: {usersIds: selectedUsersIds},
                         success: function (response) {
-                            console.log(response);
-                            alert("sent");
+                            $('.queue-control').replaceWith(queueControlSource);
+                            QueueList();
                         }
                     });
                 });
+            }
+
+            //Open queue control to create new queue element
+            $('button.btn-add-to-queue').click(function() {
+                $('.queue-control').show( "slide" );
+                QueueControl('create', null, null);
             });
-        </script>
+
+            //editing queue element
+            $("div.queue-container").on("click", "div.edit-queue-element", function() {
+                var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+                var selectedUsersIds = [];
+
+                //add already selected users to queue control in editing
+                $('.queue-control').find("ul.log-list").empty();
+                $('.queue-control').find("button#save-queue-element").removeClass("hidden");
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('kdsm_queue', {'method':'single_queue'}) }}/"+queueElementId,
+                    success: function (response) {
+                        if(response.users != undefined) {
+                            console.log(response);
+                            for (var i = 0; i < response.users.length; i++) {
+                                console.log(response.users[i]);
+                                //if user is not me
+                                if(response.users[i].userStatus != "queueOwner" && response.users[i].userId != response.LoggedUserId) {
+                                    selectedUsersIds.push(response.users[i].userId);
+                                    $('.queue-control').find("ul.log-list").append("<li id='user-" + response.users[i].userId + "' class='ui-menu-item' tabindex='-1'>" + response.users[i].userName + "</li>");
+                                }
+                            }
+                        }
+                    }
+                });
+
+                //call queue control function
+                QueueControl("join_users", queueElementId, selectedUsersIds);
+                $('.queue-control').show( "slide" );
+            });
+
+            //user invitation response
+            function InviteUserResponse(queueElementId, answer) {
+                var userId = {{ app.user.id }};
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('kdsm_queue', {'method':'process_invite'}) }}/"+queueElementId,
+                    data: {userResponse: answer, userId: userId},
+                    success: function (response) {
+                        console.log(response);
+                        alert("sent");
+                    }
+                });
+            }
+
+            $("div.queue-container").on("click", "div.accept-invitation", function() {
+                var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+                InviteUserResponse(queueElementId, "accepted");
+            });
+
+            $("div.queue-container").on("click", "div.decline-invitation", function() {
+                var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+                InviteUserResponse(queueElementId, "declined");
+            });
+
+            //removing queue element
+            $("div.queue-container").on("click", "div.remove-queue-element", function() {
+                var queueElementId =  $("div.queue-game").has($(this)).attr("id");
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('kdsm_queue', {'method':'remove'}) }}/"+queueElementId,
+                    success: function (response) {
+                        console.log(response);
+                        alert("sent");
+                    }
+                });
+            });
+        });
+    </script>
     {% endblock %}
    <div class="queue-container">
        <div class="row queue-game default-queue-element hidden">
