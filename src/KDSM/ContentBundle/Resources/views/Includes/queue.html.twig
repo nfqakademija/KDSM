@@ -51,8 +51,13 @@
                                 }
 
                                 //else if defined user photo and it's status not decline invitation, show it
-                                else if (response_json[i].users[x].userPicturePath != undefined && response_json[i].users[x].userStatus != "inviteDeclined") {
+                                else if (response_json[i].users[x].userPicturePath != undefined) {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
+                                }
+
+                                if(response_json[i].users[x].userStatus == "inviteDeclined") {
+                                    queueElement.find(".row.player-" + x + " .player-name").empty();
+                                    queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/add-user.png') }}");
                                 }
 
                                 //if logged user is in the queue element and he is in pending status
@@ -155,7 +160,7 @@
                     var path = "{{ path('kdsm_queue', {'method':'HereMethodName', 'queueId':'HereQueueId'}) }}";
                     path = path.replace("HereMethodName", method);
                     path = path.replace("HereQueueId", param);
-
+                    alert(selectedUsersIds);
                     $.ajax({
                         type: "post",
                         url: path,
@@ -215,7 +220,7 @@
                     data: {userResponse: answer, userId: userId},
                     success: function (response) {
                         console.log(response);
-                        alert("sent");
+                        QueueList();
                     }
                 });
             }
