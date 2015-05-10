@@ -162,7 +162,7 @@ class QueueManager
         foreach ($usersQueues as $userQueue) {
             $userId = $userQueue->getUser()->getId();
             if (($existingUsers == null || !in_array($userId, $existingUsers)) && $userQueue->getUserStatusInQueue() != 'queueOwner') {
-                $userQueue->setUserStatusInQueue('inviteDeclined');
+                $userQueue->setUserStatusInQueue('kicked');
             }
         }
         if (!empty($users)) {
