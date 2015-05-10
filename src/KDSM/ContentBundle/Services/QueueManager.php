@@ -198,6 +198,10 @@ class QueueManager extends ContainerAwareCommand
                 if ($notificationObject != null) {
                     $notificationObject->setViewed(1);
                 }
+                if ($acceptedUserCountInQueue == 3) {
+                    $queueObject->setStatus('in_queue');
+                }
+
                 $queueJoinResponse['response'] = 'Accept SUCCESS';
             } else {
                 $userQueueObject->setUserStatusInQueue('inviteDeclined');
