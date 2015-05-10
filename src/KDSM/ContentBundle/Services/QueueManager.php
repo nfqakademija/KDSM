@@ -21,6 +21,9 @@ class QueueManager extends ContainerAwareCommand
     private $eventDispatcher;
 
     private $queueRepository;
+    private $userRepository;
+    private $usersQueuesRepository;
+    private $notificationRepository;
 
     /**
      * @param EntityManager $entityManager
@@ -31,6 +34,9 @@ class QueueManager extends ContainerAwareCommand
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
+        $this->userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+        $this->usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+        $this->notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
     }
 
     /**
@@ -61,14 +67,10 @@ class QueueManager extends ContainerAwareCommand
 
         $this->sendInvites($users, $ownerId, $queueObject->getId());
 
-        $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
-
-        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
-
         foreach ($users as $user) {
             $userQueues = new UsersQueues();
 
-            $userObject = $userRepository->findOneBy(array('id' => $user));
+            $userObject = $this->userRepository->findOneBy(array('id' => $user));
             if ($userObject != null) {
                 $userQueues->setUser($userObject);
                 $userObject->addUsersQueue($userQueues);
@@ -81,7 +83,7 @@ class QueueManager extends ContainerAwareCommand
             $userQueues->setQueue($queueObject);
             $queueObject->addUsersQueue($userQueues);
 
-            $usersQueuesRepository->persistObject($userQueues);
+            $this->usersQueuesRepository->persistObject($userQueues);
         }
         $this->entityManager->detach($queueObject);
         $this->entityManager->detach($userQueues);
@@ -91,7 +93,6 @@ class QueueManager extends ContainerAwareCommand
 
     public function queueAddUsersRequest($users, $queueId)
     {
-        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
         $usersQueues = $queueObject->getUsersQueues();
         foreach ($usersQueues as $userQueue) {
@@ -107,13 +108,11 @@ class QueueManager extends ContainerAwareCommand
         {
             $response = null;
             foreach ($users as $user) {
-                $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
-
                 $this->sendInvites($users, null, $queueObject->getId());
 
                 $userQueues = new UsersQueues();
 
-                $userObject = $userRepository->findOneBy(array('id' => $user));
+                $userObject = $this->userRepository->findOneBy(array('id' => $user));
                 if ($userObject != null) {
                     $userQueues->setUser($userObject);
                     $userObject->addUsersQueue($userQueues);
@@ -124,7 +123,7 @@ class QueueManager extends ContainerAwareCommand
                 $userQueues->setQueue($queueObject);
                 $queueObject->addUsersQueue($userQueues);
 
-                $usersQueuesRepository->persistObject($userQueues);
+                $this->usersQueuesRepository->persistObject($userQueues);
             }
             $response['inviteStatus'] = 'SUCCESS';
         } else {
@@ -178,8 +177,6 @@ class QueueManager extends ContainerAwareCommand
      */
     public function removeQueue($queueId, $userId)
     {
-        $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
-
         $response = null;
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
@@ -192,7 +189,7 @@ class QueueManager extends ContainerAwareCommand
                     $usersQueue->setUserStatusInQueue('canceled');
                 }
 
-                $notifications = $notificationRepository->findBy((array('gameId' => $queueId)));
+                $notifications = $this->notificationRepository->findBy((array('gameId' => $queueId)));
                 if ($notifications != null) {
                     foreach ($notifications as $notification) {
                         $notification->setViewed(1);
@@ -237,17 +234,14 @@ class QueueManager extends ContainerAwareCommand
     public function processUserInviteResponse($queueId, $userId, $response)
     {
         $queueJoinResponse = null;
-        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
-        $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
-        $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
-        $userObject = $userRepository->findOneBy((array('id' => $userId)));
-        $userQueueObject = $usersQueuesRepository->getObjectByIds($queueObject, $userObject);
-        $notificationObject = $notificationRepository->findOneBy((array('gameId' => $queueId, 'userId' => $userId)));
+        $userObject = $this->userRepository->findOneBy((array('id' => $userId)));
+        $userQueueObject = $this->usersQueuesRepository->getObjectByIds($queueObject, $userObject);
+        $notificationObject = $this->notificationRepository->findOneBy((array('gameId' => $queueId, 'userId' => $userId)));
 
         if ($response == 'accepted') {
-            $acceptedUserCountInQueue = $usersQueuesRepository->getAcceptedUserCount($queueObject);
+            $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
             if ($acceptedUserCountInQueue < 3) {
                 $userQueueObject->setUserStatusInQueue('inviteAccepted');
                 if ($notificationObject != null) {
