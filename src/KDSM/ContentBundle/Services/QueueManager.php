@@ -178,7 +178,7 @@ class QueueManager
      */
     public function removeQueue($queueId, $userId)
     {
-        $response = 'ERROR: something went very wrong here';
+        $response['deleteStatus'] = 'ERROR: something went very wrong here';
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         if ($queueObject != null) {
@@ -232,7 +232,7 @@ class QueueManager
      */
     public function processUserInviteResponse($queueId, $userId, $response)
     {
-        $queueJoinResponse = 'ERROR: I did not understand the response you sent me.';
+        $queueJoinResponse['response'] = 'ERROR: I did not understand the response you sent me.';
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         $userObject = $this->userRepository->findOneBy((array('id' => $userId)));
