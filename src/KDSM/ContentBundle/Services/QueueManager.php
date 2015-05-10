@@ -14,7 +14,7 @@ use KDSM\ContentBundle\Entity\UsersQueues;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-class QueueManager extends ContainerAwareCommand
+class QueueManager
 {
     private $entityManager;
     private $eventDispatcher;
@@ -178,7 +178,7 @@ class QueueManager extends ContainerAwareCommand
      */
     public function removeQueue($queueId, $userId)
     {
-        $response = null;
+        $response = 'ERROR: something went very wrong here';
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         if ($queueObject != null) {
@@ -232,7 +232,7 @@ class QueueManager extends ContainerAwareCommand
      */
     public function processUserInviteResponse($queueId, $userId, $response)
     {
-        $queueJoinResponse = null;
+        $queueJoinResponse = 'ERROR: I did not understand the response you sent me.';
 
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         $userObject = $this->userRepository->findOneBy((array('id' => $userId)));
