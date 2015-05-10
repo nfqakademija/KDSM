@@ -48,9 +48,11 @@ class QueueController extends Controller
                     ->getUser()->getId());
                 $queueRemoveResponse = new JsonResponse($response);
                 return $queueRemoveResponse;
-            case 'accept_invite':
-                $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
-                    ->getUser());
+            case 'process_invite':
+                $request = Request::createFromGlobals();
+                $userId = $_POST['userId'];
+                $response = $_POST['userResponse'];
+                $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $response);
                 return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();

@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints\False;
 class NotificationRepository extends EntityRepository
 {
 
-    public function getAllUnviewedNotifications($userid){
+    public function getAllUnviewedNotifications($userid)
+    {
 
         $result = $this->createQueryBuilder('n')
             ->select('n')
@@ -28,7 +29,8 @@ class NotificationRepository extends EntityRepository
         return $result;
     }
 
-    public function setViewed($id){
+    public function setViewed($id)
+    {
         $this->createQueryBuilder('n')
             ->update()
             ->set('n.viewed', 1)
@@ -38,7 +40,8 @@ class NotificationRepository extends EntityRepository
             ->execute();
     }
 
-    public function createNotification($userid, $gameid){
+    public function createNotification($userid, $gameid)
+    {
         $notification = new Notification();
         $notification->setGameId($gameid);
         $notification->setUserId($userid);

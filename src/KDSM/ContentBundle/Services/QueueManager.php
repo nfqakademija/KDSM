@@ -175,34 +175,46 @@ class QueueManager extends ContainerAwareCommand
     }
 
     /**
-     * @param Queue $queue
-     * @return bool
+     * @param $queueId
+     * @param $userId
+     * @param $response
      */
-    private function getIsFull($queue)
+    public function processUserInviteResponse($queueId, $userId, $response)
     {
-        $isFull = false;
-//        if (count($queue->getUsers()) == 2 && !$queue->getIsFourPlayers()) {
-//            $isFull = true;
-//        }
-//        if (count($queue->getUsers()) == 4 && !$queue->getIsFourPlayers()) {
-//            $isFull = true;
-//        }
-        return $isFull;
-    }
+        $queueJoinResponse = null;
+        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+        $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+        $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
 
-    /**
-     * @param $queue
-     * @param $user
-     * @return bool
-     */
-    private function getIsAlreadyInQueue($queue, $user)
-    {
-        $isInQueue = false;
-//        foreach ($queue->getUsers() as $u) {
-//            if ($u->getId() == $user->getId()) {
-//                $isInQueue = true;
-//            }
-//        }
-        return $isInQueue;
+        $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
+        $userObject = $userRepository->findOneBy((array('id' => $userId)));
+        $userQueueObject = $usersQueuesRepository->getObjectByIds($queueObject, $userObject);
+        $notificationObject = $notificationRepository->findOneBy((array('gameId' => $queueId, 'userId' => $userId)));
+
+        if ($response == 'accepted') {
+            $acceptedUserCountInQueue = $usersQueuesRepository->getAcceptedUserCount($queueObject);
+            if ($acceptedUserCountInQueue < 3) {
+                $userQueueObject->setUserStatusInQueue('inviteAccepted');
+                if ($notificationObject != null) {
+                    $notificationObject->setViewed(1);
+                }
+                $queueJoinResponse['response'] = 'Accept SUCCESS';
+            } else {
+                $userQueueObject->setUserStatusInQueue('inviteDeclined');
+                if ($notificationObject != null) {
+                    $notificationObject->setViewed(1);
+                }
+                $queueJoinResponse['response'] = 'Accept FAIL: Queue Full';
+            }
+        }
+        if ($response == 'declined') {
+            $userQueueObject->setUserStatusInQueue('inviteDeclined');
+            if ($notificationObject != null) {
+                $notificationObject->setViewed(1);
+            }
+            $queueJoinResponse['response'] = 'Decline SUCCESS';
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 }
