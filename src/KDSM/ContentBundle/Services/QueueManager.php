@@ -67,27 +67,37 @@ class QueueManager extends ContainerAwareCommand
         $this->sendInvites($users, $ownerId, $queueObject->getId());
 
         foreach ($users as $user) {
-            $userQueues = new UsersQueues();
-
-            $userObject = $this->userRepository->findOneBy(array('id' => $user));
-            if ($userObject != null) {
-                $userQueues->setUser($userObject);
-                $userObject->addUsersQueue($userQueues);
-
-                $userObject->getId() == $ownerId ? $userQueues->setUserStatusInQueue('queueOwner') :
-                    $userQueues->setUserStatusInQueue('invitePending');
-            }
-
-            $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId()));
-            $userQueues->setQueue($queueObject);
-            $queueObject->addUsersQueue($userQueues);
-
-            $this->usersQueuesRepository->persistObject($userQueues);
+            $this->createUserQueue($user, $ownerId, $queueObject);
         }
         $this->entityManager->detach($queueObject);
-        $this->entityManager->detach($userQueues);
 
         return $this->parseQueue($queueObject);
+    }
+
+    /**
+     * @param $user
+     * @param $ownerId
+     * @param Queue $queueObject
+     */
+    private function createUserQueue($user, $ownerId, $queueObject)
+    {
+        $userQueues = new UsersQueues();
+
+        $userObject = $this->userRepository->findOneBy(array('id' => $user));
+        if ($userObject != null) {
+            $userQueues->setUser($userObject);
+            $userObject->addUsersQueue($userQueues);
+
+            $userObject->getId() == $ownerId ? $userQueues->setUserStatusInQueue('queueOwner') :
+                $userQueues->setUserStatusInQueue('invitePending');
+        }
+
+        $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId()));
+        $userQueues->setQueue($queueObject);
+        $queueObject->addUsersQueue($userQueues);
+
+        $this->usersQueuesRepository->persistObject($userQueues);
+        $this->entityManager->detach($userQueues);
     }
 
     /**
@@ -130,6 +140,11 @@ class QueueManager extends ContainerAwareCommand
         return $response;
     }
 
+    /**
+     * @param $users
+     * @param $queueId
+     * @return null
+     */
     public function queueAddUsersRequest($users, $queueId)
     {
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
@@ -146,21 +161,7 @@ class QueueManager extends ContainerAwareCommand
             $response = null;
             foreach ($users as $user) {
                 $this->sendInvites($users, null, $queueObject->getId());
-
-                $userQueues = new UsersQueues();
-
-                $userObject = $this->userRepository->findOneBy(array('id' => $user));
-                if ($userObject != null) {
-                    $userQueues->setUser($userObject);
-                    $userObject->addUsersQueue($userQueues);
-                    $userQueues->setUserStatusInQueue('invitePending');
-                }
-
-                $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
-                $userQueues->setQueue($queueObject);
-                $queueObject->addUsersQueue($userQueues);
-
-                $this->usersQueuesRepository->persistObject($userQueues);
+                $this->createUserQueue($user, null, $queueObject);
             }
             $response['inviteStatus'] = 'SUCCESS';
         } else {
@@ -188,14 +189,12 @@ class QueueManager extends ContainerAwareCommand
                 foreach ($usersQueues as $usersQueue) {
                     $usersQueue->setUserStatusInQueue('canceled');
                 }
-
                 $notifications = $this->notificationRepository->findBy((array('gameId' => $queueId)));
                 if ($notifications != null) {
                     foreach ($notifications as $notification) {
                         $notification->setViewed(1);
                     }
                 }
-
                 $queueObject->setStatus('deleted');
                 $this->queueRepository->persistObject($queueObject);
                 $response['deleteStatus'] = 'SUCCESS';
@@ -223,7 +222,6 @@ class QueueManager extends ContainerAwareCommand
                 break;
             }
         }
-
         return $queueOwner;
     }
 
@@ -254,7 +252,6 @@ class QueueManager extends ContainerAwareCommand
                 if ($acceptedUserCountInQueue == 3) {
                     $queueObject->setStatus('in_queue');
                 }
-
                 $queueJoinResponse['response'] = 'Accept SUCCESS';
             } else {
                 $userQueueObject->setUserStatusInQueue('inviteDeclined');
@@ -273,5 +270,6 @@ class QueueManager extends ContainerAwareCommand
         }
         $this->entityManager->flush();
         $this->entityManager->clear();
+        return $queueJoinResponse;
     }
 }
