@@ -50,8 +50,8 @@
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
                                 }
 
-                                //else if defined user photo, show it
-                                else if (response_json[i].users[x].userPicturePath != undefined) {
+                                //else if defined user photo and it's status not decline invitation, show it
+                                else if (response_json[i].users[x].userPicturePath != undefined && response_json[i].users[x].userStatus != "inviteDeclined") {
                                     queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/user-photo.png') }}");
                                 }
 
@@ -138,8 +138,9 @@
                 //when needs to diselect user
                 $("#log").on("click", "li", function() {
                     var removedRowId = $(this).attr("id");
-                    var removedRowUserId = removedRowId.split("-")[1];
-                    selectedUsersIds.splice(selectedUsersIds.indexOf(removedRowUserId), 1);
+                    var removedRowUserId = parseInt(removedRowId.split("-")[1]);
+                    var indexOfIdInArray = selectedUsersIds.indexOf(removedRowUserId);
+                    selectedUsersIds.splice(indexOfIdInArray, 1);
                     $(this).remove();
                     //get back user to list
                     $(".sidebar").find("li#"+removedRowId).show();
@@ -237,7 +238,8 @@
                     url: "{{ path('kdsm_queue', {'method':'remove'}) }}/"+queueElementId,
                     success: function (response) {
                         console.log(response);
-                        alert("sent");
+                        QueueList();
+                        alert("ok");
                     }
                 });
             });
