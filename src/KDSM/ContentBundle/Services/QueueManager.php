@@ -22,6 +22,10 @@ class QueueManager extends ContainerAwareCommand
 
     private $queueRepository;
 
+    /**
+     * @param EntityManager $entityManager
+     * @param $eventDispatcher
+     */
     public function __construct(EntityManager $entityManager, $eventDispatcher)
     {
         $this->entityManager = $entityManager;
@@ -29,6 +33,10 @@ class QueueManager extends ContainerAwareCommand
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
     }
 
+    /**
+     * @param $userId
+     * @return mixed
+     */
     public function getCurrentQueueList($userId)
     {
         return $this->queueRepository->getCurrentQueue($userId);
@@ -44,7 +52,6 @@ class QueueManager extends ContainerAwareCommand
      * @param $ownerId
      * @return null
      */
-
     public function queueCreateRequest($users, $ownerId)
     {
         $queueObject = new Queue();
@@ -82,6 +89,50 @@ class QueueManager extends ContainerAwareCommand
         return $this->parseQueue($queueObject);
     }
 
+    public function queueAddUsersRequest($users, $queueId)
+    {
+        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+        $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
+        $usersQueues = $queueObject->getUsersQueues();
+        foreach ($usersQueues as $userQueue) {
+            $userId = $userQueue->getUser()->getId();
+            if (in_array($userId, $users)) {
+                if (($key = array_search($userId, $users)) !== false)
+                {
+                    unset($users[$key]);
+                }
+            }
+        }
+        if (!empty($users))
+        {
+            $response = null;
+            foreach ($users as $user) {
+                $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+
+                $this->sendInvites($users, null, $queueObject->getId());
+
+                $userQueues = new UsersQueues();
+
+                $userObject = $userRepository->findOneBy(array('id' => $user));
+                if ($userObject != null) {
+                    $userQueues->setUser($userObject);
+                    $userObject->addUsersQueue($userQueues);
+                    $userQueues->setUserStatusInQueue('invitePending');
+                }
+
+                $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
+                $userQueues->setQueue($queueObject);
+                $queueObject->addUsersQueue($userQueues);
+
+                $usersQueuesRepository->persistObject($userQueues);
+            }
+            $response['inviteStatus'] = 'SUCCESS';
+        } else {
+            $response['inviteStatus'] = 'NO NEW USERS';
+        }
+        return $response;
+    }
+
     /**
      * @param Queue $queue
      * @return null
@@ -108,7 +159,6 @@ class QueueManager extends ContainerAwareCommand
      * @param $usersIds
      * @param $gameId
      */
-
     public function sendInvites($usersIds, $ownerId, $gameId)
     {
         foreach ($usersIds as $userId) {
@@ -121,6 +171,11 @@ class QueueManager extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param $queueId
+     * @param $userId
+     * @return null
+     */
     public function removeQueue($queueId, $userId)
     {
         $notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');

@@ -62,7 +62,10 @@ class QueueController extends Controller
                     ->getUser()));
                 return $userResponse;
             case 'join_users':
-                break;
+                $users = $_POST['usersIds'];
+                $managerResponse = $queueMan->queueAddUsersRequest($users, $queueId);
+                $userResponse = new JsonResponse($managerResponse);
+                return $userResponse;
             default:
                 throw new NotFoundHttpException('Page not found');
                 break;
