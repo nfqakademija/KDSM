@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManager;
 use KDSM\ContentBundle\Entity\Queue;
 use KDSM\ContentBundle\Entity\UsersQueues;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class QueueManager extends ContainerAwareCommand
@@ -79,7 +78,7 @@ class QueueManager extends ContainerAwareCommand
                     $userQueues->setUserStatusInQueue('invitePending');
             }
 
-            $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
+            $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId()));
             $userQueues->setQueue($queueObject);
             $queueObject->addUsersQueue($userQueues);
 
@@ -91,6 +90,46 @@ class QueueManager extends ContainerAwareCommand
         return $this->parseQueue($queueObject);
     }
 
+    /**
+     * @param $usersIds
+     * @param $ownerId
+     * @param $gameId
+     */
+    public function sendInvites($usersIds, $ownerId, $gameId)
+    {
+        foreach ($usersIds as $userId) {
+            if ($userId != $ownerId) {
+                $event = new GenericEvent();
+                $event->setArgument('gameid', $gameId);
+                $event->setArgument('userid', $userId);
+                $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
+            }
+        }
+    }
+
+    /**
+     * @param Queue $queue
+     * @return null
+     */
+    private function parseQueue($queue)
+    {
+        $response = null;
+        if ($queue != null) {
+            $response['queueId'] = $queue->getId();
+            $response['queueStatus'] = $queue->getStatus();
+            $response['queueCreateTime'] = $queue->getReservationDateTime();
+            $usersQueues = $queue->getUsersQueues();
+            foreach ($usersQueues as $key => $uq) {
+                $response['players'][$key]['userId'] = $uq->getUser()->getId();
+                $response['players'][$key]['userName'] = $uq->getUser()->getUsername();
+                $response['players'][$key]['userPicturePath'] = $uq->getUser()->getProfilePicturePath();
+                $response['players'][$key]['userStatus'] = $uq->getUserStatusInQueue();
+            }
+        }
+
+        return $response;
+    }
+
     public function queueAddUsersRequest($users, $queueId)
     {
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
@@ -98,14 +137,12 @@ class QueueManager extends ContainerAwareCommand
         foreach ($usersQueues as $userQueue) {
             $userId = $userQueue->getUser()->getId();
             if (in_array($userId, $users)) {
-                if (($key = array_search($userId, $users)) !== false)
-                {
+                if (($key = array_search($userId, $users)) !== false) {
                     unset($users[$key]);
                 }
             }
         }
-        if (!empty($users))
-        {
+        if (!empty($users)) {
             $response = null;
             foreach ($users as $user) {
                 $this->sendInvites($users, null, $queueObject->getId());
@@ -129,45 +166,8 @@ class QueueManager extends ContainerAwareCommand
         } else {
             $response['inviteStatus'] = 'NO NEW USERS';
         }
-        return $response;
-    }
 
-    /**
-     * @param Queue $queue
-     * @return null
-     */
-    private function parseQueue($queue)
-    {
-        $response = null;
-        if ($queue != null) {
-            $response['queueId'] = $queue->getId();
-            $response['queueStatus'] = $queue->getStatus();
-            $response['queueCreateTime'] = $queue->getReservationDateTime();
-            $usersQueues = $queue->getUsersQueues();
-            foreach ($usersQueues as $key => $uq) {
-                $response['players'][$key]['userId'] = $uq->getUser()->getId();
-                $response['players'][$key]['userName'] = $uq->getUser()->getUsername();
-                $response['players'][$key]['userPicturePath'] = $uq->getUser()->getProfilePicturePath();
-                $response['players'][$key]['userStatus'] = $uq->getUserStatusInQueue();
-            }
-        }
         return $response;
-    }
-
-    /**
-     * @param $usersIds
-     * @param $gameId
-     */
-    public function sendInvites($usersIds, $ownerId, $gameId)
-    {
-        foreach ($usersIds as $userId) {
-            if ($userId != $ownerId) {
-                $event = new GenericEvent();
-                $event->setArgument('gameid', $gameId);
-                $event->setArgument('userid', $userId);
-                $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
-            }
-        }
     }
 
     /**
@@ -183,7 +183,7 @@ class QueueManager extends ContainerAwareCommand
         if ($queueObject != null) {
             if ($queueObject->getStatus() == 'deleted') {
                 $response['deleteStatus'] = 'ERROR: the queue is already deleted.';
-            } else if ($this->getQueueOwner($queueObject) == $userId) {
+            } elseif ($this->getQueueOwner($queueObject) == $userId) {
                 $usersQueues = $queueObject->getUsersQueues();
                 foreach ($usersQueues as $usersQueue) {
                     $usersQueue->setUserStatusInQueue('canceled');
@@ -210,7 +210,7 @@ class QueueManager extends ContainerAwareCommand
     }
 
     /**
-     * @param $queueObject
+     * @param Queue $queueObject
      * @return null
      */
     private function getQueueOwner($queueObject)
@@ -223,6 +223,7 @@ class QueueManager extends ContainerAwareCommand
                 break;
             }
         }
+
         return $queueOwner;
     }
 
@@ -238,7 +239,10 @@ class QueueManager extends ContainerAwareCommand
         $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
         $userObject = $this->userRepository->findOneBy((array('id' => $userId)));
         $userQueueObject = $this->usersQueuesRepository->getObjectByIds($queueObject, $userObject);
-        $notificationObject = $this->notificationRepository->findOneBy((array('gameId' => $queueId, 'userId' => $userId)));
+        $notificationObject = $this->notificationRepository->findOneBy((array(
+            'gameId' => $queueId,
+            'userId' => $userId
+        )));
 
         if ($response == 'accepted') {
             $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
