@@ -53,7 +53,7 @@ class QueueRepository extends EntityRepository
             $queryResponse['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
             $queryResponse['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
             $queryResponse['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
-            if ($userQueue->getUser()->getId() == $currentUserId) {
+            if ($userQueue->getUser()->getId() == $currentUserId && $userQueue->getUserStatusInQueue() != 'inviteDeclined') {
                 $queryResponse['queueRights'] = 'queueMember';
                 if ($queryResponse['users'][$userKey]['userStatus'] == 'queueOwner') {
                     $queryResponse['queueRights'] = 'queueOwner';
