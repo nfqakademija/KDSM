@@ -38,6 +38,13 @@ class UsersQueuesRepository extends EntityRepository
         return $result[0];
     }
 
+    public function deleteObject($usersQueues)
+    {
+        $this->getEntityManager()->remove($usersQueues);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
     public function persistObject($newUsersQueues)
     {
         $this->getEntityManager()->persist($newUsersQueues);
