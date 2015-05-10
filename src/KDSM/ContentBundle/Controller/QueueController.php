@@ -53,7 +53,8 @@ class QueueController extends Controller
                 $userId = $_POST['userId'];
                 $response = $_POST['userResponse'];
                 $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $response);
-                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
+                $userResponse = new JsonResponse($managerResponse);
+                return $userResponse;
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();
                 $userRep = $userEm->getRepository('KDSMContentBundle:User');
