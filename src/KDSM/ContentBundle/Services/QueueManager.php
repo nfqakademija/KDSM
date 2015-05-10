@@ -149,12 +149,20 @@ class QueueManager
     {
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
         $usersQueues = $queueObject->getUsersQueues();
+        $existingUsers = null;
         foreach ($usersQueues as $userQueue) {
             $userId = $userQueue->getUser()->getId();
             if (in_array($userId, $users)) {
                 if (($key = array_search($userId, $users)) !== false) {
+                    $existingUsers[] = $users[$key];
                     unset($users[$key]);
                 }
+            }
+        }
+        foreach ($usersQueues as $userQueue) {
+            $userId = $userQueue->getUser()->getId();
+            if (($existingUsers == null || !in_array($userId, $existingUsers)) && $userQueue->getUserStatusInQueue() != 'queueOwner') {
+                $userQueue->setUserStatusInQueue('inviteDeclined');
             }
         }
         if (!empty($users)) {
