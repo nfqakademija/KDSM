@@ -13,14 +13,28 @@ use Doctrine\ORM\EntityManager;
 class StatisticsService {
 
     private $rep;
+    private $tableEventRep;
 
     public function __construct(EntityManager $entityManager){
         $em = $entityManager;
         $this->rep = $em->getRepository('KDSMContentBundle:Statistic');
+        $this->tableEventRep= $em->getRepository('KDSMAPIBundle:TableEvent');
     }
 
     public function update(){
-        $this->rep->addStatistic(1, array('foo'=>'bar'));
+        $goals = $this->tableEventRep->getGoalEventsFromId(0);
+        $count = 0;
+
+        foreach($goals as $goal){
+            if(strpos($goal->getData(), '0') !== false){
+                $count++;
+            }
+        }
+
+        $percentage0 = ($count/sizeof($goals))*100;
+        $percentage1 = 100 - $percentage0;
+
+        $this->rep->addStatistic(1, array('0'=>$percentage0, '1'=>$percentage1));
     }
 
 }
