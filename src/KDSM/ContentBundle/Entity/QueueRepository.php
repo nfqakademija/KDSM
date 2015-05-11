@@ -64,6 +64,18 @@ class QueueRepository extends EntityRepository
         return $queryResponse;
     }
 
+//    public function getActiveQueuePlayers()
+//    {
+//        $query = $this->getEntityManager()->createQueryBuilder();
+//        $query->select('tb', 'u.id')
+//            ->from('KDSMContentBundle:User', 'u')
+//            ->leftJoin('tb.user', 'u')
+//            ->where('tb.status = ?1');
+//        $query->setParameters(array(1 => 'active'));
+//        $result = $query->getQuery()->getResult();
+//        $queryResponse = null;
+//    }
+
     public function persistObject($newQueue)
     {
         $this->getEntityManager()->persist($newQueue);

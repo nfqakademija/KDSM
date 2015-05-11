@@ -41,6 +41,8 @@ class DefaultController extends Controller
         $cacheMan = $this->get('kdsm_content.cache_manager');
         $players = $cacheMan->getPlayerCache();
 
+//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $liveScoreManager->getTableStatus();
 
         $tableStatusResponse = [
             'status' => $cacheMan->getTableStatusCache(),

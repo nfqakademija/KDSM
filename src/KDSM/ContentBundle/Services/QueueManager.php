@@ -281,4 +281,26 @@ class QueueManager
         $this->entityManager->clear();
         return $queueJoinResponse;
     }
+
+    public function setNextQueueAsActive()
+    {
+        $isQueue = false;
+        $queueObject = $this->queueRepository->findOneBy(array('status' => 'in_queue'));
+        if ($queueObject != null) {
+            $queueObject->setStatus('active');
+            $this->queueRepository->persistObject($queueObject);
+            $isQueue = true;
+        }
+        return $isQueue;
+    }
+    public function setActiveQueueAsExpired()
+    {
+        $queueObjects = $this->queueRepository->findBy(array('status' => 'active'));
+        if ($queueObjects != null) {
+            foreach ($queueObjects as $queueObject) {
+                $queueObject->setStatus('expired');
+                $this->queueRepository->persistObject($queueObject);
+            }
+        }
+    }
 }
