@@ -1,0 +1,17 @@
+KDSM\ContentBundle\Entity\Statistic:
+    type: entity
+    table: null
+    repositoryClass: KDSM\ContentBundle\Entity\StatisticRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        statisticId:
+            type: integer
+            column: statistic_id
+        stats:
+            type: array
+    lifecycleCallbacks: {  }
