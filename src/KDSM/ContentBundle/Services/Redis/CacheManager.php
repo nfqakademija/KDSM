@@ -113,5 +113,20 @@ class CacheManager
         return $this->redis->hset('table:LiveScore', 'tableStatus', $status);
     }
 
+    public function getCurrentActiveQueueStatus()
+    {
+        $activeQueueStatus = $this->redis->hget('queue:LiveStatus', 'status');
+        if ($activeQueueStatus == null) {
+            $this->redis->hset('queue:LiveStatus', 'status', 'queue_empty');
+            $activeQueueStatus = 'queue_empty';
+        }
+        return $activeQueueStatus;
+    }
+
+    public function setActiveQueueStatus($status)
+    {
+        return $this->redis->hset('queue:LiveStatus', 'status', $status);
+    }
+
 
 }

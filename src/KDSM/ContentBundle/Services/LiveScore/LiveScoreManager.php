@@ -11,6 +11,7 @@ namespace KDSM\ContentBundle\Services\LiveScore;
 use Doctrine\ORM\EntityManager;
 use KDSM\APIBundle\Entity\TableEvent;
 use KDSM\ContentBundle\Entity\LiveScore;
+use KDSM\ContentBundle\Services\QueueManager;
 use KDSM\ContentBundle\Services\Redis\CacheManager;
 use KDSM\ContentBundle\Services\Statistics;
 use KDSM\ContentBundle\Services\Statistics\BusyCheck;
@@ -37,6 +38,17 @@ class LiveScoreManager
      */
     protected $rep;
 
+
+    /**
+     * @var \KDSM\ContentBundle\Entity\QueueRepository
+     */
+    protected $queueRep;
+
+    /**
+     * @var QueueManager
+     */
+    protected $queueManager;
+
     /**
      * @var CacheManager
      */
@@ -52,13 +64,16 @@ class LiveScoreManager
         LiveScore $liveScore,
         BusyCheck $busyCheck,
         EntityManager $entityManager,
-        CacheManager $cacheMan
+        CacheManager $cacheMan,
+        QueueManager $queueManager
     ) {
         $this->liveScore = $liveScore;
         $this->busyCheck = $busyCheck;
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
+        $this->queueRep = $this->em->getRepository('KDSMContentBundle:Queue');
         $this->cacheMan = $cacheMan;
+        $this->queueManager = $queueManager;
     }
 
 
@@ -76,6 +91,9 @@ class LiveScoreManager
 //        $this->cacheMan->setLatestCheckedTableGoalId(3905);
         $this->getSwipes();
         $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
+
+        $this->liveQueueCheck();
+
         if ($status == 'free') {
             $this->cacheMan->resetScoreCache();
             $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
@@ -133,6 +151,9 @@ class LiveScoreManager
         return true;
     }
 
+    /**
+     * @return bool
+     */
     private function getSwipes()
     {
         $position = 0;
@@ -157,5 +178,54 @@ class LiveScoreManager
         }
 
         return true;
+    }
+
+    private function liveQueueCheck()
+    {
+        $activeQueueStatus = $this->cacheMan->getCurrentActiveQueueStatus();
+        switch ($activeQueueStatus) {
+            case 'queue_empty':
+                if ($this->queueManager->setNextQueueAsActive()) {
+                    $this->cacheMan->setActiveQueueStatus('waiting_for_swipe');
+                }
+                break;
+            case 'waiting_for_swipe':
+                $swipedPlayers = $this->cacheMan->getPlayerCache();
+                $activeQueue = $this->queueRep->findOneBy(array('status' => 'active'));//getActiveQueuePlayers();
+                if ($activeQueue != null)
+                {
+                    $activeQueuePlayers = null;
+                    foreach ($activeQueue->getUsersQueues() as $uq)
+                    {
+                        if ($uq->getUserStatusInQueue() == 'inviteAccepted' || $uq->getUserStatusInQueue() == 'queueOwner')
+                        {
+                            $activeQueuePlayers[] = (string)$uq->getUser()->getCardId();
+                        }
+                    }
+//                    foreach ($swipedPlayers['players'] as $player) {
+//                        if (in_array($player, $activeQueuePlayers)) {
+                            $this->cacheMan->setActiveQueueStatus('ready_to_play');
+//                        }
+//                    }
+                }
+                break;
+            case 'ready_to_play':
+                $status = $this->cacheMan->getTableStatusCache();
+                if ($this->cacheMan->getTableStatusCache() != 'free') {
+                    $this->cacheMan->setActiveQueueStatus('playing');
+                }
+                break;
+            case 'playing':
+                if ($this->cacheMan->getTableStatusCache() == 'free') {
+                    $this->queueManager->setActiveQueueAsExpired();
+                    $this->cacheMan->setActiveQueueStatus('queue_empty');
+                }
+                break;
+            default:
+                $this->cacheMan->setActiveQueueStatus('queue_empty');
+                break;
+        }
+
+        return false;
     }
 }

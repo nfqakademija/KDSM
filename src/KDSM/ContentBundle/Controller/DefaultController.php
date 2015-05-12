@@ -23,17 +23,20 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        if ( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
-        }
-        else {
-            return $this->render('KDSMContentBundle:Default:index.html.twig');
+        } else {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
     }
 
     public function loggedHomepageAction()
     {
-        return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('KDSMContentBundle:Default:tableDataMain.html.twig');
+        } else {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
     }
 
     public function liveGameAction()
@@ -41,6 +44,8 @@ class DefaultController extends Controller
         $cacheMan = $this->get('kdsm_content.cache_manager');
         $players = $cacheMan->getPlayerCache();
 
+//        $liveScoreManager = $this->get('kdsm_content.live_score_manager');
+//        $liveScoreManager->getTableStatus();
 
         $tableStatusResponse = [
             'status' => $cacheMan->getTableStatusCache(),
@@ -53,45 +58,38 @@ class DefaultController extends Controller
 
         ];
 
-
         $response = new JsonResponse($tableStatusResponse);
         return $response;
     }
 
-    public function getNotificationsAction(Request $request){
-        $encoders = array(new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
-        $serializer = new Serializer($normalizers, $encoders);
+    public function getNotificationsAction(Request $request)
+    {
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $encoders = array(new JsonEncoder());
+            $normalizers = array(new GetSetMethodNormalizer());
+            $serializer = new Serializer($normalizers, $encoders);
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $rep = $em->getRepository('KDSMContentBundle:Notification');
-        $notifications = $rep->getAllUnviewedNotifications($request->request->get('id'));
+            $em = $this->getDoctrine()->getEntityManager();
+            $rep = $em->getRepository('KDSMContentBundle:Notification');
+            $notifications = $rep->getAllUnviewedNotifications($request->request->get('id'));
 
-        $notificationsjson = $serializer->serialize($notifications, 'json');
+            $notificationsjson = $serializer->serialize($notifications, 'json');
 
-        return new Response($notificationsjson);
+            return new Response($notificationsjson);
+        } else {
+            throw new \Exception('User is not logged in!');
+        }
     }
 
-    public function viewNotificationAction(Request $request){
-        $em = $this->getDoctrine()->getEntityManager();
-        $rep = $em->getRepository('KDSMContentBundle:Notification');
-        $rep->setViewed($request->request->get('id'));
-        return new Response();
-    }
-
-    public function testEventAction(){
-        $dispatcher = $this->get('event_dispatcher');
-//        $em = $this->getDoctrine()->getEntityManager();
-
-//        $listener = new KDSMNotificationListener($em);
-//        $dispatcher->addListener('kdsm_content.notification_create', array($listener, 'onNotificationCreate'));
-
-        $event = new GenericEvent();
-        $event->setArgument('gameid', 128);
-        $event->setArgument('userid', 4);
-
-        $dispatcher->dispatch('kdsm_content.notification_create', $event);
-
-        return new Response();
+    public function viewNotificationAction(Request $request)
+    {
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $rep = $em->getRepository('KDSMContentBundle:Notification');
+            $rep->setViewed($request->request->get('id'));
+            return new Response();
+        } else {
+            throw new \Exception('User is not logged in!');
+        }
     }
 }
