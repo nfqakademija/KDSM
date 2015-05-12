@@ -45,7 +45,7 @@ header {
 }
 
 .content-heading {
-    background: rgba(150, 33, 44, 0.8);
+    background: #157C3E;
     padding: 0em 1em;
     color: white;
     margin: 1em 0 0 0;
@@ -239,6 +239,12 @@ table td {
     border: 1px solid #266929;
 }
 
+.sidebar.right ul.log-list li:hover {
+    background-color: rgba(150, 33, 44, 0.8) !important;
+    border-color: rgba(150, 33, 44, 0.8) !important;
+    cursor: pointer;
+}
+
 .sidebar .selected-users {
     margin-top: 0.5em;
     height: 100%;
@@ -258,6 +264,11 @@ table td {
     height: 30%;
     width: 100%;
     overflow: hidden;
+}
+
+#save-queue-element {
+    width: 100%;
+    margin: 0 2em;
 }
 
 .user-info {
@@ -471,8 +482,11 @@ table th {
 }
 
 .queue-game .user-response div i {
-    font-size: 2em;
+    font-size: 1em;
     padding: 0.3em 0;
+}
+.queue-game .user-response label {
+    font-weight: 300;
 }
 
 .queue-game .user-response .accept-invitation {
@@ -494,8 +508,8 @@ table th {
 }
 
 .queue-game.gameMember {
-    background: rgba(173, 31, 31, 0.8);
-    border: 1px solid #C00C00;
+    background: rgba(244, 142, 43, 0.81);
+    border: 1px solid #F48E2B;
 }
 
 .queue-element-info {
@@ -507,7 +521,13 @@ table th {
     display: block;
     cursor: pointer;
     position:relative;
+    text-align: center;
+    padding: 0;
 }
+.queue-element-info .action:hover {
+    background: #157C3E;
+}
+
 
 .btn-add-to-queue {
     position: fixed;

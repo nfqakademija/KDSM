@@ -3,7 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             QueueList();
-            setInterval(QueueList, 8000);
+            //setInterval(QueueList, 8000);
 
             function emptyControl() {
                 //add already selected users to queue control in editing
@@ -73,9 +73,10 @@
                                 //if logged user is in the queue element and he is in pending status
                                 // add him response possibility
                                 if(response_json[i].users[x].userId == response_json[i].loggedUserId && response_json[i].users[x].userStatus == "invitePending") {
-                                    queueElement.find(".row.player-" + x + " .player-photo").replaceWith("<div class='col-sm-8 user-response'></div>");
+                                    queueElement.find(".row.player-" + x + " .player-photo").replaceWith("<div class='col-sm-10 user-response'></div>");
                                     queueElement.find(".row.player-" + x + " .player-name").remove();
                                     queueElement.find("div.user-response").append("<div class='row'></div>");
+                                    queueElement.find("div.user-response").prepend("<label>Žaisi?</label>")
                                     queueElement.find("div.user-response").children(".row")
                                             .append("<div class='col-sm-6 accept-invitation'><i class='fa fa-thumbs-up'></i></div>")
                                             .append("<div class='col-sm-6 decline-invitation'><i class='fa fa-thumbs-down'></i></div>");
@@ -124,6 +125,7 @@
 
                             //get selected user html and add it to selected container
                             var selectedUserRowHTML = $(".found-users").find("li#user-"+selectedUserId).clone();
+                            selectedUserRowHTML.removeClass("ui-state-focus");
                             $("li#user-"+selectedUserId).hide();
                             $("#log").children("ul.log-list").prepend(selectedUserRowHTML);
                         }
@@ -259,7 +261,7 @@
     {% endblock %}
    <div class="queue-container">
        <div class="row queue-game default-queue-element hidden">
-           <div class="row queue-element-users">
+           <div class="col-sm-11 queue-element-users">
                {%  for i in 0..3 %}
                 <div class="col-sm-3">
                     <div class="row player-{{ i }}">
@@ -269,16 +271,14 @@
                 </div>
                {% endfor %}
            </div>
-           <div class="row queue-element-info">
-               <div class="col-sm-2 queue-actions pull-right">
-                   <div class="row">
+           <div class="col-sm-1 queue-element-info">
+               <div class="row queue-actions">
                        <div class="col-sm-6 action edit-queue-element">
                            <i class="fa fa-pencil-square-o"></i>
                        </div>
                        <div class="col-sm-6 action remove-queue-element">
                            <i class="fa fa-times"></i>
                        </div>
-                   </div>
                </div>
            </div>
        </div>

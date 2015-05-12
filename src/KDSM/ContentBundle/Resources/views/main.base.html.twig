@@ -121,22 +121,6 @@
             }
         });
     </script>
-
-    <script>
-        function viewNotification(element){
-            var notificationid = element.id.substr(13);
-            $.ajax({
-                type: "post",
-                url: "{{ path('view_notification') }}",
-                data: {id: notificationid}
-//                success: function(){
-//                    $(element).remove();
-//                    $('#notification-count').html(parseInt($('#notification-count').val())-1);
-//                }
-            });
-        }
-
-    </script>
-        {% endif %}
+{% endif %}
 
 {% endblock %}
