@@ -49,28 +49,38 @@ class LiveScoreManager
     protected $cacheMan;
 
     /**
-     * @param LiveScore $liveScore
-     * @param BusyCheck $busyCheck
      * @param EntityManager $entityManager
-     * @param CacheManager $cacheMan
      */
-    public function __construct(
-        BusyCheck $busyCheck,
-        EntityManager $entityManager,
-        CacheManager $cacheMan,
-        QueueManager $queueManager
-    ) {
-        $this->busyCheck = $busyCheck;
+    public function __construct(EntityManager $entityManager)
+    {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
         $this->queueRep = $this->em->getRepository('KDSMContentBundle:Queue');
+    }
+
+    /**
+     * @param BusyCheck $busyCheck
+     */
+    public function setTableBusyCheck(BusyCheck $busyCheck)
+    {
+        $this->busyCheck = $busyCheck;
+    }
+
+    /**
+     * @param CacheManager $cacheMan
+     */
+    public function setCacheManager(CacheManager $cacheMan)
+    {
         $this->cacheMan = $cacheMan;
+    }
+
+    public function setQueueManager(QueueManager $queueManager)
+    {
         $this->queueManager = $queueManager;
     }
 
-
     /**
-     *
+     * @return null|string
      */
     public function getTableStatus()
     {
@@ -111,7 +121,7 @@ class LiveScoreManager
     {
         $table = $this->cacheMan->getScoreCache(); //gets latest result
 
-        $events = $this->rep->getGoalEventsFromLastCheckedEvent($this->getLastCheckedGoalId);
+        $events = $this->rep->getGoalEventsFromLastCheckedEvent($this->getLastCheckedGoalId());
 
         if ($events != null) {
             foreach ($events as $event) {

@@ -18,11 +18,21 @@ class BusyCheck
     private $busyThreshold;
     private $checkPeriod;
 
-    public function __construct(EntityManager $entityManager, $threshold, $checkPeriod)
+    public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
+
+
+    }
+
+    public function setTableBusyThreshold($threshold)
+    {
         $this->busyThreshold = $threshold;
+    }
+
+    public function setTableCheckPeriod($checkPeriod)
+    {
         $this->checkPeriod = $checkPeriod;
     }
 

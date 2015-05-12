@@ -7,11 +7,17 @@ services:
         arguments: [@snc_redis.default, @doctrine.orm.entity_manager]
     kdsm_content.table_busy_check:
         class: KDSM\ContentBundle\Services\Statistics\BusyCheck
-        arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%, %table.check_period%]
+        arguments: [@doctrine.orm.entity_manager]
+        calls:
+          - [setTableBusyThreshold, [%table.busy_threshold%]]
+          - [setTableCheckPeriod, [%table.check_period%]]
     kdsm_content.live_score_manager:
         class: KDSM\ContentBundle\Services\LiveScore\LiveScoreManager
-#        TODO: setters kai >2
-        arguments: [@kdsm_content.table_busy_check, @doctrine.orm.entity_manager, @kdsm_content.cache_manager, @kdsm_content.queue_manager]
+        arguments: [@doctrine.orm.entity_manager]
+        calls:
+          - [setTableBusyCheck, [@kdsm_content.table_busy_check]]
+          - [setCacheManager, [@kdsm_content.cache_manager]]
+          - [setQueueManager, [@kdsm_content.queue_manager]]
     kdsm_content.queue_manager:
         class: KDSM\ContentBundle\Services\QueueManager
         arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
