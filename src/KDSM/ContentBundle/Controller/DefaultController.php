@@ -60,7 +60,8 @@ class DefaultController extends Controller
         return $response;
     }
 
-    public function getNotificationsAction(Request $request){
+    public function getNotificationsAction(Request $request)
+    {
         $encoders = array(new JsonEncoder());
         $normalizers = array(new GetSetMethodNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
@@ -74,14 +75,16 @@ class DefaultController extends Controller
         return new Response($notificationsjson);
     }
 
-    public function viewNotificationAction(Request $request){
+    public function viewNotificationAction(Request $request)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $rep = $em->getRepository('KDSMContentBundle:Notification');
         $rep->setViewed($request->request->get('id'));
         return new Response();
     }
 
-    public function testEventAction(){
+    public function testEventAction()
+    {
         $dispatcher = $this->get('event_dispatcher');
 //        $em = $this->getDoctrine()->getEntityManager();
 

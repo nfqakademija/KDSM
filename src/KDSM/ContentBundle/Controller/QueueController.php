@@ -18,7 +18,7 @@ class QueueController extends Controller
 
     }
 
-    public function queueAction($method, $queueId = null)
+    public function queueAction($method, $queueId = null, Request $request = null)
     {
         $queueMan = $this->get('kdsm_content.queue_manager');
 
@@ -34,9 +34,7 @@ class QueueController extends Controller
                 $queueListResponse = new JsonResponse($response);
                 return $queueListResponse;
             case 'create':
-                $request = Request::createFromGlobals();
-                $request->request->get('usersIds');
-                $users = $_POST['usersIds'];
+                $users = $request->request->get('usersIds');
                 array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
                     ->getUser()->getId());
                 $managerResponse = $queueMan->queueCreateRequest($users, (string)$this->get('security.token_storage')->getToken()
@@ -49,12 +47,11 @@ class QueueController extends Controller
                 $queueRemoveResponse = new JsonResponse($response);
                 return $queueRemoveResponse;
             case 'process_invite':
-                $request = Request::createFromGlobals();
-                $userId = $_POST['userId'];
-                $response = $_POST['userResponse'];
-                $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $response);
-                $userResponse = new JsonResponse($managerResponse);
-                return $userResponse;
+                $userId = $request->request->get('userId');
+                $userResponse = $request->request->get('userResponse');
+                $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
+                $queueResponse = new JsonResponse($managerResponse);
+                return $queueResponse;
             case 'lfg':
                 $userEm = $this->getDoctrine()->getEntityManager();
                 $userRep = $userEm->getRepository('KDSMContentBundle:User');
@@ -62,7 +59,8 @@ class QueueController extends Controller
                     ->getUser()));
                 return $userResponse;
             case 'join_users':
-                $users = $_POST['usersIds'];
+                $users = $request->request->get('usersIds');
+
                 $managerResponse = $queueMan->queueAddUsersRequest($users, $queueId);
                 $userResponse = new JsonResponse($managerResponse);
                 return $userResponse;
