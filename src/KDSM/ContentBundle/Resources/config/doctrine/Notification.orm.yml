@@ -1,0 +1,23 @@
+KDSM\ContentBundle\Entity\Notification:
+    type: entity
+    table: null
+    repositoryClass: KDSM\ContentBundle\Entity\NotificationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        gameId:
+            type: integer
+            column: game_id
+        notificationText:
+            type: text
+            column: notification_text
+        userId:
+            type: integer
+            column: user_id
+        viewed:
+            type: boolean
+    lifecycleCallbacks: {  }

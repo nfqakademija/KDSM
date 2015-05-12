@@ -12,60 +12,109 @@ use Doctrine\ORM\EntityManager;
 use KDSM\ContentBundle\Entity\Queue;
 use KDSM\ContentBundle\Entity\UsersQueues;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
-class QueueManager extends ContainerAwareCommand
+class QueueManager
 {
     private $entityManager;
+    private $eventDispatcher;
 
     private $queueRepository;
+    private $userRepository;
+    private $usersQueuesRepository;
+    private $notificationRepository;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @param EntityManager $entityManager
+     * @param $eventDispatcher
+     */
+    public function __construct(EntityManager $entityManager, $eventDispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->queueRepository = $this->entityManager->getRepository('KDSMContentBundle:Queue');
+        $this->userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
+        $this->usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+        $this->notificationRepository = $this->entityManager->getRepository('KDSMContentBundle:Notification');
     }
 
-    public function getCurrentQueueList()
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function getCurrentQueueList($userId)
     {
-        return $this->queueRepository->getCurrentQueue();
+        return $this->queueRepository->getCurrentQueue($userId);
+    }
+
+    public function getSingleQueue($queueId, $userId)
+    {
+        return $this->queueRepository->getSingleQueue($queueId, $userId);
     }
 
     /**
      * @param $users
+     * @param $ownerId
+     * @return null
      */
-    public function queueCreateRequest($users)
+    public function queueCreateRequest($users, $ownerId)
     {
         $queueObject = new Queue();
         $queueObject->setStatus('creatingGame');
         $queueObject->setReservationDateTime(new \DateTime());
         $this->queueRepository->persistObject($queueObject);
-        $userRepository = $this->entityManager->getRepository('KDSMContentBundle:User');
 
-        $usersQueuesRepository = $this->entityManager->getRepository('KDSMContentBundle:UsersQueues');
+        $this->sendInvites($users, $ownerId, $queueObject->getId());
 
-//        if (!$queue) //neveikia
-//            throw new NotFoundHttpException('Page not found');
-//        if($this->getIsFull($queue))
-//            return $queue;//'full';
         foreach ($users as $user) {
-            $userQueues = new UsersQueues();
-
-            $userObject = $userRepository->findOneBy(array('id' => $user));
-            if ($userObject != null) {
-                $userQueues->setUser($userObject);
-                $userObject->addUsersQueue($userQueues);
-            }
-
-            $userQueues->setUserStatusInQueue('invitePending');
-
-            $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId())); //reikia nes per daug em->clear'u
-            $userQueues->setQueue($queueObject);
-            $queueObject->addUsersQueue($userQueues);
-
-            $usersQueuesRepository->persistObject($userQueues);
+            $this->createUserQueue($user, $ownerId, $queueObject);
         }
+        $this->entityManager->detach($queueObject);
 
         return $this->parseQueue($queueObject);
+    }
+
+    /**
+     * @param $user
+     * @param $ownerId
+     * @param Queue $queueObject
+     */
+    private function createUserQueue($user, $ownerId, $queueObject)
+    {
+        $userQueues = new UsersQueues();
+
+        $userObject = $this->userRepository->findOneBy(array('id' => $user));
+        if ($userObject != null) {
+            $userQueues->setUser($userObject);
+            $userObject->addUsersQueue($userQueues);
+
+            $userObject->getId() == $ownerId ? $userQueues->setUserStatusInQueue('queueOwner') :
+                $userQueues->setUserStatusInQueue('invitePending');
+        }
+
+        $queueObject = $this->queueRepository->findOneBy(array('id' => $queueObject->getId()));
+        $userQueues->setQueue($queueObject);
+        $queueObject->addUsersQueue($userQueues);
+
+        $this->usersQueuesRepository->persistObject($userQueues);
+        $this->entityManager->detach($userQueues);
+    }
+
+    /**
+     * @param $usersIds
+     * @param $ownerId
+     * @param $gameId
+     */
+    public function sendInvites($usersIds, $ownerId, $gameId)
+    {
+        foreach ($usersIds as $userId) {
+            if ($userId != $ownerId) {
+                $event = new GenericEvent();
+                $event->setArgument('gameid', $gameId);
+                $event->setArgument('userid', $userId);
+                $this->eventDispatcher->dispatch('kdsm_content.notification_create', $event);
+            }
+        }
     }
 
     /**
@@ -87,38 +136,171 @@ class QueueManager extends ContainerAwareCommand
                 $response['players'][$key]['userStatus'] = $uq->getUserStatusInQueue();
             }
         }
+
         return $response;
     }
 
     /**
-     * @param Queue $queue
-     * @return bool
+     * @param $users
+     * @param $queueId
+     * @return null
      */
-    private function getIsFull($queue)
+    public function queueAddUsersRequest($users, $queueId)
     {
-        $isFull = false;
-//        if (count($queue->getUsers()) == 2 && !$queue->getIsFourPlayers()) {
-//            $isFull = true;
-//        }
-//        if (count($queue->getUsers()) == 4 && !$queue->getIsFourPlayers()) {
-//            $isFull = true;
-//        }
-        return $isFull;
+        $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
+        $usersQueues = $queueObject->getUsersQueues();
+        $existingUsers = null;
+        foreach ($usersQueues as $userQueue) {
+            $userId = $userQueue->getUser()->getId();
+            if (in_array($userId, $users)) {
+                if (($key = array_search($userId, $users)) !== false) {
+                    $existingUsers[] = $users[$key];
+                    unset($users[$key]);
+                }
+            }
+        }
+        foreach ($usersQueues as $userQueue) {
+            $userId = $userQueue->getUser()->getId();
+            if (($existingUsers == null || !in_array($userId, $existingUsers)) && $userQueue->getUserStatusInQueue() != 'queueOwner') {
+                $queueObject->removeUsersQueue($userQueue);
+                $this->usersQueuesRepository->deleteObject($userQueue);
+            }
+        }
+        if (!empty($users)) {
+            $response = null;
+            foreach ($users as $user) {
+                $this->sendInvites($users, null, $queueObject->getId());
+                $this->createUserQueue($user, null, $queueObject);
+            }
+            $response['inviteStatus'] = 'SUCCESS';
+        } else {
+            $response['inviteStatus'] = 'NO NEW USERS';
+        }
+
+        return $response;
     }
 
     /**
-     * @param $queue
-     * @param $user
-     * @return bool
+     * @param $queueId
+     * @param $userId
+     * @return null
      */
-    private function getIsAlreadyInQueue($queue, $user)
+    public function removeQueue($queueId, $userId)
     {
-        $isInQueue = false;
-//        foreach ($queue->getUsers() as $u) {
-//            if ($u->getId() == $user->getId()) {
-//                $isInQueue = true;
-//            }
-//        }
-        return $isInQueue;
+        $response['deleteStatus'] = 'ERROR: something went very wrong here';
+
+        $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
+        if ($queueObject != null) {
+            if ($queueObject->getStatus() == 'deleted') {
+                $response['deleteStatus'] = 'ERROR: the queue is already deleted.';
+            } elseif ($this->getQueueOwner($queueObject) == $userId) {
+                $usersQueues = $queueObject->getUsersQueues();
+                foreach ($usersQueues as $usersQueue) {
+                    $usersQueue->setUserStatusInQueue('canceled');
+                }
+                $notifications = $this->notificationRepository->findBy((array('gameId' => $queueId)));
+                if ($notifications != null) {
+                    foreach ($notifications as $notification) {
+                        $notification->setViewed(1);
+                    }
+                }
+                $queueObject->setStatus('deleted');
+                $this->queueRepository->persistObject($queueObject);
+                $response['deleteStatus'] = 'SUCCESS';
+            } else {
+                $response['deleteStatus'] = 'ERROR: the user does not have the permissions to delete this queue.';
+            }
+        } else {
+            $response['deleteStatus'] = 'ERROR: the queue does not exist.';
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Queue $queueObject
+     * @return null
+     */
+    private function getQueueOwner($queueObject)
+    {
+        $queueOwner = null;
+        $usersQueues = $queueObject->getUsersQueues();
+        foreach ($usersQueues as $usersQueue) {
+            if ($usersQueue->getUserStatusInQueue() == 'queueOwner') {
+                $queueOwner = $usersQueue->getUser()->getId();
+                break;
+            }
+        }
+        return $queueOwner;
+    }
+
+    /**
+     * @param $queueId
+     * @param $userId
+     * @param $response
+     */
+    public function processUserInviteResponse($queueId, $userId, $response)
+    {
+        $queueJoinResponse['response'] = 'ERROR: I did not understand the response you sent me.';
+
+        $queueObject = $this->queueRepository->findOneBy((array('id' => $queueId)));
+        $userObject = $this->userRepository->findOneBy((array('id' => $userId)));
+        $userQueueObject = $this->usersQueuesRepository->getObjectByIds($queueObject, $userObject);
+        $notificationObject = $this->notificationRepository->findOneBy((array(
+            'gameId' => $queueId,
+            'userId' => $userId
+        )));
+
+        if ($response == 'accepted') {
+            $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
+            if ($acceptedUserCountInQueue < 3) {
+                $userQueueObject->setUserStatusInQueue('inviteAccepted');
+                if ($notificationObject != null) {
+                    $notificationObject->setViewed(1);
+                }
+                if ($acceptedUserCountInQueue == 3) {
+                    $queueObject->setStatus('in_queue');
+                }
+                $queueJoinResponse['response'] = 'Accept SUCCESS';
+            } else {
+                $userQueueObject->setUserStatusInQueue('inviteDeclined');
+                if ($notificationObject != null) {
+                    $notificationObject->setViewed(1);
+                }
+                $queueJoinResponse['response'] = 'Accept FAIL: Queue Full';
+            }
+        }
+        if ($response == 'declined') {
+            $userQueueObject->setUserStatusInQueue('inviteDeclined');
+            if ($notificationObject != null) {
+                $notificationObject->setViewed(1);
+            }
+            $queueJoinResponse['response'] = 'Decline SUCCESS';
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        return $queueJoinResponse;
+    }
+
+    public function setNextQueueAsActive()
+    {
+        $isQueue = false;
+        $queueObject = $this->queueRepository->findOneBy(array('status' => 'in_queue'));
+        if ($queueObject != null) {
+            $queueObject->setStatus('active');
+            $this->queueRepository->persistObject($queueObject);
+            $isQueue = true;
+        }
+        return $isQueue;
+    }
+    public function setActiveQueueAsExpired()
+    {
+        $queueObjects = $this->queueRepository->findBy(array('status' => 'active'));
+        if ($queueObjects != null) {
+            foreach ($queueObjects as $queueObject) {
+                $queueObject->setStatus('expired');
+                $this->queueRepository->persistObject($queueObject);
+            }
+        }
     }
 }

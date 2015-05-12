@@ -12,6 +12,39 @@ use Doctrine\ORM\EntityRepository;
  */
 class UsersQueuesRepository extends EntityRepository
 {
+
+    public function getAcceptedUserCount($queue)
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select('count(tb.id)')
+            ->where("tb.userStatusInQueue = 'inviteAccepted'")
+        ->andWhere('tb.queue = ?1');
+        $query->setParameters(array(1 => $queue));
+        $result = $query->getQuery()->getSingleScalarResult();
+        return $result;
+    }
+
+    public function getObjectByIds($queueId, $userId)
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.user = ?1')
+            ->andWhere('tb.queue = ?2');
+        $query->setParameters(array(1 => $userId, 2 => $queueId));
+        $result = $query->getQuery()->getResult();
+        if ($result == null) {
+            $result = false;
+        }
+        return $result[0];
+    }
+
+    public function deleteObject($usersQueues)
+    {
+        $this->getEntityManager()->remove($usersQueues);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+    }
+
     public function persistObject($newUsersQueues)
     {
         $this->getEntityManager()->persist($newUsersQueues);
