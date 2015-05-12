@@ -264,7 +264,7 @@ table td {
     height: 25%;
 }
 
-.user-info img {
+.user-info > img {
     max-width: 60%;
     max-height: 60%;
     margin: 5% auto;
@@ -290,7 +290,7 @@ table td {
     font-weight: 400;
 }
 
-.user-info span.notifications-icon {
+.notifications-icon{
     display: block;
     width: 35px;
     height: 35px;
@@ -303,6 +303,23 @@ table td {
     font-size: 1.4em;
     color: white;
     top: 1%;
+    cursor: pointer;
+}
+
+.queue-up{
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: red;
+    position: absolute;
+    left: 60%;
+    text-align: center;
+    line-height: 35px;
+    font-size: 1.4em;
+    color: white;
+    top: 12%;
+    cursor: pointer;
 }
 
 .sidebar-nav {
@@ -431,6 +448,78 @@ table th {
     text-align: center;
     margin: 1.5% 0;
     background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em 1em;
+    padding: 0.5em 1em 0 1em;
     border: 1px solid black;
+}
+
+.queue-element-users {
+    margin-bottom: 0.5em;
+    padding: 0 1em;
+}
+
+.queue-game .player-photo,
+.queue-game .user-response
+{
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #BABABA;
+    padding:1px;
+}
+
+.queue-game .user-response div {
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.queue-game .user-response div i {
+    font-size: 2em;
+    padding: 0.3em 0;
+}
+
+.queue-game .user-response .accept-invitation {
+    background: rgba(66, 160, 46, 0.9);
+}
+
+.queue-game .user-response .decline-invitation
+{
+    background: rgba(215, 23, 23, 0.9);
+}
+
+.queue-game .player-name {
+    padding-top: 1em;
+}
+
+.queue-game.creatingGame {
+    background: rgba(92, 184, 92, 0.8);
+    border: 1px solid #4cae4c;
+}
+
+.queue-game.gameMember {
+    background: rgba(173, 31, 31, 0.8);
+    border: 1px solid #C00C00;
+}
+
+.queue-element-info {
+    border-top: 1px solid #BABABA;
+    background: rgba(81, 74, 74, 0.8);
+    padding: 0.2em 0;
+}
+
+.queue-element-info .action {
+    display: block;
+    cursor: pointer;
+    position:relative;
+}
+
+/* Notifications part*/
+.cancel_button{
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: 25%;
+
+}
+
+.notification{
+
 }
