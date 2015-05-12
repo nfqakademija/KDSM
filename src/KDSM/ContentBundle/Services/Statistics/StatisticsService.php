@@ -77,7 +77,7 @@ class StatisticsService {
         $res = $this->rep->getAllStatistics();
         for($i = 0; $i < sizeof($res); ++$i){
 //            $res[$i] = json_decode($res[$i]['stats']);
-            $res[$i] = $res[$i]->getStats();
+            $res[$i] = json_decode($res[$i]->getStats());
         }
         return $res;
     }

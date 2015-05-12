@@ -17,6 +17,8 @@
 
         var data = '{{ stats }}';
         var stats = JSON.parse(replaceAll('&quot;', '"', data));
+//        var stats = replaceAll('&quot;', '"', data);
+//        console.log(stats);
 
         $(function () {
             $('#container1').highcharts({
@@ -47,7 +49,8 @@
                 series: [{
                     type: 'pie',
                     name: 'Goals scored',
-                    data: stats
+                    data: stats[0]
+//                    data: [['ha', 100]]
                 }]
             });
         });
