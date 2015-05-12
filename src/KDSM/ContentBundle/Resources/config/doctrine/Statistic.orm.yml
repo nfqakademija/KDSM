@@ -13,5 +13,5 @@ KDSM\ContentBundle\Entity\Statistic:
             type: integer
             column: statistic_id
         stats:
-            type: array
+            type: text
     lifecycleCallbacks: {  }

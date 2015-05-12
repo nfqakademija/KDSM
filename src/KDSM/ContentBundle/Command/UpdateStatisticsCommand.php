@@ -19,6 +19,7 @@ class UpdateStatisticsCommand extends ContainerAwareCommand{
 
     protected function configure(){
         $this->setName('stats:update');
+//        ->addOption('');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output){

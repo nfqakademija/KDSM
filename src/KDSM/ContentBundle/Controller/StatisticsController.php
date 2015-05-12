@@ -9,6 +9,10 @@ class StatisticsController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Statistics:index.html.twig');
+        $statisticsService = $this->get('kdsm_content.statistics_updater');
+        $stats = $statisticsService->getStatistics();
+        return $this->render('KDSMContentBundle:Statistics:index.html.twig', array(
+            'stats' => $stats
+        ));
     }
 }

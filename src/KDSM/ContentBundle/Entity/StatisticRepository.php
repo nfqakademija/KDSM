@@ -15,7 +15,8 @@ class StatisticRepository extends EntityRepository
     public function addStatistic($statistic_id, $stats){
         $stat = new Statistic();
         $stat->setStatisticId($statistic_id);
-        $stat->setStats($stats);
+        $stats_json = json_encode($stats);
+        $stat->setStats($stats_json);
 
         $em = $this->getEntityManager();
         $em->persist($stat);
