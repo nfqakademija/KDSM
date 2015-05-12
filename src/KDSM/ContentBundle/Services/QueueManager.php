@@ -251,37 +251,35 @@ class QueueManager
             'userId' => $userId
         )));
 
+        $this->notificationRepository->setViewed($notificationObject);
+
         if ($response == 'accepted') {
             $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
             if ($acceptedUserCountInQueue < 3) {
                 $userQueueObject->setUserStatusInQueue('inviteAccepted');
-                if ($notificationObject != null) {
-                    $notificationObject->setViewed(1);
-                }
                 if ($acceptedUserCountInQueue == 3) {
                     $queueObject->setStatus('in_queue');
                 }
                 $queueJoinResponse['response'] = 'Accept SUCCESS';
             } else {
                 $userQueueObject->setUserStatusInQueue('inviteDeclined');
-                if ($notificationObject != null) {
-                    $notificationObject->setViewed(1);
-                }
                 $queueJoinResponse['response'] = 'Accept FAIL: Queue Full';
             }
         }
+
         if ($response == 'declined') {
             $userQueueObject->setUserStatusInQueue('inviteDeclined');
-            if ($notificationObject != null) {
-                $notificationObject->setViewed(1);
-            }
             $queueJoinResponse['response'] = 'Decline SUCCESS';
         }
+
         $this->entityManager->flush();
         $this->entityManager->clear();
         return $queueJoinResponse;
     }
 
+    /**
+     * @return bool
+     */
     public function setNextQueueAsActive()
     {
         $isQueue = false;
@@ -293,6 +291,7 @@ class QueueManager
         }
         return $isQueue;
     }
+
     public function setActiveQueueAsExpired()
     {
         $queueObjects = $this->queueRepository->findBy(array('status' => 'active'));
