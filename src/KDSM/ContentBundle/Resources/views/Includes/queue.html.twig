@@ -5,6 +5,11 @@
             QueueList();
             setInterval(QueueList, 8000);
 
+            function emptyControl() {
+                //add already selected users to queue control in editing
+                $('.queue-control').find("ul.log-list").empty();
+                $('.queue-control').find("button#save-queue-element").removeClass("hidden");
+            }
             //function updateing queue list
             function QueueList() {
                 $.ajax({
@@ -177,6 +182,7 @@
 
             //Open queue control to create new queue element
             $('button.btn-add-to-queue').click(function() {
+                emptyControl();
                 $('.queue-control').show( "slide" );
                 QueueControl('create', null, null);
             });
@@ -186,9 +192,8 @@
                 var queueElementId =  $("div.queue-game").has($(this)).attr("id");
                 var selectedUsersIds = [];
 
-                //add already selected users to queue control in editing
-                $('.queue-control').find("ul.log-list").empty();
-                $('.queue-control').find("button#save-queue-element").removeClass("hidden");
+                //empty queue control fields
+                emptyControl();
 
                 $.ajax({
                     type: "post",
