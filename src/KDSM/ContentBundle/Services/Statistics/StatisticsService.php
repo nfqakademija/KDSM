@@ -24,35 +24,48 @@ class StatisticsService {
     public function update(){
         $goals = $this->tableEventRep->getGoalEventsFromId(0);
 
-        $count = 0;
-
+        $sides = array_fill(0, 2, 0); // komandos imustu golu statistika
         $weekarray = array_fill(0, 7, 0);
         $hoursarray = array_fill(0, 24, 0);
+        $weeksides = array_fill(0, 7, array_fill(0, 2, 0));
 
         foreach($goals as $goal){
+            $week = $goal->getTimeSec()->format('w');
+
             if(strpos($goal->getData(), '0') !== false){
-                $count++;
+                $sides[0]++;
+                $weeksides[$week][0]++;
+            }else{
+                $weeksides[$week][1]++;
             }
 
-            $weekarray[$goal->getTimeSec()->format('w')]++;
+            $weekarray[$week]++;
 
             $hoursarray[intval($goal->getTimeSec()->format('H'))]++;
         }
 
-        $percentage0 = ($count/sizeof($goals))*100;
-        $percentage1 = 100 - $percentage0;
+        $sides[0] = ($sides[0]/sizeof($goals))*100; // skaiciuoja procentus kiek viena komanda imusa
+        $sides[1] = 100 - $sides[0];
 
-        for($i=0; $i<sizeof($weekarray); ++$i){
+        for($i=0; $i<sizeof($weekarray); ++$i){ // skaiciuoja procentus kiek zaidziama per sava
             $weekarray[$i] = ($weekarray[$i]/sizeof($goals))*100;
         }
 
-        for($i=0; $i<sizeof($hoursarray); ++$i){
+        for($i=0; $i<sizeof($hoursarray); ++$i){ // skaiciuoja procentus kiek zaidziama per diena
             $hoursarray[$i] = ($hoursarray[$i]/sizeof($goals))*100;
         }
 
-        $this->rep->addStatistic(1, array('0'=>$percentage0, '1'=>$percentage1));
+        for($i=0; $i < 7; $i++){
+            $goalsum = $weeksides[$i][0] + $weeksides[$i][1];
+            $weeksides[$i][0] = ($weeksides[$i][0]/$goalsum)*100;
+            $weeksides[$i][1] = 100 - $weeksides[$i][0];
+        }
+
+
+        $this->rep->addStatistic(1, $sides);
         $this->rep->addStatistic(2, $weekarray);
         $this->rep->addStatistic(3, $hoursarray);
+        $this->rep->addStatistic(4, $weeksides);
     }
 
     public function getStatistics(){
