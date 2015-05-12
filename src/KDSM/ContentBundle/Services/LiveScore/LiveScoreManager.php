@@ -22,12 +22,6 @@ use KDSM\ContentBundle\Services\Statistics\BusyCheck;
  */
 class LiveScoreManager
 {
-
-    /**
-     * @var LiveScore
-     */
-    protected $liveScore;
-
     /**
      * @var BusyCheck
      */
@@ -55,40 +49,44 @@ class LiveScoreManager
     protected $cacheMan;
 
     /**
-     * @param LiveScore $liveScore
-     * @param BusyCheck $busyCheck
      * @param EntityManager $entityManager
-     * @param CacheManager $cacheMan
      */
-    public function __construct(
-        LiveScore $liveScore,
-        BusyCheck $busyCheck,
-        EntityManager $entityManager,
-        CacheManager $cacheMan,
-        QueueManager $queueManager
-    ) {
-        $this->liveScore = $liveScore;
-        $this->busyCheck = $busyCheck;
+    public function __construct(EntityManager $entityManager)
+    {
         $this->em = $entityManager;
         $this->rep = $this->em->getRepository('KDSMAPIBundle:TableEvent');
         $this->queueRep = $this->em->getRepository('KDSMContentBundle:Queue');
+    }
+
+    /**
+     * @param BusyCheck $busyCheck
+     */
+    public function setTableBusyCheck(BusyCheck $busyCheck)
+    {
+        $this->busyCheck = $busyCheck;
+    }
+
+    /**
+     * @param CacheManager $cacheMan
+     */
+    public function setCacheManager(CacheManager $cacheMan)
+    {
         $this->cacheMan = $cacheMan;
+    }
+
+    public function setQueueManager(QueueManager $queueManager)
+    {
         $this->queueManager = $queueManager;
     }
 
-
     /**
-     *
+     * @return null|string
      */
-    public function getTableStatus(/*$checkDateTime = '2014-10-06 09:02:00'*/)
+    public function getTableStatus()
     {
-        //todo set to now() at live
-//        $checkDateTime = strtotime('2014-10-07 09:05:00');
         $checkDateTime = strtotime('now');
         $status = $this->busyCheck->busyCheck($checkDateTime);
-//        echo date('Y-m-d H:i:s', $checkDateTime);
-//
-//        $this->cacheMan->setLatestCheckedTableGoalId(3905);
+
         $this->getSwipes();
         $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
 
@@ -122,33 +120,42 @@ class LiveScoreManager
     private function readEvents()
     {
         $table = $this->cacheMan->getScoreCache(); //gets latest result
-        if (in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
-        {
-            $table = $this->cacheMan->resetScoreCache();
-        }
-        $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
-        foreach ($events as $event) {
-            if (is_object($event) && $event instanceof TableEvent) {
+
+        $events = $this->rep->getGoalEventsFromLastCheckedEvent($this->getLastCheckedGoalId());
+
+        if ($events != null) {
+            foreach ($events as $event) {
+                if ($this->checkGoalsForWinner($table)) {//reset to 0 if latest game ended with a score of 10
+                    $table = $this->cacheMan->resetScoreCache();
+                }
+                // todo: getTeam() -> tableEventParser
                 if (json_decode($event->getData())->team == 1) {
                     $table['score']['black']++;
                 } else {
                     $table['score']['white']++;
                 }
-                if (in_array(10, $table['score'])) {
+                if ($this->checkGoalsForWinner($table)) {
                     break;
                 }
             }
-        }
-        //cache up  stuff
-        if (isset($event)) {
+            //cache up  stuff
             $this->cacheMan->setLatestCheckedTableGoalId($event->getId());
             $this->cacheMan->setScoreCache($table['score']);
+            //cleanup
+            unset($events);
+            unset($event);
         }
-        //cleanup
-        unset($events);
-        unset($event);
-
         return true;
+    }
+
+    private function checkGoalsForWinner($table)
+    {
+        return in_array(10, $table['score']) ? true : false;
+    }
+
+    private function getLastCheckedGoalId()
+    {
+        return $this->cacheMan->getLatestCheckedTableGoalId();
     }
 
     /**
@@ -191,14 +198,12 @@ class LiveScoreManager
                 break;
             case 'waiting_for_swipe':
                 $swipedPlayers = $this->cacheMan->getPlayerCache();
-                $activeQueue = $this->queueRep->findOneBy(array('status' => 'active'));//getActiveQueuePlayers();
-                if ($activeQueue != null)
-                {
+
+                $activeQueue = $this->getActiveQueue();//getActiveQueuePlayers();
+                if ($activeQueue != null) {
                     $activeQueuePlayers = null;
-                    foreach ($activeQueue->getUsersQueues() as $uq)
-                    {
-                        if ($uq->getUserStatusInQueue() == 'inviteAccepted' || $uq->getUserStatusInQueue() == 'queueOwner')
-                        {
+                    foreach ($activeQueue->getUsersQueues() as $uq) {
+                        if ($this->isUserSwiped($uq)) {
                             $activeQueuePlayers[] = (string)$uq->getUser()->getCardId();
                         }
                     }
@@ -227,5 +232,16 @@ class LiveScoreManager
         }
 
         return false;
+    }
+
+    private function getActiveQueue()
+    {
+        return $this->queueRep->findOneBy(array('status' => 'active'));
+    }
+
+    private function isUserSwiped($uq)
+    {
+        ($uq->getUserStatusInQueue() == 'inviteAccepted' ||
+            $uq->getUserStatusInQueue() == 'queueOwner') ? true : false;
     }
 }
