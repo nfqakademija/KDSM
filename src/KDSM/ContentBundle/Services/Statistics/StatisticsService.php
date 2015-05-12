@@ -47,17 +47,17 @@ class StatisticsService {
         $sides[0] = ($sides[0]/sizeof($goals))*100; // skaiciuoja procentus kiek viena komanda imusa
         $sides[1] = 100 - $sides[0];
 
-        for($i=0; $i<sizeof($weekarray); ++$i){ // skaiciuoja procentus kiek zaidziama per sava
-            $weekarray[$i] = ($weekarray[$i]/sizeof($goals))*100;
+        foreach($weekarray as $i=>$value){ // skaiciuoja procentus kiek zaidziama per sava
+            $weekarray[$i] = ($value/sizeof($goals))*100;
         }
 
-        for($i=0; $i<sizeof($hoursarray); ++$i){ // skaiciuoja procentus kiek zaidziama per diena
-            $hoursarray[$i] = ($hoursarray[$i]/sizeof($goals))*100;
+        foreach($hoursarray as $i=>$value){
+            $hoursarray[$i] = ($value/sizeof($goals))*100;
         }
 
-        for($i=0; $i < 7; $i++){
-            $goalsum = $weeksides[$i][0] + $weeksides[$i][1];
-            $weeksides[$i][0] = ($weeksides[$i][0]/$goalsum)*100;
+        foreach($weeksides as $i=>$value){
+            $goalsum = $value[0] + $value[1];
+            $weeksides[$i][0] = ($value[0]/$goalsum)*100;
             $weeksides[$i][1] = 100 - $weeksides[$i][0];
         }
 
@@ -75,10 +75,6 @@ class StatisticsService {
 
     public function getStatistics(){
         $res = $this->rep->getAllStatistics();
-        for($i = 0; $i < sizeof($res); ++$i){
-//            $res[$i] = json_decode($res[$i]['stats']);
-            $res[$i] = json_decode($res[$i]->getStats());
-        }
         return $res;
     }
 

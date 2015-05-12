@@ -24,12 +24,14 @@ class StatisticRepository extends EntityRepository
     }
 
     public function getAllStatistics(){
-//        $sql = 'SELECT s1.* FROM Statistic s1 LEFT JOIN Statistic s2 ON (s1.statistic_id = s2.statistic_id AND s1.id < s2.id) WHERE s2.id IS NULL ORDER BY s1.statistic_id';
-//        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-//        $stmt->execute();
-//        $results = $stmt->fetchAll();
+        $sql = 'SELECT s1.* FROM Statistic s1 LEFT JOIN Statistic s2 ON (s1.statistic_id = s2.statistic_id AND s1.id < s2.id) WHERE s2.id IS NULL ORDER BY s1.statistic_id';
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
 
-        $results = array($this->findOneById(59));
+        foreach($results as $i=>$result){
+            $results[$i] = json_decode($result['stats']);
+        }
 
         return $results;
     }
