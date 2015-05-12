@@ -13,74 +13,67 @@ class QueueController extends Controller
 
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Includes:queue.html.twig',
-            array('route' => $this->get('kernel')->getRootDir()));
-
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('KDSMContentBundle:Includes:queue.html.twig',
+                array('route' => $this->get('kernel')->getRootDir()));
+        } else {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
     }
 
     public function queueAction($method, $queueId = null, Request $request = null)
     {
-        $queueMan = $this->get('kdsm_content.queue_manager');
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $queueMan = $this->get('kdsm_content.queue_manager');
 
-        switch($method) {
-            case 'single_queue':
-                $response = $queueMan->getSingleQueue($queueId, (string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $queueListResponse = new JsonResponse($response);
-                return $queueListResponse;
-            case 'list':
-                $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $queueListResponse = new JsonResponse($response);
-                return $queueListResponse;
-            case 'create':
-                $users = $request->request->get('usersIds');
-                array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $managerResponse = $queueMan->queueCreateRequest($users, (string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $userResponse = new JsonResponse($managerResponse);
-                return $userResponse;
-            case 'remove':
-                $response = $queueMan->removeQueue($queueId, (string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $queueRemoveResponse = new JsonResponse($response);
-                return $queueRemoveResponse;
-            case 'process_invite':
-                $userId = $request->request->get('userId');
-                $userResponse = $request->request->get('userResponse');
-                $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
-                $queueResponse = new JsonResponse($managerResponse);
-                return $queueResponse;
-            case 'lfg':
-                $userEm = $this->getDoctrine()->getEntityManager();
-                $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
-                    ->getUser()));
-                return $userResponse;
-            case 'join_users':
-                $users = $request->request->get('usersIds');
+            switch($method) {
+                case 'single_queue':
+                    $response = $queueMan->getSingleQueue($queueId, (string)$this->get('security.token_storage')->getToken()
+                        ->getUser()->getId());
+                    $queueListResponse = new JsonResponse($response);
+                    return $queueListResponse;
+                case 'list':
+                    $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
+                        ->getUser()->getId());
+                    $queueListResponse = new JsonResponse($response);
+                    return $queueListResponse;
+                case 'create':
+                    $users = $request->request->get('usersIds');
+                    array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
+                        ->getUser()->getId());
+                    $managerResponse = $queueMan->queueCreateRequest($users, (string)$this->get('security.token_storage')->getToken()
+                        ->getUser()->getId());
+                    $userResponse = new JsonResponse($managerResponse);
+                    return $userResponse;
+                case 'remove':
+                    $response = $queueMan->removeQueue($queueId, (string)$this->get('security.token_storage')->getToken()
+                        ->getUser()->getId());
+                    $queueRemoveResponse = new JsonResponse($response);
+                    return $queueRemoveResponse;
+                case 'process_invite':
+                    $userId = $request->request->get('userId');
+                    $userResponse = $request->request->get('userResponse');
+                    $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
+                    $queueResponse = new JsonResponse($managerResponse);
+                    return $queueResponse;
+                case 'lfg':
+                    $userEm = $this->getDoctrine()->getEntityManager();
+                    $userRep = $userEm->getRepository('KDSMContentBundle:User');
+                    $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
+                        ->getUser()));
+                    return $userResponse;
+                case 'join_users':
+                    $users = $request->request->get('usersIds');
 
-                $managerResponse = $queueMan->queueAddUsersRequest($users, $queueId);
-                $userResponse = new JsonResponse($managerResponse);
-                return $userResponse;
-            default:
-                throw new NotFoundHttpException('Page not found');
-                break;
+                    $managerResponse = $queueMan->queueAddUsersRequest($users, $queueId);
+                    $userResponse = new JsonResponse($managerResponse);
+                    return $userResponse;
+                default:
+                    throw new NotFoundHttpException('Page not found');
+                    break;
+            }
+        } else {
+            throw new \Exception('User is not logged in!');
         }
-    }
-
-    public function sendUserQueueJoinRequestAction($userIds = null, $queueId = null)
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
-
-    public function userQueueJoinDeclineAction($queueId = null)
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
     }
 }
