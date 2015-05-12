@@ -8,11 +8,10 @@ services:
     kdsm_content.table_busy_check:
         class: KDSM\ContentBundle\Services\Statistics\BusyCheck
         arguments: [@doctrine.orm.entity_manager, %table.busy_threshold%, %table.check_period%]
-    kdsm_content.live_score:
-        class: KDSM\ContentBundle\Entity\LiveScore
     kdsm_content.live_score_manager:
         class: KDSM\ContentBundle\Services\LiveScore\LiveScoreManager
-        arguments: [@kdsm_content.live_score, @kdsm_content.table_busy_check, @doctrine.orm.entity_manager, @kdsm_content.cache_manager, @kdsm_content.queue_manager]
+#        TODO: setters kai >2
+        arguments: [@kdsm_content.table_busy_check, @doctrine.orm.entity_manager, @kdsm_content.cache_manager, @kdsm_content.queue_manager]
     kdsm_content.queue_manager:
         class: KDSM\ContentBundle\Services\QueueManager
         arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
