@@ -422,8 +422,7 @@ table td {
 
 .user-photo {
     width: 50.5%;
-    border: 1px solid #BABABA;
-    padding: 2%;
+    border: 2px solid white;
     background: white;
 }
 
@@ -431,7 +430,6 @@ table td {
 table {
     background: white;
 }
-
 table th {
     background: #4CAF50;
     border: none !important;
