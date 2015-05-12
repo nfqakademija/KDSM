@@ -53,6 +53,168 @@
             });
         });
 
+        $(function () {
+            $('#container2').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Busiest weekdays'
+                },
+                xAxis: {
+                    categories: [
+                        'Sun',
+                        'Mon',
+                        'Tue',
+                        'Wed',
+                        'Thu',
+                        'Fri',
+                        'Sat'
+                    ]
+                    ,crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '% of all games'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+//                    enabled : false
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Games',
+                    color: '#b20000',
+                    data: stats[1]
+                }]
+            });
+        });
+
+        $(function () {
+            $('#container3').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Busiest hours'
+                },
+                xAxis: {
+                    categories: [
+                        '00h', '01h', '02h', '03h', '04h', '05h', '06h', '07h', '08h', '09h', '10h', '11h',
+                        '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+                        '24h'
+                    ]
+                    ,crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '% of all games'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+//                    enabled : false
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Games',
+                    color: '#003300',
+                    data: stats[2]
+
+                }]
+            });
+        });
+
+        $(function () {
+            var categories = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            $(document).ready(function () {
+                $('#container4').highcharts({
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Team goal percentages based on weekday'
+                    },
+                    xAxis: [{
+                        categories: categories,
+                        reversed: false,
+                        labels: {
+                            step: 1
+                        }
+                    }, { // mirror axis on right side
+                        opposite: true,
+                        reversed: false,
+                        categories: categories,
+                        linkedTo: 0,
+                        labels: {
+                            step: 1
+                        }
+                    }],
+                    yAxis: {
+                        title: {
+                            text: null
+                        },
+                        labels: {
+                            formatter: function () {
+                                return Math.abs(this.value) + '%';
+                            }
+                        }
+                    },
+
+                    
+                    plotOptions: {
+                        series: {
+                            stacking: 'normal'
+                        }
+                    },
+
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                    'Percentage: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0) + '%';
+                        }
+                    },
+
+                    series: [{
+                        name: 'White',
+                        data: stats[3][0]
+                    }, {
+                        name: 'Black',
+                        data: stats[3][1]
+                    }]
+                });
+            });
+
+        });
 
     </script>
 
@@ -61,5 +223,11 @@
 {% block content %}
 
     <div id="container1" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+    <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+    <div id="container3" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+    <div id="container4" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
 
 {% endblock %}

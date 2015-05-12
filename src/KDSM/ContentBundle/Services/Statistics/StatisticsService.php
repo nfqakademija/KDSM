@@ -27,16 +27,16 @@ class StatisticsService {
         $sides = array_fill(0, 2, 0); // komandos imustu golu statistika
         $weekarray = array_fill(0, 7, 0);
         $hoursarray = array_fill(0, 24, 0);
-        $weeksides = array_fill(0, 7, array_fill(0, 2, 0));
+        $weeksides = array_fill(0, 2, array_fill(0, 7, 0));
 
         foreach($goals as $goal){
             $week = $goal->getTimeSec()->format('w');
 
             if(strpos($goal->getData(), '0') !== false){
                 $sides[0]++;
-                $weeksides[$week][0]++;
+                $weeksides[0][$week]++;
             }else{
-                $weeksides[$week][1]++;
+                $weeksides[1][$week]++;
             }
 
             $weekarray[$week]++;
@@ -55,10 +55,16 @@ class StatisticsService {
             $hoursarray[$i] = ($value/sizeof($goals))*100;
         }
 
-        foreach($weeksides as $i=>$value){
-            $goalsum = $value[0] + $value[1];
-            $weeksides[$i][0] = ($value[0]/$goalsum)*100;
-            $weeksides[$i][1] = 100 - $weeksides[$i][0];
+//        foreach($weeksides as $i=>$value){
+//            $goalsum = $value[0] + $value[1];
+//            $weeksides[$i][0] = ($value[0]/$goalsum)*100;
+//            $weeksides[$i][1] = 100 - $weeksides[$i][0];
+//        }
+
+        for($i = 0; $i < 7; $i++){
+            $goalsum = $weeksides[0][$i] + $weeksides[1][$i];
+            $weeksides[0][$i] = - ($weeksides[0][$i]/$goalsum)*100;
+            $weeksides[1][$i] = 100 + $weeksides[0][$i];
         }
 
 
