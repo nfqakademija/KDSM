@@ -26,11 +26,12 @@
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "predis/predis": "<0.9",
         "snc/redis-bundle": "2.0.*@dev",
-        "phpmd/phpmd" : "@stable"
+        "phpmd/phpmd" : "@stable",
+        "sensio/generator-bundle": "~2.3"
 
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3",
+
         "pdepend/pdepend" : "2.0.6"
     },
     "scripts": {
