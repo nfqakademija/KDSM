@@ -7,6 +7,7 @@
 
             function emptyControl() {
                 //add already selected users to queue control in editing
+                $('.queue-control').removeAttr("style");
                 $('.queue-control').find("ul.log-list").empty();
                 $('.queue-control').find("button#save-queue-element").removeClass("hidden");
             }

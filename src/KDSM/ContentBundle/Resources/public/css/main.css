@@ -210,6 +210,8 @@ table td {
 .sidebar .found-users {
     height: 63%;
     margin: 5px 1px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar.right ul {
@@ -263,7 +265,7 @@ table td {
 
 #save-queue-element {
     width: 90%;
-    margin: 0 5%;
+    margin: 1em 5%;
 }
 
 .user-info {
@@ -530,17 +532,4 @@ table th {
     bottom: 0;
     left: 0;
     width: 100%;
-}
-
-/* Notifications part*/
-.cancel_button{
-    width: 25px;
-    height: 25px;
-    position: relative;
-    left: 25%;
-
-}
-
-.notification{
-
 }
