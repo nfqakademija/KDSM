@@ -11,8 +11,10 @@ class StatisticsController extends Controller
     {
         $statisticsService = $this->get('kdsm_content.statistics_updater');
         $stats = $statisticsService->getStatistics();
+//        var_dump($stats);
+
         return $this->render('KDSMContentBundle:Statistics:index.html.twig', array(
-            'stats' => $stats
+            'stats' => $stats[0]
         ));
     }
 }

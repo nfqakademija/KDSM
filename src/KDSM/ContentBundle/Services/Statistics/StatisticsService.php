@@ -62,6 +62,11 @@ class StatisticsService {
         }
 
 
+        $sides = array(
+            ['Black team', $sides[1]],
+            ['White team', $sides[0]]
+                );
+
         $this->rep->addStatistic(1, $sides);
         $this->rep->addStatistic(2, $weekarray);
         $this->rep->addStatistic(3, $hoursarray);
@@ -71,7 +76,8 @@ class StatisticsService {
     public function getStatistics(){
         $res = $this->rep->getAllStatistics();
         for($i = 0; $i < sizeof($res); ++$i){
-            $res[$i] = json_decode($res[$i]['stats']);
+//            $res[$i] = json_decode($res[$i]['stats']);
+            $res[$i] = $res[$i]->getStats();
         }
         return $res;
     }
