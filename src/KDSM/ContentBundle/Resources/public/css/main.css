@@ -375,6 +375,7 @@ table td {
     margin: 0 auto;
     float: none;
     padding: 0 30px;
+    margin-bottom: 4em;
 }
 /* Logged homepage*/
 
@@ -506,6 +507,13 @@ table th {
     display: block;
     cursor: pointer;
     position:relative;
+}
+
+.btn-add-to-queue {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
 
 /* Notifications part*/
