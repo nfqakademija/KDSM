@@ -110,38 +110,42 @@ class LiveScoreManager
     private function readEvents()
     {
         $table = $this->cacheMan->getScoreCache(); //gets latest result
-        // todo: to ~checkGoals
-        if (in_array(10, $table['score']))//reset to 0 if latest game ended with a score of 10
-        {
-            $table = $this->cacheMan->resetScoreCache();
-        }
-        // Todo: ->getEventsFromLast
-        $events = $this->rep->getGoalEventsFromId($this->cacheMan->getLatestCheckedTableGoalId());
-        // todo: check null?
-        foreach ($events as $event) {
-            if (is_object($event) && $event instanceof TableEvent) {
+
+        $events = $this->rep->getGoalEventsFromLastCheckedEvent($this->getLastCheckedGoalId);
+
+        if ($events != null) {
+            foreach ($events as $event) {
+                if ($this->checkGoalsForWinner($table)) {//reset to 0 if latest game ended with a score of 10
+                    $table = $this->cacheMan->resetScoreCache();
+                }
                 // todo: getTeam() -> tableEventParser
                 if (json_decode($event->getData())->team == 1) {
                     $table['score']['black']++;
                 } else {
                     $table['score']['white']++;
                 }
-                if (in_array(10, $table['score'])) {
+                if ($this->checkGoalsForWinner($table)) {
                     break;
                 }
             }
-        }
-        //cache up  stuff
-
-        if (isset($event)) {
+            //cache up  stuff
             $this->cacheMan->setLatestCheckedTableGoalId($event->getId());
             $this->cacheMan->setScoreCache($table['score']);
+            //cleanup
+            unset($events);
+            unset($event);
         }
-        //cleanup
-        unset($events);
-        unset($event);
-
         return true;
+    }
+
+    private function checkGoalsForWinner($table)
+    {
+        return in_array(10, $table['score']) ? true : false;
+    }
+
+    private function getLastCheckedGoalId()
+    {
+        return $this->cacheMan->getLatestCheckedTableGoalId();
     }
 
     /**
