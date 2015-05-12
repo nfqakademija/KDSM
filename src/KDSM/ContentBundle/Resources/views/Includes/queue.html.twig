@@ -176,6 +176,7 @@
                         data: {usersIds: selectedUsersIds},
                         success: function (response) {
                             $('.queue-control').replaceWith(queueControlSource);
+                            $('.queue-control').css("display", "none");
                             QueueList();
                         }
                     });

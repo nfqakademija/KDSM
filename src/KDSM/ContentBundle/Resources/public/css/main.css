@@ -186,11 +186,6 @@ table td {
     height: 27px;
     width: 100%;
     border: 1px solid #BABABA;
-    border-radius: 15px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    -o-border-radius: 15px;
-    -ms-border-radius: 15px;
     padding: 0 0 0 26px;
     font-size: 12px;
     line-height: 28px;
@@ -267,8 +262,8 @@ table td {
 }
 
 #save-queue-element {
-    width: 100%;
-    margin: 0 2em;
+    width: 90%;
+    margin: 0 5%;
 }
 
 .user-info {
@@ -433,10 +428,6 @@ table td {
     background: white;
 }
 
-.user-photo img {
-
-}
-
 /* Tables */
 table {
     background: white;
@@ -473,6 +464,11 @@ table th {
 {
     background: rgba(0, 0, 0, 0.3);
     padding:1px;
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -o-border-radius: 100%;
+    -ms-border-radius: 100%;
 }
 
 .queue-game .user-response div {
