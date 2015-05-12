@@ -3,7 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             QueueList();
-            //setInterval(QueueList, 8000);
+            setInterval(QueueList, 8000);
 
             function emptyControl() {
                 //add already selected users to queue control in editing
@@ -31,6 +31,10 @@
                             //if status is creating, add class to change element design
                             if(response_json[i].status == 'active') {
                                 queueElement.remove();
+                            }
+
+                            if(response_json[i].status == "in_queue") {
+
                             }
 
                             //if status is creating, add class to change element design
