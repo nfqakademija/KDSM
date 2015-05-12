@@ -3,7 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             QueueList();
-            setInterval(QueueList, 8000);
+            //setInterval(QueueList, 8000);
 
             //function updateing queue list
             function QueueList() {
@@ -21,6 +21,11 @@
 
                             //set queue id
                             queueElement.attr("id", response_json[i].id);
+
+                            //if status is creating, add class to change element design
+                            if(response_json[i].status == 'active') {
+                                queueElement.remove();
+                            }
 
                             //if status is creating, add class to change element design
                             if(response_json[i].status == 'creatingGame') {
@@ -47,7 +52,7 @@
 
                                 //if user is pending, add spinner instead of photo
                                 if (response_json[i].users[x].userStatus == "invitePending") {
-                                    queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/ajax-spinner.gif') }}");
+                                    queueElement.find(".row.player-" + x + " .player-photo").attr("src", "{{ asset('bundles/kdsmcontent/images/invite.png') }}");
                                 }
 
                                 //else if defined user photo and it's status not decline invitation, show it
@@ -122,7 +127,6 @@
                         if(selectedUsersIds.length == 1) {
                             $("button#save-queue-element").removeClass("hidden");
                         }
-                        alert(selectedUsersIds);
                     }
                 })
                         .autocomplete( "instance" )._renderItem = function( ul, item ) {
@@ -160,7 +164,6 @@
                     var path = "{{ path('kdsm_queue', {'method':'HereMethodName', 'queueId':'HereQueueId'}) }}";
                     path = path.replace("HereMethodName", method);
                     path = path.replace("HereQueueId", param);
-                    alert(selectedUsersIds);
                     $.ajax({
                         type: "post",
                         url: path,
@@ -244,7 +247,6 @@
                     success: function (response) {
                         console.log(response);
                         QueueList();
-                        alert("ok");
                     }
                 });
             });

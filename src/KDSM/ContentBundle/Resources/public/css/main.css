@@ -398,7 +398,7 @@ table td {
     overflow: hidden;
     text-align: center;
     margin: 5% 0;
-    padding: 2em 1em;
+    padding: 1em 1em;
 
 }
 
@@ -463,6 +463,7 @@ table th {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid #BABABA;
     padding:1px;
+    width:25%;
 }
 
 .queue-game .user-response div {
@@ -486,7 +487,7 @@ table th {
 }
 
 .queue-game .player-name {
-    padding-top: 1em;
+    padding: 1em 0em;
 }
 
 .queue-game.creatingGame {
