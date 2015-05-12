@@ -139,7 +139,7 @@
                     }
                     if(alreadySelected == false) {
                         return $("<li id='user-" + item.id + "'>")
-                                .append(item.value + " " + item.id)
+                                .append(item.value)
                                 .appendTo(ul);
                     }
                 };
@@ -157,7 +157,6 @@
                     if(selectedUsersIds.length < 1) {
                         $("button#save-queue-element").addClass("hidden");
                     }
-                    alert(selectedUsersIds);
                 });
 
                 $("button#save-queue-element").click(function() {

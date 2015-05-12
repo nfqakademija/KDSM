@@ -448,22 +448,19 @@ table th {
     text-align: center;
     margin: 1.5% 0;
     background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em 1em 0 1em;
+    padding: 0em 0em 0em 0.5em;
     border: 1px solid black;
 }
 
 .queue-element-users {
-    margin-bottom: 0.5em;
-    padding: 0 1em;
+    padding: 0 0.6em;
 }
 
 .queue-game .player-photo,
 .queue-game .user-response
 {
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid #BABABA;
     padding:1px;
-    width:25%;
 }
 
 .queue-game .user-response div {
@@ -503,7 +500,6 @@ table th {
 .queue-element-info {
     border-top: 1px solid #BABABA;
     background: rgba(81, 74, 74, 0.8);
-    padding: 0.2em 0;
 }
 
 .queue-element-info .action {
