@@ -11,12 +11,8 @@
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
     <script type="text/javascript">
-        function replaceAll(find, replace, str) { // Bugfix for &quot; values in json
-            return str.replace(new RegExp(find, 'g'), replace);
-        }
 
-        var data = '{{ stats }}';
-        var stats = JSON.parse(replaceAll('&quot;', '"', data));
+        var stats = {{ stats | raw }};
         console.log(stats);
 
         $(function () {
@@ -190,7 +186,6 @@
                         }
                     },
 
-                    
                     plotOptions: {
                         series: {
                             stacking: 'normal'
@@ -205,11 +200,11 @@
                     },
 
                     series: [{
-                        name: 'White',
-                        data: stats[3][0]
-                    }, {
                         name: 'Black',
                         data: stats[3][1]
+                    }, {
+                        name: 'White',
+                        data: stats[3][0]
                     }]
                 });
             });
