@@ -16,12 +16,13 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new KDSM\ContentBundle\KDSMContentBundle(),
             new KDSM\APIBundle\KDSMAPIBundle(),
-            new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
 
         );
 
