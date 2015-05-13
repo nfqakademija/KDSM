@@ -36,20 +36,21 @@ class BusyCheck
         $this->checkPeriod = $checkPeriod;
     }
 
+    /**
+     * @param $checkDateTime
+     * @return bool|null
+     */
+
     public function busyCheck($checkDateTime)
     {
-
-//        todo: return types
         $shakesNow = $this->rep->getShakeCountAtPeriod($checkDateTime, $this->checkPeriod);
-        $tableStatus = null;
-//        echo date('H:i:s', $checkDateTime);
-//        echo $shakesNow;
+        $tableBusy = null;
         if ($shakesNow <= $this->busyThreshold) {
-            $tableStatus = 'free';
+            $tableBusy = false;
         } else {
-            $tableStatus = 'busy';
+            $tableBusy = true;
         }
 
-        return $tableStatus;
+        return $tableBusy;
     }
 }
