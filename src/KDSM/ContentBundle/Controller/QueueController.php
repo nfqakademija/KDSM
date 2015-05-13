@@ -25,53 +25,45 @@ class QueueController extends Controller
     {
         if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $queueMan = $this->get('kdsm_content.queue_manager');
+            $currentUserId = (string)$this->get('security.token_storage')->getToken()->getUser()->getId();
+            $response = null;
 
             switch($method) {
                 case 'single_queue':
-                    $response = $queueMan->getSingleQueue($queueId, (string)$this->get('security.token_storage')->getToken()
-                        ->getUser()->getId());
-                    $queueListResponse = new JsonResponse($response);
-                    return $queueListResponse;
+                    $response = $queueMan->getSingleQueue($queueId, $currentUserId);
+                    break;
                 case 'list':
-                    $response = $queueMan->getCurrentQueueList((string)$this->get('security.token_storage')->getToken()
-                        ->getUser()->getId());
-                    $queueListResponse = new JsonResponse($response);
-                    return $queueListResponse;
+                    $response = $queueMan->getCurrentQueueList($currentUserId);
+                    break;
                 case 'create':
                     $users = $request->request->get('usersIds');
-                    array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
-                        ->getUser()->getId());
-                    $managerResponse = $queueMan->queueCreateRequest($users, (string)$this->get('security.token_storage')->getToken()
-                        ->getUser()->getId());
-                    $userResponse = new JsonResponse($managerResponse);
-                    return $userResponse;
+                    array_splice($users, 0, 0, $currentUserId);
+                    $response = $queueMan->queueCreateRequest($users, $currentUserId);
+                    break;
                 case 'remove':
-                    $response = $queueMan->removeQueue($queueId, (string)$this->get('security.token_storage')->getToken()
-                        ->getUser()->getId());
-                    $queueRemoveResponse = new JsonResponse($response);
-                    return $queueRemoveResponse;
+                    $response = $queueMan->removeQueue($queueId, $currentUserId);
+                    break;
                 case 'process_invite':
                     $userId = $request->request->get('userId');
                     $userResponse = $request->request->get('userResponse');
-                    $managerResponse = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
-                    $queueResponse = new JsonResponse($managerResponse);
-                    return $queueResponse;
+                    $response = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
+                    break;
                 case 'lfg':
                     $userEm = $this->getDoctrine()->getEntityManager();
                     $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                    $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
-                        ->getUser()));
-                    return $userResponse;
+                    $currentUserObject = $this->get('security.token_storage')->getToken()->getUser();
+                    $response = $userRep->getUsersLookingForGame($currentUserObject);
+                    break;
                 case 'join_users':
                     $users = $request->request->get('usersIds');
-
-                    $managerResponse = $queueMan->queueAddUsersRequest($users, $queueId);
-                    $userResponse = new JsonResponse($managerResponse);
-                    return $userResponse;
+                    $response = $queueMan->queueAddUsersRequest($users, $queueId);
+                    break;
                 default:
                     throw new NotFoundHttpException('Page not found');
                     break;
             }
+            $queueResponse = new JsonResponse($response);
+            return $queueResponse;
         } else {
             throw new \Exception('User is not logged in!');
         }

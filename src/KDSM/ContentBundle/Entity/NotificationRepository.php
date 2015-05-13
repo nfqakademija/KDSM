@@ -29,16 +29,16 @@ class NotificationRepository extends EntityRepository
         return $result;
     }
 
-    public function setViewed($id)
-    {
-        $this->createQueryBuilder('n')
-            ->update()
-            ->set('n.viewed', 1)
-            ->where('n.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->execute();
-    }
+//    public function setViewed($id)
+//    {
+//        $this->createQueryBuilder('n')
+//            ->update()
+//            ->set('n.viewed', 1)
+//            ->where('n.id = :id')
+//            ->setParameter('id', $id)
+//            ->getQuery()
+//            ->execute();
+//    }
 
     public function createNotification($userid, $gameid)
     {
@@ -52,6 +52,13 @@ class NotificationRepository extends EntityRepository
         $em = $this->getEntityManager();
         $em->persist($notification);
         $em->flush();
+    }
+
+    public function setViewed($notificationObject)
+    {
+        if ($notificationObject != null) {
+            $notificationObject->setViewed(1);
+        }
     }
 
 }

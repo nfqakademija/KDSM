@@ -21,6 +21,9 @@ class UsersQueuesRepository extends EntityRepository
         ->andWhere('tb.queue = ?1');
         $query->setParameters(array(1 => $queue));
         $result = $query->getQuery()->getSingleScalarResult();
+        if ($result == null) {
+            $result = 0;
+        }
         return $result;
     }
 
