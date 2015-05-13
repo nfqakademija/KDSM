@@ -45,7 +45,7 @@ class NotificationRepository extends EntityRepository
         $notification = new Notification();
         $notification->setGameId($gameid);
         $notification->setUserId($userid);
-        $notification->setNotificationText('You have been invited for a game!');
+        $notification->setNotificationText('testo xdd');
         $notification->setViewed(0);
 
 

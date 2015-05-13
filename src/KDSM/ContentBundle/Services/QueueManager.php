@@ -287,7 +287,7 @@ class QueueManager
             $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
             if ($acceptedUserCountInQueue < 3) {
                 $userQueueObject->setUserStatusInQueue('inviteAccepted');
-                if ($acceptedUserCountInQueue >= 0) {
+                if ($acceptedUserCountInQueue == 1) {
                     $queueObject->setStatus('in_queue');
                 }
                 $queueJoinResponse['response'] = 'Accept SUCCESS';
