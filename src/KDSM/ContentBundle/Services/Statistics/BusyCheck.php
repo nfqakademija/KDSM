@@ -42,8 +42,8 @@ class BusyCheck
 //        todo: return types
         $shakesNow = $this->rep->getShakeCountAtPeriod($checkDateTime, $this->checkPeriod);
         $tableStatus = null;
-        echo date('H:i:s', $checkDateTime);
-        echo $shakesNow;
+//        echo date('H:i:s', $checkDateTime);
+//        echo $shakesNow;
         if ($shakesNow <= $this->busyThreshold) {
             $tableStatus = 'free';
         } else {
