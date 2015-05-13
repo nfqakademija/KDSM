@@ -22,7 +22,7 @@ class StatisticsService {
     }
 
     public function update(){
-        $goals = $this->tableEventRep->getGoalEventsFromId(0);
+        $goals = $this->tableEventRep->getGoalEventsFromLastCheckedEvent(0);
 
         $sides = array_fill(0, 2, 0); // komandos imustu golu statistika
         $weekarray = array_fill(0, 7, 0);
