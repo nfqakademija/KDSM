@@ -150,7 +150,6 @@ class QueueManager
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
         $usersQueues = $queueObject->getUsersQueues();
         $existingUsers = null;
-        //todo i metodus
 //        $usersList = $this->filterAlreadyInvitedUsers($usersList, $usersQueues);
 
         foreach ($usersQueues as $userQueue) {
@@ -287,7 +286,7 @@ class QueueManager
             $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
             if ($acceptedUserCountInQueue < 3) {
                 $userQueueObject->setUserStatusInQueue('inviteAccepted');
-                if ($acceptedUserCountInQueue == 1) {
+                if ($acceptedUserCountInQueue >= 0) {
                     $queueObject->setStatus('in_queue');
                 }
                 $queueJoinResponse['response'] = 'Accept SUCCESS';
