@@ -96,7 +96,7 @@ class LiveScoreManager
             $tableStatus = 'error';
         } else if (!$busyStatus) {
             $this->cacheMan->resetScoreCache();
-            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
+//            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
             $tableStatus = 'free';
         } else if ($busyStatus) {
                 $this->readEvents();
@@ -130,7 +130,6 @@ class LiveScoreManager
                 if ($this->checkGoalsForWinner($table)) {//reset to 0 if latest game ended with a score of 10
                     $table = $this->cacheMan->resetScoreCache();
                 }
-                // todo: getTeam() -> tableEventParser
                 $scorer = $eventParser->getWhoScoredTheGoal($event);
                 if ($scorer) {
                     $table['score'][$scorer]++;
