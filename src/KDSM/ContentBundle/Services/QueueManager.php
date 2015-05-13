@@ -145,11 +145,42 @@ class QueueManager
      * @param $queueId
      * @return null
      */
-    public function queueAddUsersRequest($users, $queueId)
+    public function queueAddUsersRequest($usersList, $queueId)
     {
         $queueObject = $this->queueRepository->findOneBy(array('id' => $queueId));
         $usersQueues = $queueObject->getUsersQueues();
         $existingUsers = null;
+        //todo i metodus
+//        $usersList = $this->filterAlreadyInvitedUsers($usersList, $usersQueues);
+
+        foreach ($usersQueues as $userQueue) {
+            $userId = $userQueue->getUser()->getId();
+            if (in_array($userId, $usersList)) {
+                if (($key = array_search($userId, $usersList)) !== false) {
+                    $existingUsers[] = $usersList[$key];
+                    unset($usersList[$key]);
+                }
+            }
+        }
+
+        $this->removeKickedUsers($usersQueues, $existingUsers, $queueObject);
+
+        if (!empty($usersList)) {
+            $response = null;
+            foreach ($usersList as $user) {
+                $this->sendInvites($usersList, null, $queueObject->getId());
+                $this->createUserQueue($user, null, $queueObject);
+            }
+            $response['inviteStatus'] = 'SUCCESS';
+        } else {
+            $response['inviteStatus'] = 'NO NEW USERS';
+        }
+
+        return $response;
+    }
+
+    private function filterAlreadyInvitedUsers($users, $usersQueues)
+    {
         foreach ($usersQueues as $userQueue) {
             $userId = $userQueue->getUser()->getId();
             if (in_array($userId, $users)) {
@@ -159,25 +190,24 @@ class QueueManager
                 }
             }
         }
+        return $users;
+    }
+
+    private function removeKickedUsers($usersQueues, $existingUsers, $queueObject)
+    {
         foreach ($usersQueues as $userQueue) {
             $userId = $userQueue->getUser()->getId();
-            if (($existingUsers == null || !in_array($userId, $existingUsers)) && $userQueue->getUserStatusInQueue() != 'queueOwner') {
+            if ($this->isKicked($existingUsers, $userId, $userQueue)) {
                 $queueObject->removeUsersQueue($userQueue);
                 $this->usersQueuesRepository->deleteObject($userQueue);
             }
         }
-        if (!empty($users)) {
-            $response = null;
-            foreach ($users as $user) {
-                $this->sendInvites($users, null, $queueObject->getId());
-                $this->createUserQueue($user, null, $queueObject);
-            }
-            $response['inviteStatus'] = 'SUCCESS';
-        } else {
-            $response['inviteStatus'] = 'NO NEW USERS';
-        }
+    }
 
-        return $response;
+    private function isKicked($existingUsers, $userId, $userQueue)
+    {
+        return (($existingUsers == null || !in_array($userId, $existingUsers))
+            && $userQueue->getUserStatusInQueue() != 'queueOwner') ? true : false;
     }
 
     /**
@@ -201,7 +231,7 @@ class QueueManager
                 $notifications = $this->notificationRepository->findBy((array('gameId' => $queueId)));
                 if ($notifications != null) {
                     foreach ($notifications as $notification) {
-                        $notification->setViewed(1);
+                        $this->notificationRepository->setViewed($notification);
                     }
                 }
                 $queueObject->setStatus('deleted');
@@ -257,7 +287,7 @@ class QueueManager
             $acceptedUserCountInQueue = $this->usersQueuesRepository->getAcceptedUserCount($queueObject);
             if ($acceptedUserCountInQueue < 3) {
                 $userQueueObject->setUserStatusInQueue('inviteAccepted');
-                if ($acceptedUserCountInQueue == 3) {
+                if ($acceptedUserCountInQueue == 1) {
                     $queueObject->setStatus('in_queue');
                 }
                 $queueJoinResponse['response'] = 'Accept SUCCESS';

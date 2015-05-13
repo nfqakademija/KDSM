@@ -59,7 +59,8 @@ class QueueController extends Controller
                 case 'lfg':
                     $userEm = $this->getDoctrine()->getEntityManager();
                     $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                    $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
+                    $userResponse = new JsonResponse(
+                        $userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
                         ->getUser()));
                     return $userResponse;
                 case 'join_users':

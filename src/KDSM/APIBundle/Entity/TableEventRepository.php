@@ -76,7 +76,7 @@ class TableEventRepository extends EntityRepository
 //        return $query->getQuery()->getResult();
 //    }
 
-    public function getGoalEventsFromId($id)
+    public function getGoalEventsFromLastCheckedEvent($id)
     {
         $query = $this->createQueryBuilder('tb');
         $query->select()

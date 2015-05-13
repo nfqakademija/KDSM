@@ -29,12 +29,23 @@ class NotificationRepository extends EntityRepository
         return $result;
     }
 
+//    public function setViewed($id)
+//    {
+//        $this->createQueryBuilder('n')
+//            ->update()
+//            ->set('n.viewed', 1)
+//            ->where('n.id = :id')
+//            ->setParameter('id', $id)
+//            ->getQuery()
+//            ->execute();
+//    }
+
     public function createNotification($userid, $gameid)
     {
         $notification = new Notification();
         $notification->setGameId($gameid);
         $notification->setUserId($userid);
-        $notification->setNotificationText('You have been invited for a game!');
+        $notification->setNotificationText('testo xdd');
         $notification->setViewed(0);
 
 
