@@ -85,25 +85,25 @@ class LiveScoreManager
     public function getTableStatus()
     {
         $checkDateTime = strtotime('now');
-        $status = $this->busyCheck->busyCheck($checkDateTime);
+        $busyStatus = $this->busyCheck->busyCheck($checkDateTime);
 
         $this->getSwipes();
         $this->cacheMan->setLatestCheckedTableSwipeId($this->rep->getLatestId());
 
         $this->liveQueueCheck();
 
-        if ($status == 'free') {
+        if ($busyStatus === null) {
+            $tableStatus = 'error';
+        } else if (!$busyStatus) {
             $this->cacheMan->resetScoreCache();
-            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
-        } else {
-            if ($status == 'busy') {
+//            $this->cacheMan->setLatestCheckedTableGoalId($this->rep->getLatestId());
+            $tableStatus = 'free';
+        } else if ($busyStatus) {
                 $this->readEvents();
-            } else {
-                $status = 'error';
-            }
+                $tableStatus = 'busy';
         }
-        $this->cacheMan->setTableStatusCache($status);
-        return $status;
+        $this->cacheMan->setTableStatusCache($tableStatus);
+        return $tableStatus;
     }
 
 
@@ -123,16 +123,16 @@ class LiveScoreManager
 
         $events = $this->rep->getGoalEventsFromLastCheckedEvent($this->getLastCheckedGoalId());
 
+        $eventParser = new TableEventParser();
+
         if ($events != null) {
             foreach ($events as $event) {
                 if ($this->checkGoalsForWinner($table)) {//reset to 0 if latest game ended with a score of 10
                     $table = $this->cacheMan->resetScoreCache();
                 }
-                // todo: getTeam() -> tableEventParser
-                if (json_decode($event->getData())->team == 1) {
-                    $table['score']['black']++;
-                } else {
-                    $table['score']['white']++;
+                $scorer = $eventParser->getWhoScoredTheGoal($event);
+                if ($scorer) {
+                    $table['score'][$scorer]++;
                 }
                 if ($this->checkGoalsForWinner($table)) {
                     break;
@@ -165,23 +165,18 @@ class LiveScoreManager
     {
         $position = 0;
         $swipes = $this->rep->getSwipeEventsFromId($this->cacheMan->getLatestCheckedTableSwipeId());
-        foreach ($swipes as $swipe) {
-            if (is_object($swipe) && $swipe instanceof TableEvent) {
-                if (json_decode($swipe->getData())->team == 0) {
-                    json_decode($swipe->getData())->player == 0 ? $position = 1 : $position = 2;
+        if ($swipes != null) {
+            $eventParser = new TableEventParser();
+            foreach ($swipes as $swipe) {
+                $position = $eventParser->getSwipePosition($swipe);
+                if ($position) {
+                    $this->cacheMan->setPlayerCache($position, json_decode($swipe->getData())->card_id);
                 }
-                if (json_decode($swipe->getData())->team == 1) {
-                    json_decode($swipe->getData())->player == 0 ? $position = 3 : $position = 4;
-                }
-                $this->cacheMan->setPlayerCache($position, json_decode($swipe->getData())->card_id);
             }
-        }
-        if(isset($event))
-        {
-            $this->cacheMan->setLatestCheckedTableSwipeId($event->getId());
+            $this->cacheMan->setLatestCheckedTableSwipeId($swipe->getId());
             //cleanup
-            unset($events);
-            unset($event);
+            unset($swipes);
+            unset($swipe);
         }
 
         return true;
