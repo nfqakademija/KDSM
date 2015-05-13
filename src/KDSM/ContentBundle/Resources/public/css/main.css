@@ -45,7 +45,7 @@ header {
 }
 
 .content-heading {
-    background: rgba(0,0,0,0.8);
+    background: #157C3E;
     padding: 0em 1em;
     color: white;
     margin: 1em 0 0 0;
@@ -186,11 +186,6 @@ table td {
     height: 27px;
     width: 100%;
     border: 1px solid #BABABA;
-    border-radius: 15px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    -o-border-radius: 15px;
-    -ms-border-radius: 15px;
     padding: 0 0 0 26px;
     font-size: 12px;
     line-height: 28px;
@@ -215,6 +210,8 @@ table td {
 .sidebar .found-users {
     height: 63%;
     margin: 5px 1px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar.right ul {
@@ -239,6 +236,12 @@ table td {
     border: 1px solid #266929;
 }
 
+.sidebar.right ul.log-list li:hover {
+    background-color: rgba(150, 33, 44, 0.8) !important;
+    border-color: rgba(150, 33, 44, 0.8) !important;
+    cursor: pointer;
+}
+
 .sidebar .selected-users {
     margin-top: 0.5em;
     height: 100%;
@@ -260,11 +263,16 @@ table td {
     overflow: hidden;
 }
 
+#save-queue-element {
+    width: 90%;
+    margin: 1em 5%;
+}
+
 .user-info {
     height: 25%;
 }
 
-.user-info img {
+.user-info > img {
     max-width: 60%;
     max-height: 60%;
     margin: 5% auto;
@@ -290,7 +298,7 @@ table td {
     font-weight: 400;
 }
 
-.user-info span.notifications-icon {
+.notifications-icon{
     display: block;
     width: 35px;
     height: 35px;
@@ -303,6 +311,23 @@ table td {
     font-size: 1.4em;
     color: white;
     top: 1%;
+    cursor: pointer;
+}
+
+.queue-up{
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: red;
+    position: absolute;
+    left: 60%;
+    text-align: center;
+    line-height: 35px;
+    font-size: 1.4em;
+    color: white;
+    top: 12%;
+    cursor: pointer;
 }
 
 .sidebar-nav {
@@ -358,21 +383,19 @@ table td {
     margin: 0 auto;
     float: none;
     padding: 0 30px;
+    margin-bottom: 4em;
 }
 /* Logged homepage*/
 
 .table-free {
-    padding: 1em 1em;
+    padding: 0.6em 1em;
     margin: 1em 0 1em 0;
 }
 
 .table-free p {
     color: white;
     font-size:18px;
-}
-
-.table-free button {
-
+    margin:0;
 }
 
 .result-box {
@@ -381,7 +404,7 @@ table td {
     overflow: hidden;
     text-align: center;
     margin: 5% 0;
-    padding: 2em 1em;
+    padding: 1em 1em;
 
 }
 
@@ -399,20 +422,14 @@ table td {
 
 .user-photo {
     width: 50.5%;
-    border: 1px solid #BABABA;
-    padding: 2%;
+    border: 2px solid white;
     background: white;
-}
-
-.user-photo img {
-
 }
 
 /* Tables */
 table {
     background: white;
 }
-
 table th {
     background: #4CAF50;
     border: none !important;
@@ -430,7 +447,84 @@ table th {
     overflow: hidden;
     text-align: center;
     margin: 1.5% 0;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 0.5em 1em;
-    border: 1px solid black;
+    background: rgba(92, 184, 92, 0.8);
+    border: 1px solid #4cae4c;
+    padding: 0em 0em 0em 0.5em;
+}
+
+.queue-element-users {
+    padding: 0 0.6em;
+}
+
+.queue-game .player-photo,
+.queue-game .user-response
+{
+    background: rgba(0, 0, 0, 0.3);
+    padding:1px;
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -o-border-radius: 100%;
+    -ms-border-radius: 100%;
+}
+
+.queue-game .user-response div {
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.queue-game .user-response div i {
+    font-size: 1em;
+    padding: 0.3em 0;
+}
+.queue-game .user-response label {
+    font-weight: 300;
+}
+
+.queue-game .user-response .accept-invitation {
+    background: rgba(66, 160, 46, 0.9);
+}
+
+.queue-game .user-response .decline-invitation
+{
+    background: rgba(215, 23, 23, 0.9);
+}
+
+.queue-game .player-name {
+    padding: 1em 0em;
+}
+
+.queue-game.creatingGame {
+    background: rgba(28, 148, 117, 0.7);
+    border: 1px solid rgb(9, 79, 61);
+}
+
+.queue-game.gameMember {
+    background: rgba(244, 142, 43, 0.81);
+    border: 1px solid #F48E2B;
+}
+
+.queue-element-info {
+    border-top: 1px solid #BABABA;
+    background: rgba(81, 74, 74, 0.8);
+}
+
+.queue-element-info .action {
+    display: block;
+    cursor: pointer;
+    position:relative;
+    text-align: center;
+    padding: 0;
+}
+.queue-element-info .action:hover {
+    background: #157C3E;
+}
+
+
+.btn-add-to-queue {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }

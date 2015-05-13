@@ -13,26 +13,52 @@ use Doctrine\ORM\EntityRepository;
 class QueueRepository extends EntityRepository
 {
 
-    public function getCurrentQueue()
+    public function getCurrentQueue($currentUserId)
     {
         $query = $this->createQueryBuilder('tb');
         $query->select()
             ->where('tb.status = ?1')
-            ->orWhere('tb.status = ?2');
-        $query->setParameters(array(1 => 'active', 2 => 'in_queue'));
+            ->orWhere('tb.status = ?2')
+            ->orWhere('tb.status = ?3')
+            ->orderBy('tb.reservationDateTime', 'DESC');
+        $query->setParameters(array(1 => 'active', 2 => 'in_queue', 3 => 'creatingGame'));
         $result = $query->getQuery()->getResult();
         $queryResponse = null;
-        foreach ($result as $key => $queue)
-        {
-            $queryResponse[$key]['id'] = $queue->getId();
-            $queryResponse[$key]['date'] = $queue->getReservationDateTime();
-            $queryResponse[$key]['status'] = $queue->getStatus();
-            foreach ($queue->getUsersQueues() as $userKey => $userQueue)
-            {
-                $queryResponse[$key]['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
-                $queryResponse[$key]['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
-                $queryResponse[$key]['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
-                $queryResponse[$key]['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
+        foreach ($result as $key => $queue) {
+            $queryResponse[$key] = $this->parseSingleQueueResponse($queue, $currentUserId);
+        }
+        return $queryResponse;
+    }
+
+    public function getSingleQueue($id, $currentUserId)
+    {
+        $query = $this->createQueryBuilder('tb');
+        $query->select()
+            ->where('tb.id = ?1');
+        $query->setParameters(array(1 => $id));
+        $result = $query->getQuery()->getResult();
+        $queryResponse = $this->parseSingleQueueResponse($result[0], $currentUserId);
+        return $queryResponse;
+    }
+
+    private function parseSingleQueueResponse($queue, $currentUserId)
+    {
+        $queryResponse['id'] = $queue->getId();
+        $queryResponse['date'] = $queue->getReservationDateTime();
+        $queryResponse['status'] = $queue->getStatus();
+        $queryResponse['queueRights'] = 'restricted';
+        $queryResponse['loggedUserId'] = $currentUserId;
+        foreach ($queue->getUsersQueues() as $userKey => $userQueue) {
+            $queryResponse['users'][$userKey]['userId'] = $userQueue->getUser()->getId();
+            $queryResponse['users'][$userKey]['userName'] = $userQueue->getUser()->getUserName();
+            $queryResponse['users'][$userKey]['userPicturePath'] = $userQueue->getUser()->getUserName();
+            $queryResponse['users'][$userKey]['userStatus'] = $userQueue->getUserStatusInQueue();
+            if ($userQueue->getUser()->getId() == $currentUserId &&
+                $userQueue->getUserStatusInQueue() != 'inviteDeclined') {
+                $queryResponse['queueRights'] = 'queueMember';
+                if ($queryResponse['users'][$userKey]['userStatus'] == 'queueOwner') {
+                    $queryResponse['queueRights'] = 'queueOwner';
+                }
             }
         }
         return $queryResponse;
@@ -42,6 +68,6 @@ class QueueRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($newQueue);
         $this->getEntityManager()->flush();
-//        $this->getEntityManager()->clear();
+        $this->getEntityManager()->clear();
     }
 }

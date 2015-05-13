@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kdsmcontent/css/main.css') }}" />
     {% stylesheets 'bundles/kdsmcontent/css/*' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -14,7 +13,7 @@
         {% block header %}
             <header class="row">
                 <div class="container">
-                    <img class="col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logotype.png') }}" alt=""/>
+                    <img class="col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logo-nfq.png') }}" alt=""/>
                     <div class="col-sm-7">
                         <div class="nav row">
 
@@ -39,7 +38,7 @@
                 {% if app.user %}
                     <aside class="col-sm-2 sidebar right queue-control">
                         <div class="ui-widget search-box">
-                            <i class="search-users-icon glyphicon glyphicon-search"></i>
+                            <i class="search-users-icon fa fa-search"></i>
                             <input id="search-users" placeholder="Search...">
                         </div>
                         <div id="results" class="found-users"></div>
@@ -91,4 +90,37 @@
             }
         });
     </script>
+
+
+    {% if app.user %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var userid = {{ app.user.id }};
+            setInterval( reloadNotifications, 2000);
+            function reloadNotifications(){
+                $.ajax({
+                    type: "post",
+                    url: "{{ path('get_notifications') }}",
+                    data: {id: userid},
+                    success: function(response_json) {
+                        $("ul#notifications").empty();
+                        var response = $.parseJSON(response_json);
+                        $('#notification-count').html(response.length);
+                        $.each(response, function(key, value){
+                            var aid = 'notification-'.concat(value.id);
+                            $("ul#notifications").append(
+                                    $('<li>').append(
+                                            $('<a>').addClass('notification col-xs-7').attr('id', aid).attr('onclick','viewNotification(this)').append(value.notificationText)
+                                            ,$('<img>').addClass('cancel_button').attr('src', "{{ asset('bundles/kdsmcontent/images/cancel.png') }}" )
+
+                                    )
+                            );
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+{% endif %}
+
 {% endblock %}

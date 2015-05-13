@@ -13,59 +13,59 @@ class QueueController extends Controller
 
     public function indexAction()
     {
-        return $this->render('KDSMContentBundle:Includes:queue.html.twig',
-            array('route' => $this->get('kernel')->getRootDir()));
-
-    }
-
-    public function queueAction($method, $queueId = null)
-    {
-        $queueMan = $this->get('kdsm_content.queue_manager');
-
-        switch($method) {
-            case 'list':
-                $response = $queueMan->getCurrentQueueList();
-                $queueListResponse = new JsonResponse($response);
-
-                return $queueListResponse;
-            case 'create':
-                $request = Request::createFromGlobals();
-                $request->request->get('usersIds');
-                $users = $_POST['usersIds'];
-                array_splice($users, 0, 0, (string)$this->get('security.token_storage')->getToken()
-                    ->getUser()->getId());
-                $managerResponse = $queueMan->queueCreateRequest($users);
-                $userResponse = new JsonResponse($managerResponse);
-                return $userResponse;
-
-                //return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
-            case 'accept_invite':
-                $managerResponse = $queueMan->joinQueueRequest($queueId, $this->get('security.token_storage')->getToken()
-                    ->getUser());
-                return $this->render('KDSMContentBundle:Queue:queue.html.twig', array('queue' => $managerResponse));
-            case 'lfg':
-                $userEm = $this->getDoctrine()->getEntityManager();
-                $userRep = $userEm->getRepository('KDSMContentBundle:User');
-                $userResponse = new JsonResponse($userRep->getUsersLookingForGame($this->get('security.token_storage')->getToken()
-                    ->getUser()));
-                return $userResponse;
-            default:
-                throw new NotFoundHttpException('Page not found');
-                break;
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('KDSMContentBundle:Includes:queue.html.twig',
+                array('route' => $this->get('kernel')->getRootDir()));
+        } else {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
     }
 
-    public function sendUserQueueJoinRequestAction($userIds = null, $queueId = null)
+    public function queueAction($method, $queueId = null, Request $request = null)
     {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-    }
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $queueMan = $this->get('kdsm_content.queue_manager');
+            $currentUserId = (string)$this->get('security.token_storage')->getToken()->getUser()->getId();
+            $response = null;
 
-    public function userQueueJoinDeclineAction($queueId = null)
-    {
-        $response = new Response(1);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+            switch($method) {
+                case 'single_queue':
+                    $response = $queueMan->getSingleQueue($queueId, $currentUserId);
+                    break;
+                case 'list':
+                    $response = $queueMan->getCurrentQueueList($currentUserId);
+                    break;
+                case 'create':
+                    $users = $request->request->get('usersIds');
+                    array_splice($users, 0, 0, $currentUserId);
+                    $response = $queueMan->queueCreateRequest($users, $currentUserId);
+                    break;
+                case 'remove':
+                    $response = $queueMan->removeQueue($queueId, $currentUserId);
+                    break;
+                case 'process_invite':
+                    $userId = $request->request->get('userId');
+                    $userResponse = $request->request->get('userResponse');
+                    $response = $queueMan->processUserInviteResponse($queueId, $userId, $userResponse);
+                    break;
+                case 'lfg':
+                    $userEm = $this->getDoctrine()->getEntityManager();
+                    $userRep = $userEm->getRepository('KDSMContentBundle:User');
+                    $currentUserObject = $this->get('security.token_storage')->getToken()->getUser();
+                    $response = $userRep->getUsersLookingForGame($currentUserObject);
+                    break;
+                case 'join_users':
+                    $users = $request->request->get('usersIds');
+                    $response = $queueMan->queueAddUsersRequest($users, $queueId);
+                    break;
+                default:
+                    throw new NotFoundHttpException('Page not found');
+                    break;
+            }
+            $queueResponse = new JsonResponse($response);
+            return $queueResponse;
+        } else {
+            throw new \Exception('User is not logged in!');
+        }
     }
 }

@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new KDSM\ContentBundle\KDSMContentBundle(),
             new KDSM\APIBundle\KDSMAPIBundle(),
+
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
