@@ -33,7 +33,7 @@
                                 queueElement.remove();
                             }
 
-                            if(response_json[i].status == "in_queue" && (response_json[i].status.queueRights == "queueOwner" || response_json[i].status.queueRights == "queueMember")) {
+                            if(response_json[i].status == "in_queue" && (response_json[i].queueRights == "queueOwner" || response_json[i].queueRights == "queueMember")) {
                                 queueElement.addClass("inQueue");
                             }
 
