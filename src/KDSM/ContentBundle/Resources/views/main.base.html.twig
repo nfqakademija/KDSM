@@ -13,11 +13,8 @@
         {% block header %}
             <header class="row">
                 <div class="container">
-                    <img class="col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logo-nfq.png') }}" alt=""/>
+                    <img class="col-xs-12 col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logo-nfq.png') }}" alt=""/>
                     <div class="col-sm-7">
-                        <div class="nav row">
-
-                        </div>
                     </div>
                 </div>
             </header>
@@ -36,7 +33,7 @@
             </main>
             {% block rightSidebar %}
                 {% if app.user %}
-                    <aside class="col-sm-2 sidebar right queue-control">
+                    <aside class="hidden-xs col-sm-2 sidebar right queue-control">
                         <div class="ui-widget search-box">
                             <i class="search-users-icon fa fa-search"></i>
                             <input id="search-users" placeholder="Search...">
