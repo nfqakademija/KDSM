@@ -111,6 +111,7 @@
 
                 $("#search-users").autocomplete({
                     source: availableTags,
+                    minLength: 0,
                     create: function( event, ui ) {
                         $(this).autocomplete("widget")
                                 .appendTo("#results")
@@ -140,6 +141,8 @@
                             $("button#save-queue-element").removeClass("hidden");
                         }
                     }
+                }).focus(function(){
+                    $(this).trigger('keydown.autocomplete');
                 })
                         .autocomplete( "instance" )._renderItem = function( ul, item ) {
                     //check if user wasn't already selected and don't show him if he was
