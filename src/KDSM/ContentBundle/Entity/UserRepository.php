@@ -14,8 +14,9 @@ class UserRepository extends EntityRepository // implements UserProviderInterfac
     {
         $query = $this->createQueryBuilder('tb');
         $query->select()
-            ->where('tb.lookingForGame = true')
-            ->andWhere('tb.id != ?1');
+//            ->where('tb.lookingForGame = true')
+//            ->andWhere('tb.id != ?1');
+              ->where('tb.id != ?1');
         $query->setParameters(array(1 => $myUser->getId()));
         $users = $query->getQuery()->getResult();
         $result = null;
