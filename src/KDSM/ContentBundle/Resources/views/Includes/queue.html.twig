@@ -121,11 +121,13 @@
                         $(this).autocomplete("widget")
                                 .appendTo("#results")
                                 .css("position", "static");
+                        $(this).autocomplete("search");
                     },
                     open: function() {
                         $(this).autocomplete("widget")
                                 .appendTo("#results")
                                 .css("position", "static");
+                        $(this).autocomplete("search");
                     },
                     select: function(event, ui) {
                         //when user is selected
