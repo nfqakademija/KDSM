@@ -48,8 +48,12 @@
                             }
 
                             //if not queue element owner, remove control possibility
-                            if (response_json[i].queueRights != "queueOwner") {
+                            if (response_json[i].queueRights == "queueOwner") {
                                 queueElement.addClass("gameMember");
+                            }
+
+                            //if not queue element owner, remove control possibility
+                            if (response_json[i].queueRights != "queueOwner") {
                                 queueElement.find("div.queue-element-info").remove();
                             }
 
