@@ -151,7 +151,7 @@ table td {
 .register-btn {
     margin-top: 2em;
     position: relative;
-    right: 7em;
+    right: 5em;
 }
 
 /* Sidebar */
@@ -389,7 +389,7 @@ table td {
     position: relative;
     margin: 0 auto;
     float: none;
-    padding: 0 30px;
+    padding: 1em 30px;
     margin-bottom: 4em;
 }
 /* Logged homepage*/
