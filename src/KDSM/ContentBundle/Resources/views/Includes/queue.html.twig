@@ -142,7 +142,7 @@
                         }
                     }
                 }).focus(function(){
-                    $(this).data("uiAutocomplete").search($(this).val());
+                    $(this).autocomplete("search");
                 })
                         .autocomplete( "instance" )._renderItem = function( ul, item ) {
                     //check if user wasn't already selected and don't show him if he was
