@@ -13,7 +13,9 @@
         {% block header %}
             <header class="row">
                 <div class="container">
-                    <img class="col-xs-12 col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logo-nfq.png') }}" alt=""/>
+                    <a href="{{ path('kdsm_content_homepage') }}">
+                     <img class="col-xs-12 col-sm-3 logo" src="{{ asset('bundles/kdsmcontent/images/logo-nfq.png') }}" alt=""/>
+                    </a>
                     <div class="col-sm-3 pull-right">
                         <a href="{{ path('fos_user_registration_register') }}" style="margin-top:2em; margin-right:2em;" class="btn btn-default register-btn">Registracija</a>
                     </div>
