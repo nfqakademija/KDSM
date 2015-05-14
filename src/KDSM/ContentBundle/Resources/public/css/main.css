@@ -148,6 +148,12 @@ table td {
     margin: 0 auto;
 }
 
+.register-btn {
+    margin-top: 2em;
+    position: relative;
+    right: 7em;
+}
+
 /* Sidebar */
 .sidebar {
     height: 100%;
