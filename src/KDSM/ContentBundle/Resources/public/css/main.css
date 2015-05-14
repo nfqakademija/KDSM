@@ -535,7 +535,7 @@ table th {
     }
 
     span.result {
-        font-size: 14px !important;
+        font-size: 32px !important;
     }
 
     .table-free p {
@@ -544,6 +544,6 @@ table th {
 
     .queue-game .player-name {
         padding: 0 !important;
-        font-size: 32px !important;
+        font-size: 12px !important;
     }
 }
