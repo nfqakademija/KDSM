@@ -146,7 +146,7 @@
                             $("button#save-queue-element").removeClass("hidden");
                         }
                     }
-                }).focus(function(){
+                }).load(function(){
                     $(this).autocomplete("search");
                 })
                         .autocomplete( "instance" )._renderItem = function( ul, item ) {
