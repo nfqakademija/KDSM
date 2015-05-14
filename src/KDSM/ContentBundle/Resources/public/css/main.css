@@ -496,8 +496,8 @@ table th {
 }
 
 .queue-game.creatingGame {
-    background: rgba(28, 148, 117, 0.7);
-    border: 1px solid rgb(9, 79, 61);
+    background: rgba(124, 122, 122, 0.8);
+    border: 1px solid rgb(79, 73, 75);
 }
 
 .queue-game.gameMember {
