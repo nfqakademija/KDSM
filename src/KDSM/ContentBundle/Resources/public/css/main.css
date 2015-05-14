@@ -501,8 +501,8 @@ table th {
 }
 
 .queue-game.inQueue {
-    background: rgba(92, 184, 92, 0.8);
-    border: 1px solid rgb(92, 184, 92);
+    background: rgba(92, 184, 92, 0.8) !important;
+    border: 1px solid rgb(92, 184, 92) !important;
 }
 
 
