@@ -33,9 +33,9 @@
                                 queueElement.remove();
                             }
 
-//                            if(response_json[i].status == "in_queue") {
-//                                queueElement.addClass("inQueue");
-//                            }
+                            if(response_json[i].status == "in_queue" && (response_json[i].status.queueRights == "queueOwner" || response_json[i].status.queueRights == "queueMember")) {
+                                queueElement.addClass("inQueue");
+                            }
 
                             //if status is creating, add class to change element design
                             if(response_json[i].status == 'creatingGame') {

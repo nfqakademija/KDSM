@@ -500,6 +500,12 @@ table th {
     border: 1px solid rgb(79, 73, 75);
 }
 
+.queue-game.inQueue {
+    background: rgba(92, 184, 92, 0.8);
+    border: 1px solid rgb(92, 184, 92);
+}
+
+
 .queue-game.gameMember {
     background: rgba(244, 142, 43, 0.81);
     border: 1px solid #F48E2B;
