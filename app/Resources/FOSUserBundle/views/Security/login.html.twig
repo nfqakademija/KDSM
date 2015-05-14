@@ -13,16 +13,16 @@
     {% endif %}
     <div class="col-sm-4 login-form pull-right">
         <h2>{{ 'security.login.heading' | trans }}</h2>
-    <form action="{{ path("fos_user_security_check") }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+        <form action="{{ path("fos_user_security_check") }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-        <input type="text" class="col-sm-12 field" id="username" placeholder="{{ 'security.login.username'|trans }} " name="_username" value="{{ last_username }}" required="required" />
-        <input type="password" class="col-sm-12 field"id="password" placeholder="{{ 'security.login.password'|trans }}" name="_password" required="required" />
+            <input type="text" class="col-sm-12 field" id="username" placeholder="{{ 'security.login.username'|trans }} " name="_username" value="{{ last_username }}" required="required" />
+            <input type="password" class="col-sm-12 field"id="password" placeholder="{{ 'security.login.password'|trans }}" name="_password" required="required" />
 
-        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-        <label for="remember_me" class="remember-me-label">{{ 'security.login.remember_me'|trans }}</label>
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+            <label for="remember_me" class="remember-me-label">{{ 'security.login.remember_me'|trans }}</label>
 
-        <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
-    </form>
+            <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+        </form>
     </div>
 {% endblock fos_user_content %}
