@@ -528,3 +528,22 @@ table th {
     left: 0;
     width: 100%;
 }
+
+@media (max-width: 768px){
+    h4 {
+        font-size:14px !important;
+    }
+
+    span.result {
+        font-size: 14px !important;
+    }
+
+    .table-free p {
+        font-size: 14px !important;
+    }
+
+    .queue-game .player-name {
+        padding: 0 !important;
+        font-size: 12px !important;
+    }
+}
