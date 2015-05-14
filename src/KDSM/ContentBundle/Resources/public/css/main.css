@@ -137,7 +137,8 @@ table td {
 }
 
 .login-form input[type=submit],
-.register-form input[type=submit] {
+.register-form input[type=submit],
+.register-btn {
     background-color: #F48E2B;
     border: none;
     padding: 0.5em 2em;
